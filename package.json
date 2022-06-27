@@ -1,0 +1,34 @@
+{
+  "name": "checkout-express-pay-library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "cover-test": "jest --coverage --colors",
+    "tsc": "tsc",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git-lab.boldapps.net:bold-checkout/checkout-express-pay-library.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@bold-commerce/checkout-frontend-library": "^0.25.1",
+    "@types/jest": "^28.1.2",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
+    "jest": "^28.1.1",
+    "jest-environment-jsdom": "^28.1.1",
+    "ts-jest": "^28.0.5",
+    "typescript": "^4.7.4"
+  },
+  "peerDependencies": {
+    "@bold-commerce/checkout-frontend-library": "^0.25.1"
+  }
+}
