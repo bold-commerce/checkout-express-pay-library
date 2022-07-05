@@ -1,11 +1,14 @@
 {
-  "name": "checkout-express-pay-library",
-  "version": "1.0.0",
+  "name": "@bold-commerce/checkout-express-pay-library",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
+    "lint-ci": "yarn lint",
+    "test-ci": "yarn cover-test --ci --bail --verbose",
+    "lint-staged": "lint-staged",
     "cover-test": "jest --coverage --colors",
     "tsc": "tsc",
     "build": "tsc"
@@ -23,12 +26,20 @@
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
+    "husky": "^7.0.1",
     "jest": "^28.1.1",
+    "lint-staged": "^11.1.2",
     "jest-environment-jsdom": "^28.1.1",
     "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
     "@bold-commerce/checkout-frontend-library": "^0.25.1"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0"
   }
 }
