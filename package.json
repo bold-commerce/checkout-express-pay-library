@@ -2,7 +2,8 @@
   "name": "@bold-commerce/checkout-express-pay-library",
   "version": "0.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
@@ -11,7 +12,9 @@
     "lint-staged": "lint-staged",
     "cover-test": "jest --coverage --colors",
     "tsc": "tsc",
-    "build": "tsc"
+    "build": "yarn clean && ttsc && yarn copy-files",
+    "clean": "rm -rf ./lib/*.css",
+    "copy-files": "cp ./src/*.css ./lib/"
   },
   "repository": {
     "type": "git",
@@ -21,7 +24,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@bold-commerce/checkout-frontend-library": "^0.25.1",
+    "@bold-commerce/checkout-frontend-library": "^0.30.0",
     "@types/jest": "^28.1.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
@@ -31,13 +34,16 @@
     "lint-staged": "^11.1.2",
     "jest-environment-jsdom": "^28.1.1",
     "ts-jest": "^28.0.5",
-    "typescript": "^4.7.4"
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.7.4",
+    "typescript-transform-paths": "^3.3.1"
   },
   "peerDependencies": {
-    "@bold-commerce/checkout-frontend-library": "^0.25.1"
+    "@bold-commerce/checkout-frontend-library": "^0.30.0"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "src"
   ],
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0"
