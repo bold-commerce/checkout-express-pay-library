@@ -1,6 +1,7 @@
 import {alternatePaymentMethodType, getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {initStripe, IInitializeProps} from 'src';
 
-export function initialize(): void{
+export function initialize(props: IInitializeProps): void{
     const {alternate_payment_methods} = getOrderInitialData();
 
     if(alternate_payment_methods){
@@ -8,8 +9,7 @@ export function initialize(): void{
             const type = paymentMethod.type;
             switch (type){
                 case alternatePaymentMethodType.STRIPE:
-                    // eslint-disable-next-line no-console
-                    console.log('implement stripe'); // TODO CE-497
+                    initStripe(paymentMethod, props.showHideExpressPaymentSection);
                     break;
                 default:
                     // eslint-disable-next-line no-console
