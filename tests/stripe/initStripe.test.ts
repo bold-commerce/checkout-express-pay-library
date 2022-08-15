@@ -1,16 +1,20 @@
-import {initStripe, stripeOnload} from 'src';
+import {getStripeDisplayItem, initStripe, stripeOnload} from 'src';
 import {
     alternatePaymentMethodType,
     getApplicationState,
     getCurrency,
+    getOrderInitialData,
     IApplicationState,
 } from '@bold-commerce/checkout-frontend-library/';
 import {mocked} from 'jest-mock';
-import {currencyMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {currencyMock, orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
+jest.mock('src/stripe/getStripeDisplayItem');
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getCurrencyMock = mocked(getCurrency, true);
+const getOrderInitialDataMock = mocked(getOrderInitialData, true);
+const getStripeDisplayItemMock = mocked(getStripeDisplayItem, true);
 
 describe('testing init Stripe function', () => {
 
@@ -23,11 +27,14 @@ describe('testing init Stripe function', () => {
     };
 
     const orderTotal = 200;
+    const displayItemMock = [{label: 'test', amount: 1200}];
 
     beforeEach(() => {
         jest.clearAllMocks();
         getApplicationStateMock.mockReturnValue({order_total: orderTotal} as IApplicationState);
         getCurrencyMock.mockReturnValue(currencyMock);
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
+        getStripeDisplayItemMock.mockReturnValue(displayItemMock);
     });
 
     test('testing initStripe', () => {
@@ -77,6 +84,8 @@ describe('testing init Stripe function', () => {
             },
             requestPayerName: true,
             requestPayerEmail: true,
+            requestPayerPhone: orderInitialDataMock.general_settings.checkout_process.phone_number_required,
+            displayItems: displayItemMock
         });
 
         expect(stripeCreateElementMock).toHaveBeenCalledTimes(1);
@@ -122,6 +131,8 @@ describe('testing init Stripe function', () => {
             },
             requestPayerName: true,
             requestPayerEmail: true,
+            requestPayerPhone: orderInitialDataMock.general_settings.checkout_process.phone_number_required,
+            displayItems: displayItemMock
         });
 
         expect(stripeCreateElementMock).toHaveBeenCalledTimes(1);
