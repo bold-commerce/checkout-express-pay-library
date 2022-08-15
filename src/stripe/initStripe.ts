@@ -1,8 +1,10 @@
 import {
     getApplicationState,
     getCurrency,
+    getOrderInitialData,
     IExpressPayStripe
 } from '@bold-commerce/checkout-frontend-library';
+import {getStripeDisplayItem} from 'src/stripe';
 
 export function initStripe(payment: IExpressPayStripe, showHideExpressPaymentSection?: (show: boolean) => void): void{
 
@@ -16,9 +18,11 @@ export async function stripeOnload(payment: IExpressPayStripe, showHideExpressPa
 
     const currency = getCurrency();
     const {order_total} = getApplicationState();
+    const {general_settings} = getOrderInitialData();
     const country = payment.account_country;
+    const displayItems = getStripeDisplayItem();
 
-    const stripeInstance = window['Stripe'](payment.key);
+    const stripeInstance = window['Stripe'](payment.key, {stripeAccount: payment.stripe_user_id} );
     const paymentRequest = stripeInstance.paymentRequest({
         currency: currency.iso_code.toLowerCase(),
         country: country,
@@ -26,8 +30,11 @@ export async function stripeOnload(payment: IExpressPayStripe, showHideExpressPa
             label: 'Total',
             amount: order_total,
         },
+        //requestShipping: true, TODO CE-492 - uncomment it and add address & shipping listeners.
         requestPayerName: true,
         requestPayerEmail: true,
+        requestPayerPhone: general_settings.checkout_process.phone_number_required,
+        displayItems: displayItems
     });
     const elements = stripeInstance.elements();
     const stripeButton = elements.create('paymentRequestButton', {
