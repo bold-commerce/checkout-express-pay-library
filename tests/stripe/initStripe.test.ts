@@ -1,20 +1,30 @@
-import {getStripeDisplayItem, initStripe, stripeOnload} from 'src';
+import {
+    changeStripeShippingLines,
+    checkStripeAddress,
+    getStripeDisplayItem,
+    initStripe,
+    stripeOnload
+} from 'src';
 import {
     alternatePaymentMethodType,
     getApplicationState,
     getCurrency,
     getOrderInitialData,
     IApplicationState,
-} from '@bold-commerce/checkout-frontend-library/';
+} from '@bold-commerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
 import {currencyMock, orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
 jest.mock('src/stripe/getStripeDisplayItem');
+jest.mock('src/stripe/checkStripeAddress');
+jest.mock('src/stripe/changeStripeShippingLines');
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getCurrencyMock = mocked(getCurrency, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const getStripeDisplayItemMock = mocked(getStripeDisplayItem, true);
+const checkStripeAddressMock = mocked(checkStripeAddress, true);
+const changeStripeShippingLinesMock = mocked(changeStripeShippingLines, true);
 
 describe('testing init Stripe function', () => {
 
@@ -61,9 +71,14 @@ describe('testing init Stripe function', () => {
 
         const showHideExpressPaymentSection = jest.fn();
         const canMakePaymentMock = jest.fn().mockReturnValue(Promise.resolve(true));
-        const stripePaymentRequestMock = jest.fn().mockReturnValue(
-            {canMakePayment: canMakePaymentMock}
-        );
+        const eventHandlerMock = jest.fn().mockImplementation(async (event, handler) => {
+            await handler();
+        });
+        const stripePaymentObjectMock = {
+            canMakePayment: canMakePaymentMock,
+            addEventListener: eventHandlerMock
+        };
+        const stripePaymentRequestMock = jest.fn().mockReturnValue(stripePaymentObjectMock);
         const stripeCreateElementMock = jest.fn().mockReturnValue({mount: jest.fn()});
 
         window['Stripe'] = jest.fn().mockImplementation();
@@ -84,6 +99,7 @@ describe('testing init Stripe function', () => {
             },
             requestPayerName: true,
             requestPayerEmail: true,
+            requestShipping: true,
             requestPayerPhone: orderInitialDataMock.general_settings.checkout_process.phone_number_required,
             displayItems: displayItemMock
         });
@@ -91,7 +107,7 @@ describe('testing init Stripe function', () => {
         expect(stripeCreateElementMock).toHaveBeenCalledTimes(1);
         expect(stripeCreateElementMock).toBeCalledWith(
             'paymentRequestButton', {
-                paymentRequest: {canMakePayment: canMakePaymentMock},
+                paymentRequest: stripePaymentObjectMock,
                 style: {
                     paymentRequestButton: {
                         type: 'default',
@@ -101,6 +117,8 @@ describe('testing init Stripe function', () => {
             }
         );
         expect(showHideExpressPaymentSection).toHaveBeenCalledTimes(1);
+        expect(checkStripeAddressMock).toHaveBeenCalledTimes(1);
+        expect(changeStripeShippingLinesMock).toHaveBeenCalledTimes(1);
     });
 
     test('testing stripeOnload with failure', async () => {
@@ -108,9 +126,12 @@ describe('testing init Stripe function', () => {
 
         const showHideExpressPaymentSection = jest.fn();
         const canMakePaymentMock = jest.fn().mockReturnValue(Promise.resolve(false));
-        const stripePaymentRequestMock = jest.fn().mockReturnValue(
-            {canMakePayment: canMakePaymentMock}
-        );
+
+        const stripePaymentObjectMock = {
+            canMakePayment: canMakePaymentMock,
+            addEventListener: jest.fn()
+        };
+        const stripePaymentRequestMock = jest.fn().mockReturnValue(stripePaymentObjectMock);
         const stripeCreateElementMock = jest.fn().mockReturnValue({mount: jest.fn()});
 
         window['Stripe'] = jest.fn().mockImplementation();
@@ -131,6 +152,7 @@ describe('testing init Stripe function', () => {
             },
             requestPayerName: true,
             requestPayerEmail: true,
+            requestShipping: true,
             requestPayerPhone: orderInitialDataMock.general_settings.checkout_process.phone_number_required,
             displayItems: displayItemMock
         });
@@ -138,7 +160,7 @@ describe('testing init Stripe function', () => {
         expect(stripeCreateElementMock).toHaveBeenCalledTimes(1);
         expect(stripeCreateElementMock).toBeCalledWith(
             'paymentRequestButton', {
-                paymentRequest: {canMakePayment: canMakePaymentMock},
+                paymentRequest: stripePaymentObjectMock,
                 style: {
                     paymentRequestButton: {
                         type: 'default',
