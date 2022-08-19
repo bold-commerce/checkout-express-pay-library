@@ -4,7 +4,8 @@ import {
     getOrderInitialData,
     IExpressPayStripe
 } from '@bold-commerce/checkout-frontend-library';
-import {getStripeDisplayItem} from 'src/stripe';
+import {changeStripeShippingLines, checkStripeAddress, getStripeDisplayItem} from 'src/stripe';
+import {IStripeEvent} from 'src/types';
 
 export function initStripe(payment: IExpressPayStripe, showHideExpressPaymentSection?: (show: boolean) => void): void{
 
@@ -30,7 +31,7 @@ export async function stripeOnload(payment: IExpressPayStripe, showHideExpressPa
             label: 'Total',
             amount: order_total,
         },
-        //requestShipping: true, TODO CE-492 - uncomment it and add address & shipping listeners.
+        requestShipping: true,
         requestPayerName: true,
         requestPayerEmail: true,
         requestPayerPhone: general_settings.checkout_process.phone_number_required,
@@ -64,5 +65,13 @@ export async function stripeOnload(payment: IExpressPayStripe, showHideExpressPa
     } else {
         stripeDiv.style.display = 'none';
     }
+
+    paymentRequest.addEventListener('shippingaddresschange', async (event: IStripeEvent) => {
+        await checkStripeAddress(event);
+    }, false);
+
+    paymentRequest.addEventListener('shippingoptionchange', async (event: IStripeEvent) => {
+        await changeStripeShippingLines(event);
+    }, false);
 
 }
