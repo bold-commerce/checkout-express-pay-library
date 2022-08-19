@@ -10,6 +10,7 @@ module.exports = {
     'transform': {
         '^.+\\.(ts|tsx)$': 'ts-jest'
     },
+    'coverageReporters' : ['lcov', 'text', 'text-summary', 'cobertura'],
     'coverageThreshold': {
         'global': {
             'branches': 100,
