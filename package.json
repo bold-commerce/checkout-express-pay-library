@@ -8,7 +8,7 @@
     "test": "jest",
     "lint": "eslint .",
     "lint-ci": "yarn lint",
-    "test-ci": "yarn cover-test --ci --bail --verbose",
+    "test-ci": "yarn cover-test --ci --bail --verbose --reporters=default --reporters=jest-junit --forceExit --watchAll=false --detectOpenHandles",
     "lint-staged": "lint-staged",
     "cover-test": "jest --coverage --colors",
     "tsc": "tsc",
@@ -24,15 +24,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@bold-commerce/checkout-frontend-library": "^0.30.0",
+    "@bold-commerce/checkout-frontend-library": "^0.30.1",
     "@types/jest": "^28.1.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
     "husky": "^7.0.1",
     "jest": "^28.1.1",
-    "lint-staged": "^11.1.2",
     "jest-environment-jsdom": "^28.1.1",
+    "jest-junit": "^14.0.0",
+    "lint-staged": "^11.1.2",
     "ts-jest": "^28.0.5",
     "ttypescript": "^1.5.12",
     "typescript": "^4.7.4",
@@ -42,8 +43,7 @@
     "@bold-commerce/checkout-frontend-library": "^0.30.0"
   },
   "files": [
-    "lib/**/*",
-    "src"
+    "lib/**/*"
   ],
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0"
