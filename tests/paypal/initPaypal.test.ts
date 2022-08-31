@@ -1,22 +1,19 @@
-import {
-    getCurrency,
-    alternatePaymentMethodType,
-    IExpressPayPaypal,
-} from '@bold-commerce/checkout-frontend-library';
-import {getPaypalUrl, initPaypal, paypalOnload} from 'src';
+import {alternatePaymentMethodType, IExpressPayPaypal,} from '@bold-commerce/checkout-frontend-library';
+import {getPaypalScriptOptions, hasPaypalNameSpace, initPaypal, paypalOnload, setPaypalNameSpace} from 'src';
 import {mocked} from 'jest-mock';
-import {currencyMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {loadScript, PayPalNamespace, PayPalScriptOptions} from '@paypal/paypal-js';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('src/paypal/getPaypalUrl');
+jest.mock('@paypal/paypal-js');
+jest.mock('src/paypal/getPaypalScriptOptions');
+jest.mock('src/paypal/managePaypalState');
 jest.mock('src/paypal/paypalOnload');
-const getCurrencyMock = mocked(getCurrency, true);
-const getPaypalUrlMock = mocked(getPaypalUrl, true);
+const getPaypalScriptOptionsMock = mocked(getPaypalScriptOptions, true);
 const paypalOnloadMock = mocked(paypalOnload, true);
+const hasPaypalNameSpaceMock = mocked(hasPaypalNameSpace, true);
+const setPaypalNameSpaceMock = mocked(setPaypalNameSpace, true);
+const loadScriptMock = mocked(loadScript, true);
 
 describe('testing initPaypal function', () => {
-    const showHideMock = jest.fn();
-    const event = new Event('test');
     const paypalPayment: IExpressPayPaypal = {
         type: alternatePaymentMethodType.PAYPAL,
         is_test: true,
@@ -24,27 +21,61 @@ describe('testing initPaypal function', () => {
         button_style: {},
         public_id: 'somePublicId',
     };
-    const paypalUrlMock = 'https://www.paypal.com/sdk/js?param=paramValue';
+    const paypalNameSpaceMock: PayPalNamespace = {version: 'test_mock_version'};
+    const loadScriptReturn = Promise.resolve(paypalNameSpaceMock);
+    const paypalScriptOptions: PayPalScriptOptions = {
+        'client-id': paypalPayment.client_id,
+        'debug': paypalPayment.is_test,
+        'currency': 'USD',
+        'disable-funding': 'credit,card,venmo,sepa,bancontact,eps,giropay,ideal,mybank,p24,sofort',
+        'vault': 'true',
+        'intent': 'authorize',
+        'integration-date': '2020-03-10'
+    };
 
     beforeEach(() => {
         jest.clearAllMocks();
-        getPaypalUrlMock.mockReturnValue(paypalUrlMock);
-        getCurrencyMock.mockReturnValue(currencyMock);
+        getPaypalScriptOptionsMock.mockReturnValue(paypalScriptOptions);
+        hasPaypalNameSpaceMock.mockReturnValue(false);
+        loadScriptMock.mockReturnValue(loadScriptReturn);
     });
 
-    test('testing call initPaypal add script and loads', () => {
-        initPaypal(paypalPayment, showHideMock);
+    test('testing call initPaypal set paypal name space', async () => {
+        await initPaypal(paypalPayment);
 
-        expect(getCurrencyMock).toHaveBeenCalledTimes(1);
-        expect(getPaypalUrlMock).toHaveBeenCalledTimes(1);
-        expect(getPaypalUrlMock).toHaveBeenCalledWith(paypalPayment.client_id, paypalPayment.is_test, currencyMock.iso_code);
-        const qryScriptElement: NodeListOf<HTMLScriptElement> = document.querySelectorAll('script[data-namespace=paypal_direct]');
-        expect(qryScriptElement.length).toBe(1);
-        const scriptElement: HTMLScriptElement = qryScriptElement[0];
-        expect(scriptElement.src).toBe(paypalUrlMock);
-        expect(typeof scriptElement.onload).toBe('function');
-        scriptElement?.onload && scriptElement.onload(event);
+        expect(hasPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(1);
+        expect(loadScriptMock).toHaveBeenCalledTimes(1);
+        expect(loadScriptMock).toHaveBeenCalledWith(paypalScriptOptions);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledWith(paypalNameSpaceMock);
         expect(paypalOnloadMock).toHaveBeenCalledTimes(1);
-        expect(paypalOnloadMock).toHaveBeenCalledWith(paypalPayment, showHideMock);
+        expect(paypalOnloadMock).toHaveBeenCalledWith(paypalPayment);
+    });
+
+    test('testing call initPaypal null paypal name space', async () => {
+        loadScriptMock.mockReturnValueOnce(Promise.resolve(null));
+
+        await initPaypal(paypalPayment);
+
+        expect(hasPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(1);
+        expect(loadScriptMock).toHaveBeenCalledTimes(1);
+        expect(loadScriptMock).toHaveBeenCalledWith(paypalScriptOptions);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledWith(null);
+        expect(paypalOnloadMock).toHaveBeenCalledTimes(0);
+    });
+
+    test('testing call initPaypal has paypal name space', async () => {
+        hasPaypalNameSpaceMock.mockReturnValueOnce(true);
+
+        await initPaypal(paypalPayment);
+
+        expect(hasPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(0);
+        expect(loadScriptMock).toHaveBeenCalledTimes(0);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(0);
+        expect(paypalOnloadMock).toHaveBeenCalledTimes(0);
     });
 });

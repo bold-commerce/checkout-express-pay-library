@@ -1,4 +1,4 @@
-import {IActionTypes, IExpressPayContext, IShowPaymentMethods} from 'src/types/variables';
+import {IActionTypes, IExpressPayContext, IShowPaymentMethods, IPaypalState} from 'src/types/variables';
 
 export const showPaymentMethods: IShowPaymentMethods = {
     stripe: false,
@@ -13,4 +13,9 @@ export const actionTypes: IActionTypes = {
     ENABLE_DISABLE_SECTION: 'ENABLE_DISABLE_SECTION',
     ORDER_COMPLETED: 'ORDER_COMPLETED',
     ORDER_PROCESSING: 'ORDER_PROCESSING',
+};
+
+export const paypalState: IPaypalState = {
+    paypal: null,
+    button: null
 };
