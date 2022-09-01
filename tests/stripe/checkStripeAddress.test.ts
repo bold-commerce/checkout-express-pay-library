@@ -1,4 +1,4 @@
-import {checkStripeAddress, formatStripeAddress} from 'src/stripe';
+import {checkStripeAddress, formatStripeShippingAddress} from 'src/stripe';
 import {IStripeAddress} from 'src/types';
 import {mocked} from 'jest-mock';
 import {applicationStateMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
@@ -9,12 +9,12 @@ import {
     setShippingAddress, setTaxes
 } from '@bold-commerce/checkout-frontend-library';
 
-jest.mock('src/stripe/formatStripeAddress');
+jest.mock('src/stripe/formatStripeShippingAddress');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/address');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes');
-const formatStripeAddressMock = mocked(formatStripeAddress, true);
+const formatStripeAddressMock = mocked(formatStripeShippingAddress, true);
 const setShippingAddressMock = mocked(setShippingAddress, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getShippingMock = mocked(getShipping, true);

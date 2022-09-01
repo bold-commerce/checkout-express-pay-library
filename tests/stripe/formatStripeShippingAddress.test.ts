@@ -1,13 +1,11 @@
 import {mocked} from 'jest-mock';
-import {getCountryName, getProvinceDetails} from 'src/utils';
-import {formatStripeAddress} from 'src/stripe';
-import {IStripeAddress} from 'src/types';
+import {getCountryName, getFirstAndLastName, getProvinceDetails, formatStripeShippingAddress, IStripeAddress} from 'src';
 import {IAddress} from '@bold-commerce/checkout-frontend-library';
 
 jest.mock('src/utils');
 const getProvinceDetailsMock = mocked(getProvinceDetails, true);
 const getCountryNameMock = mocked(getCountryName, true);
-
+const getFirstAndLastNameMock = mocked(getFirstAndLastName, true);
 
 describe('testing format address function', () => {
 
@@ -18,6 +16,7 @@ describe('testing format address function', () => {
     test('verify with correct address', () => {
         getProvinceDetailsMock.mockReturnValueOnce({code: 'MB', name: 'Manitoba'});
         getCountryNameMock.mockReturnValueOnce('Canada');
+        getFirstAndLastNameMock.mockReturnValueOnce({firstName:'John', lastName: 'Steve'});
         const params: IStripeAddress = {
             city: 'winnipeg',
             country: 'CA',
@@ -44,7 +43,7 @@ describe('testing format address function', () => {
             'phone_number': '111-111-1111'
         };
 
-        const result = formatStripeAddress(params);
+        const result = formatStripeShippingAddress(params);
         expect(result).toStrictEqual(expectedResult);
 
     });
@@ -53,6 +52,7 @@ describe('testing format address function', () => {
     test('verify with incomplete address', () => {
         getProvinceDetailsMock.mockReturnValueOnce({code: '', name: ''});
         getCountryNameMock.mockReturnValueOnce('');
+        getFirstAndLastNameMock.mockReturnValueOnce({firstName:'', lastName: ''});
         const params: IStripeAddress = {
             recipient: '',
             addressLine: []
@@ -73,7 +73,7 @@ describe('testing format address function', () => {
             'phone_number': ''
         };
 
-        const result = formatStripeAddress(params);
+        const result = formatStripeShippingAddress(params);
         expect(result).toStrictEqual(expectedResult);
 
     });
