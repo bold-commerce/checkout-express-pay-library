@@ -24,7 +24,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@bold-commerce/checkout-frontend-library": "^0.30.1",
+    "@bold-commerce/checkout-frontend-library": "^0.30.2",
     "@types/jest": "^28.1.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
@@ -40,7 +40,7 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "peerDependencies": {
-    "@bold-commerce/checkout-frontend-library": "^0.30.0"
+    "@bold-commerce/checkout-frontend-library": "^0.30.2"
   },
   "files": [
     "lib/**/*"
