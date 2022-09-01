@@ -1,20 +1,12 @@
 import {IAddress} from '@bold-commerce/checkout-frontend-library';
-import {IStripeAddress} from 'src/types/stripeProps';
-import {getCountryName, getProvinceDetails} from 'src/utils';
+import {getCountryName, getFirstAndLastName, getProvinceDetails, IStripeAddress} from 'src';
 
-
-export function formatStripeAddress(address: IStripeAddress): IAddress {
+export function formatStripeShippingAddress(address: IStripeAddress): IAddress {
     const countryIso = address.country ?? '';
     const region = address.region ?? '';
     const {code: provinceCode, name: provinceName} = getProvinceDetails(countryIso,region);
     const countryName = getCountryName(countryIso);
-
-    const name = address.recipient.split(/ /);
-    const firstName = name[0];
-    let lastName = '';
-    if (name.length >= 1) {
-        lastName = name.slice(1, name.length).join(' ');
-    }
+    const {firstName, lastName} = getFirstAndLastName(address.recipient);
 
     const formattedAddress = {
         'first_name': firstName,
@@ -32,7 +24,7 @@ export function formatStripeAddress(address: IStripeAddress): IAddress {
     };
 
     if (formattedAddress.postal_code.length <= 4 && formattedAddress.country_code === 'CA') {
-        formattedAddress.postal_code += '1A1';
+        formattedAddress.postal_code += '1A1'; //adding default postal code because stripe only provide first 3 digits until the payment is done.
     }
 
     return formattedAddress;

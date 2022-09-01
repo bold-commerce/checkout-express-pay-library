@@ -1,21 +1,25 @@
 import {
+    alternatePaymentMethodType,
     getApplicationState,
     getCurrency,
     getOrderInitialData,
     IExpressPayStripe
 } from '@bold-commerce/checkout-frontend-library';
-import {changeStripeShippingLines, checkStripeAddress, getStripeDisplayItem} from 'src/stripe';
-import {IStripeEvent} from 'src/types';
+import {addStripePayment, changeStripeShippingLines, checkStripeAddress, getStripeDisplayItem, enableDisableSection, IStripeEvent, IStripePaymentEvent} from 'src';
 
-export function initStripe(payment: IExpressPayStripe, showHideExpressPaymentSection?: (show: boolean) => void): void{
+export function initStripe(payment: IExpressPayStripe): void {
 
-    const script = document.createElement('script');
-    script.src = 'https://js.stripe.com/v3/';
-    script.onload = async () => await stripeOnload(payment, showHideExpressPaymentSection);
-    document.head.appendChild(script);
+    const src = 'https://js.stripe.com/v3/';
+    const existentScriptElement = document.querySelector(`[src="${src}"]`);
+    if(!existentScriptElement) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = async () => await stripeOnload(payment);
+        document.head.appendChild(script);
+    }
 }
 
-export async function stripeOnload(payment: IExpressPayStripe, showHideExpressPaymentSection?: (show: boolean) => void): Promise<void> {
+export async function stripeOnload(payment: IExpressPayStripe): Promise<void> {
 
     const currency = getCurrency();
     const {order_total} = getApplicationState();
@@ -59,9 +63,7 @@ export async function stripeOnload(payment: IExpressPayStripe, showHideExpressPa
 
     if (result) {
         stripeButton.mount('#stripe-express-payment');
-        if (showHideExpressPaymentSection) {
-            showHideExpressPaymentSection(true);
-        }
+        enableDisableSection( alternatePaymentMethodType.STRIPE, true);
     } else {
         stripeDiv.style.display = 'none';
     }
@@ -72,6 +74,13 @@ export async function stripeOnload(payment: IExpressPayStripe, showHideExpressPa
 
     paymentRequest.addEventListener('shippingoptionchange', async (event: IStripeEvent) => {
         await changeStripeShippingLines(event);
+    }, false);
+
+    paymentRequest.addEventListener('token', async (event: IStripePaymentEvent) => {
+        return new Promise( function (resolve, reject) {
+            addStripePayment(event, payment.public_id).then(resolve, reject);
+            setTimeout(reject, 29999);
+        });
     }, false);
 
 }

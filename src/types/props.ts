@@ -1,3 +1,4 @@
+import {IOnAction} from 'src/types/variables';
 
 declare global {
     interface Window {
@@ -6,7 +7,11 @@ declare global {
     }
 }
 
-
 export interface IInitializeProps {
-    showHideExpressPaymentSection?: (show: boolean) => void
+    onAction: IOnAction
+}
+
+export interface IGetFirstAndLastName {
+    firstName: string;
+    lastName: string;
 }

@@ -1,6 +1,6 @@
 import {
     changeStripeShippingLines,
-    checkStripeAddress,
+    checkStripeAddress, enableDisableSection,
     getStripeDisplayItem,
     initStripe,
     stripeOnload
@@ -19,12 +19,14 @@ jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
 jest.mock('src/stripe/getStripeDisplayItem');
 jest.mock('src/stripe/checkStripeAddress');
 jest.mock('src/stripe/changeStripeShippingLines');
+jest.mock('src/actions/enableDisableSection');
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getCurrencyMock = mocked(getCurrency, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const getStripeDisplayItemMock = mocked(getStripeDisplayItem, true);
 const checkStripeAddressMock = mocked(checkStripeAddress, true);
 const changeStripeShippingLinesMock = mocked(changeStripeShippingLines, true);
+const enableDisableSectionMock = mocked(enableDisableSection, true);
 
 describe('testing init Stripe function', () => {
 
@@ -69,7 +71,6 @@ describe('testing init Stripe function', () => {
         stripeContainerDiv.className = 'express-payment-container';
         jest.spyOn(document, 'getElementById').mockReturnValue(stripeContainerDiv);
 
-        const showHideExpressPaymentSection = jest.fn();
         const canMakePaymentMock = jest.fn().mockReturnValue(Promise.resolve(true));
         const eventHandlerMock = jest.fn().mockImplementation(async (event, handler) => {
             await handler();
@@ -87,7 +88,7 @@ describe('testing init Stripe function', () => {
                 paymentRequest: stripePaymentRequestMock,
                 elements: jest.fn().mockReturnValue({create: stripeCreateElementMock})
             });
-        await stripeOnload(stripe, showHideExpressPaymentSection);
+        await stripeOnload(stripe);
 
         expect(stripePaymentRequestMock).toHaveBeenCalledTimes(1);
         expect(stripePaymentRequestMock).toBeCalledWith({
@@ -116,7 +117,7 @@ describe('testing init Stripe function', () => {
                 }
             }
         );
-        expect(showHideExpressPaymentSection).toHaveBeenCalledTimes(1);
+        expect(enableDisableSectionMock).toHaveBeenCalledTimes(1);
         expect(checkStripeAddressMock).toHaveBeenCalledTimes(1);
         expect(changeStripeShippingLinesMock).toHaveBeenCalledTimes(1);
     });
@@ -140,7 +141,7 @@ describe('testing init Stripe function', () => {
                 paymentRequest: stripePaymentRequestMock,
                 elements: jest.fn().mockReturnValue({create: stripeCreateElementMock})
             });
-        await stripeOnload(stripe, showHideExpressPaymentSection);
+        await stripeOnload(stripe);
 
         expect(stripePaymentRequestMock).toHaveBeenCalledTimes(1);
         expect(stripePaymentRequestMock).toBeCalledWith({

@@ -1,2 +1,2 @@
 export * from './initialize';
-export * from './showHideExpressPaySection';
+export * from './manageExpressPayContext';

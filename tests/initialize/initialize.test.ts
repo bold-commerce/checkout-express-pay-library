@@ -4,19 +4,20 @@ import {
     IExpressPayPaypal, IExpressPayStripe
 } from '@bold-commerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
-import {initialize, initStripe, initPaypal, showHideExpressPaySection} from 'src';
+import {initialize, initStripe, initPaypal, setOnAction} from 'src';
 
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
-jest.mock('src/initialize/showHideExpressPaySection');
+jest.mock('src/initialize/manageExpressPayContext');
 jest.mock('src/stripe/initStripe');
 jest.mock('src/paypal/initPaypal');
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
-const showHideExpressPaySectionMock = mocked(showHideExpressPaySection, true);
+const setOnActionMock = mocked(setOnAction, true);
 const initStripeMock = mocked(initStripe, true);
 const initPaypalMock = mocked(initPaypal, true);
 
 describe('testing initialize function', () => {
     let consoleSpy: jest.SpyInstance;
+    const onActionMock = jest.fn();
     const initStripeMockImplementation = (method: IExpressPayStripe, callback?: (show: boolean) => void) => callback && callback(false);
     const initPaypalMockImplementation = (method: IExpressPayPaypal, callback?: (show: boolean) => void) => callback && callback(false);
     const initData = {
@@ -47,14 +48,14 @@ describe('testing initialize function', () => {
     test('testing with undefined payment options', () => {
         const orderInitData = {...initData, alternate_payment_methods: undefined};
         getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
-        initialize({});
+        initialize({onAction: onActionMock});
         expect(consoleSpy).toHaveBeenCalledTimes(0);
 
     });
 
     test('testing with empty payment options', () => {
         getOrderInitialDataMock.mockReturnValueOnce(initData);
-        initialize({});
+        initialize({onAction: onActionMock});
         expect(consoleSpy).toHaveBeenCalledTimes(0);
 
     });
@@ -67,14 +68,13 @@ describe('testing initialize function', () => {
             public_id: '',
             account_country: ''
         };
-        const showHideExpressPaymentSection = jest.fn();
         const orderInitData = {...initData, alternate_payment_methods: [stripe]};
         getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
-        initialize({showHideExpressPaymentSection});
+        initialize({onAction: onActionMock});
         expect(consoleSpy).toHaveBeenCalledTimes(0);
         expect(initStripeMock).toHaveBeenCalledTimes(1);
-        expect(initStripeMock).toHaveBeenCalledWith(stripe, expect.any(Function));
-        expect(showHideExpressPaySectionMock).toHaveBeenCalledTimes(1);
+        expect(initStripeMock).toHaveBeenCalledWith(stripe);
+        expect(setOnActionMock).toHaveBeenCalledTimes(1);
     });
 
     test('testing with paypal payment options', () => {
@@ -85,14 +85,14 @@ describe('testing initialize function', () => {
             button_style: {},
             public_id: 'somePublicId',
         };
-        const showHideExpressPaymentSection = jest.fn();
+
         const orderInitData = {...initData, alternate_payment_methods: [paypalPayment]};
         getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
-        initialize({showHideExpressPaymentSection});
+        initialize({onAction: onActionMock});
         expect(consoleSpy).toHaveBeenCalledTimes(0);
         expect(initPaypalMock).toHaveBeenCalledTimes(1);
-        expect(initPaypalMock).toHaveBeenCalledWith(paypalPayment, expect.any(Function));
-        expect(showHideExpressPaySectionMock).toHaveBeenCalledTimes(1);
+        expect(initPaypalMock).toHaveBeenCalledWith(paypalPayment);
+        expect(setOnActionMock).toHaveBeenCalledTimes(1);
     });
 
     test('testing with default option', () => {
@@ -105,7 +105,7 @@ describe('testing initialize function', () => {
         };
         const orderInitData = {...initData, alternate_payment_methods: [stripe]};
         getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
-        initialize({});
+        initialize({onAction: onActionMock});
         expect(consoleSpy).toHaveBeenCalledTimes(1);
         expect(consoleSpy).toHaveBeenCalledWith('do nothing');
 
