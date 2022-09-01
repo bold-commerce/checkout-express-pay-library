@@ -7,11 +7,11 @@ import {
 import {initStripe, initPaypal, IInitializeProps, setOnAction} from 'src';
 
 export function initialize(props: IInitializeProps): void{
-    const {alternate_payment_methods} = getOrderInitialData();
+    const {alternative_payment_methods} = getOrderInitialData();
     setOnAction(props.onAction);
 
-    if(alternate_payment_methods){
-        alternate_payment_methods.forEach(paymentMethod => {
+    if(alternative_payment_methods){
+        alternative_payment_methods.forEach(paymentMethod => {
             const type = paymentMethod.type;
             switch (type){
                 case alternatePaymentMethodType.STRIPE:

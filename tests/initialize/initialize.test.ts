@@ -35,7 +35,7 @@ describe('testing initialize function', () => {
                 api_key: null
             }
         },
-        alternate_payment_methods: []
+        alternative_payment_methods: []
     };
 
     beforeEach(() => {
@@ -43,14 +43,6 @@ describe('testing initialize function', () => {
         consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(jest.fn());
         initStripeMock.mockImplementation(initStripeMockImplementation);
         initPaypalMock.mockImplementation(initPaypalMockImplementation);
-    });
-
-    test('testing with undefined payment options', () => {
-        const orderInitData = {...initData, alternate_payment_methods: undefined};
-        getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
-        initialize({onAction: onActionMock});
-        expect(consoleSpy).toHaveBeenCalledTimes(0);
-
     });
 
     test('testing with empty payment options', () => {
@@ -68,7 +60,7 @@ describe('testing initialize function', () => {
             public_id: '',
             account_country: ''
         };
-        const orderInitData = {...initData, alternate_payment_methods: [stripe]};
+        const orderInitData = {...initData, alternative_payment_methods: [stripe]};
         getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
         initialize({onAction: onActionMock});
         expect(consoleSpy).toHaveBeenCalledTimes(0);
@@ -86,7 +78,7 @@ describe('testing initialize function', () => {
             public_id: 'somePublicId',
         };
 
-        const orderInitData = {...initData, alternate_payment_methods: [paypalPayment]};
+        const orderInitData = {...initData, alternative_payment_methods: [paypalPayment]};
         getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
         initialize({onAction: onActionMock});
         expect(consoleSpy).toHaveBeenCalledTimes(0);
@@ -103,7 +95,7 @@ describe('testing initialize function', () => {
             public_id: '',
             account_country: ''
         };
-        const orderInitData = {...initData, alternate_payment_methods: [stripe]};
+        const orderInitData = {...initData, alternative_payment_methods: [stripe]};
         getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
         initialize({onAction: onActionMock});
         expect(consoleSpy).toHaveBeenCalledTimes(1);
