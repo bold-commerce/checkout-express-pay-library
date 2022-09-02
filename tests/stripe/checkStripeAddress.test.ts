@@ -1,11 +1,12 @@
-import {checkStripeAddress, formatStripeShippingAddress} from 'src/stripe';
-import {IStripeAddress} from 'src/types';
+import {checkStripeAddress, formatStripeShippingAddress, getStripeDisplayItem, IStripeAddress} from 'src';
 import {mocked} from 'jest-mock';
 import {applicationStateMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 import {
     baseReturnObject,
     getApplicationState, getShipping,
-    getShippingLines, IApplicationState, IShipping,
+    getShippingLines,
+    IApplicationState,
+    IShipping,
     setShippingAddress, setTaxes
 } from '@bold-commerce/checkout-frontend-library';
 
@@ -14,12 +15,14 @@ jest.mock('@bold-commerce/checkout-frontend-library/lib/address');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes');
+jest.mock('src/stripe/getStripeDisplayItem');
 const formatStripeAddressMock = mocked(formatStripeShippingAddress, true);
 const setShippingAddressMock = mocked(setShippingAddress, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getShippingMock = mocked(getShipping, true);
 const getShippingLinesMock = mocked(getShippingLines, true);
 const setTaxesMock = mocked(setTaxes, true);
+const getStripeDisplayItemMock = mocked(getStripeDisplayItem, true);
 
 
 describe('testing check address function', () => {
@@ -32,9 +35,10 @@ describe('testing check address function', () => {
         id: 'test_select_shipping_line_id',
         description: 'Test Description',
     }];
+    const displayItemMock = [{label: 'test', amount: 1200}];
 
     const data = [
-        {name: 'success', setShipping: successReturnObject, getShippingLines: successReturnObject, setTaxes: successReturnObject, getShipping: shippingLine, expected: {total: {label: 'Total', amount: orderTotal, pending: true,}, status: 'success', shippingOptions: [{amount: 100, id: 'test_select_shipping_line_id', label: 'Test Description',}]}},
+        {name: 'success', setShipping: successReturnObject, getShippingLines: successReturnObject, setTaxes: successReturnObject, getShipping: shippingLine, expected: {total: {label: 'Total', amount: orderTotal}, status: 'success', shippingOptions: [{amount: 100, id: 'test_select_shipping_line_id', label: 'Test Description',}], displayItems: displayItemMock}},
         {name: 'success with empty shipping lines', setShipping: successReturnObject, getShippingLines: successReturnObject, setTaxes: successReturnObject, getShipping:[], expected:{status:'invalid_shipping_address'}},
         {name: 'success with failed taxes call', setShipping: successReturnObject, getShippingLines: successReturnObject, setTaxes: failureReturnObject, getShipping: shippingLine, expected:{status:'invalid_shipping_address'}},
         {name: 'success with failed shipping lines call', setShipping: successReturnObject, getShippingLines: failureReturnObject, setTaxes: successReturnObject, getShipping: shippingLine, expected:{status:'invalid_shipping_address'}},
@@ -46,6 +50,7 @@ describe('testing check address function', () => {
         jest.clearAllMocks();
         formatStripeAddressMock.mockReturnValue(applicationStateMock.addresses.shipping);
         getApplicationStateMock.mockReturnValue({order_total: orderTotal} as IApplicationState);
+        getStripeDisplayItemMock.mockReturnValueOnce(displayItemMock);
     });
 
     test.each(data)('$name', async ({setShipping, getShippingLines, setTaxes, getShipping, expected}) => {

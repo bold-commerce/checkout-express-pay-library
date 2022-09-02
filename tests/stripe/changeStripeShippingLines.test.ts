@@ -1,5 +1,4 @@
-import {changeStripeShippingLines} from 'src/stripe';
-import {API_RETRY, IStripeShippingOptions} from 'src/types';
+import {changeStripeShippingLines, getStripeDisplayItem, API_RETRY, IStripeShippingOptions} from 'src';
 import {mocked} from 'jest-mock';
 import {
     baseReturnObject,
@@ -10,8 +9,11 @@ import {
 
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping');
+jest.mock('src/stripe/getStripeDisplayItem');
 const getApplicationStateMock = mocked(getApplicationState, true);
 const changeShippingLineMock = mocked(changeShippingLine, true);
+const getStripeDisplayItemMock = mocked(getStripeDisplayItem, true);
+
 
 describe('testing change shipping lines function', () => {
     const orderTotal = 200;
@@ -22,10 +24,12 @@ describe('testing change shipping lines function', () => {
         label: 'test line'
     };
     const returnObject = {...baseReturnObject};
+    const displayItemMock = [{label: 'test', amount: 1200}];
 
     beforeEach(() => {
         jest.clearAllMocks();
         getApplicationStateMock.mockReturnValue({order_total: orderTotal} as IApplicationState);
+        getStripeDisplayItemMock.mockReturnValueOnce(displayItemMock);
     });
 
     test('testing the function with success', async () => {
@@ -41,9 +45,9 @@ describe('testing change shipping lines function', () => {
             total: {
                 label: 'Total',
                 amount: orderTotal,
-                pending: true,
             },
-            status: 'success'
+            status: 'success',
+            displayItems: displayItemMock
         });
     });
 
