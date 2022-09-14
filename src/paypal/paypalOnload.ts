@@ -1,7 +1,44 @@
-import {IExpressPayPaypal} from '@bold-commerce/checkout-frontend-library';
+import {alternatePaymentMethodType, IExpressPayPaypal} from '@bold-commerce/checkout-frontend-library';
+import {
+    getPaypalNameSpace,
+    setPaypalButton,
+    paypalCreateOrder,
+    paypalOnApprove,
+    paypalOnClick,
+    paypalOnShippingChange,
+} from 'src/paypal';
+import {enableDisableSection} from 'src/actions';
 
-// TODO remove eslint disable when function implemented
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function paypalOnload(payment: IExpressPayPaypal, showHideExpressPaymentSection?: (show: boolean) => void): Promise<void> {
-    // TODO CE-500 Add Paypal Express initial order data
+export async function paypalOnload(payment: IExpressPayPaypal): Promise<void> {
+    const paypal = getPaypalNameSpace();
+    const paypalDivId = 'paypal-express-payment';
+
+    if (paypal?.Buttons) {
+        const button = paypal.Buttons({
+            createOrder: paypalCreateOrder,
+            onClick: paypalOnClick,
+            onShippingChange: paypalOnShippingChange,
+            onApprove: paypalOnApprove,
+            style: {
+                ...payment.button_style,
+                height: 39
+            }
+        });
+
+        setPaypalButton(button); // TODO - Check if we will still need to use the button on a later moment
+
+        // creating a paypal payment div inside express payment container
+        const paypalDiv = document.createElement('div');
+        paypalDiv.id = paypalDivId;
+        paypalDiv.className = `${paypalDivId} express-payment`;
+        const container = document.getElementById('express-payment-container');
+        container?.appendChild(paypalDiv);
+
+        if (container && button.isEligible()) {
+            await button.render(`#${paypalDivId}`);
+            enableDisableSection( alternatePaymentMethodType.PAYPAL, true);
+        } else {
+            paypalDiv.style.display = 'none';
+        }
+    }
 }

@@ -47,5 +47,8 @@
   ],
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0"
+  },
+  "dependencies": {
+    "@paypal/paypal-js": "^5.1.1"
   }
 }

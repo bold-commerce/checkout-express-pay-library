@@ -19,7 +19,7 @@ describe('testing initialize function', () => {
     let consoleSpy: jest.SpyInstance;
     const onActionMock = jest.fn();
     const initStripeMockImplementation = (method: IExpressPayStripe, callback?: (show: boolean) => void) => callback && callback(false);
-    const initPaypalMockImplementation = (method: IExpressPayPaypal, callback?: (show: boolean) => void) => callback && callback(false);
+    const initPaypalMockImplementation = async (method: IExpressPayPaypal, callback?: (show: boolean) => void) => callback && callback(false);
     const initData = {
         shop_name: 'test_shop_name',
         country_info: [],

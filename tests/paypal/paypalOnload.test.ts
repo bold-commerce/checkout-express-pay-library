@@ -1,17 +1,25 @@
 import {
-    getCurrency,
     alternatePaymentMethodType,
     IExpressPayPaypal,
 } from '@bold-commerce/checkout-frontend-library';
-import {paypalOnload} from 'src';
+import {
+    enableDisableSection,
+    getPaypalNameSpace,
+    paypalCreateOrder, paypalOnApprove,
+    paypalOnClick,
+    paypalOnload, paypalOnShippingChange,
+    setPaypalButton
+} from 'src';
 import {mocked} from 'jest-mock';
-import {currencyMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {PayPalNamespace} from '@paypal/paypal-js';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-const getCurrencyMock = mocked(getCurrency, true);
+jest.mock('src/paypal/managePaypalState');
+jest.mock('src/actions/enableDisableSection');
+const getPaypalNameSpaceMock = mocked(getPaypalNameSpace, true);
+const setPaypalButtonMock = mocked(setPaypalButton, true);
+const enableDisableSectionMock = mocked(enableDisableSection, true);
 
 describe('testing paypalOnload function', () => {
-    const showHideMock = jest.fn();
     const paypalPayment: IExpressPayPaypal = {
         type: alternatePaymentMethodType.PAYPAL,
         is_test: true,
@@ -19,16 +27,97 @@ describe('testing paypalOnload function', () => {
         button_style: {},
         public_id: 'somePublicId',
     };
+    const paypalButtonsOptions = {
+        createOrder: paypalCreateOrder,
+        onClick: paypalOnClick,
+        onShippingChange: paypalOnShippingChange,
+        onApprove: paypalOnApprove,
+        style: {
+            ...paypalPayment.button_style,
+            height: 39
+        }
+    };
+    const paypalButtonsMock = jest.fn();
+    const paypalMock = {Buttons: paypalButtonsMock};
+    const paypalButtonRenderMock = jest.fn();
+    const paypalButtonIsEligibleMock = jest.fn();
+    const paypalButtonMock = {render: paypalButtonRenderMock, isEligible: paypalButtonIsEligibleMock};
 
     beforeEach(() => {
         jest.clearAllMocks();
-        getCurrencyMock.mockReturnValue(currencyMock);
+        getPaypalNameSpaceMock.mockReturnValue(paypalMock as unknown as PayPalNamespace);
+        paypalButtonsMock.mockReturnValue(paypalButtonMock);
+        paypalButtonIsEligibleMock.mockReturnValue(true);
+        document.body.innerHTML = '';
     });
 
-    // TODO Add tests for CE-500 Add Paypal Express initial order data implementation
-    test('call paypalOnload', () => {
-        paypalOnload(paypalPayment, showHideMock);
+    test('call paypalOnload successful rendering', async () => {
+        const containerDiv = document.createElement('div');
+        containerDiv.id = 'express-payment-container';
+        document.body.appendChild(containerDiv);
 
-        expect(showHideMock).not.toHaveBeenCalled();
+        await paypalOnload(paypalPayment);
+
+        expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonsMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonsMock).toHaveBeenCalledWith(paypalButtonsOptions);
+        expect(setPaypalButtonMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalButtonMock).toHaveBeenCalledWith(paypalButtonMock);
+        expect(document.getElementById('paypal-express-payment')).not.toBeNull();
+        expect(document.getElementById('paypal-express-payment')?.style.display).toBe('');
+        expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonRenderMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonRenderMock).toHaveBeenCalledWith('#paypal-express-payment');
+        expect(enableDisableSectionMock).toHaveBeenCalledTimes(1);
+        expect(enableDisableSectionMock).toHaveBeenCalledWith(alternatePaymentMethodType.PAYPAL, true);
+    });
+
+    test('call paypalOnload without paypal namespace', async () => {
+        getPaypalNameSpaceMock.mockReturnValue(null);
+
+        await paypalOnload(paypalPayment);
+
+        expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonsMock).toHaveBeenCalledTimes(0);
+        expect(setPaypalButtonMock).toHaveBeenCalledTimes(0);
+        expect(document.getElementById('paypal-express-payment')).toBeNull();
+        expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(0);
+        expect(paypalButtonRenderMock).toHaveBeenCalledTimes(0);
+        expect(enableDisableSectionMock).toHaveBeenCalledTimes(0);
+    });
+
+    test('call paypalOnload with isEligible false', async () => {
+        const containerDiv = document.createElement('div');
+        containerDiv.id = 'express-payment-container';
+        document.body.appendChild(containerDiv);
+        paypalButtonIsEligibleMock.mockReturnValueOnce(false);
+
+        await paypalOnload(paypalPayment);
+
+        expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonsMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonsMock).toHaveBeenCalledWith(paypalButtonsOptions);
+        expect(setPaypalButtonMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalButtonMock).toHaveBeenCalledWith(paypalButtonMock);
+        expect(document.getElementById('paypal-express-payment')).not.toBeNull();
+        expect(document.getElementById('paypal-express-payment')?.style.display).toBe('none');
+        expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonRenderMock).toHaveBeenCalledTimes(0);
+        expect(enableDisableSectionMock).toHaveBeenCalledTimes(0);
+    });
+
+    test('call paypalOnload without container', async () => {
+
+        await paypalOnload(paypalPayment);
+
+        expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonsMock).toHaveBeenCalledTimes(1);
+        expect(paypalButtonsMock).toHaveBeenCalledWith(paypalButtonsOptions);
+        expect(setPaypalButtonMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalButtonMock).toHaveBeenCalledWith(paypalButtonMock);
+        expect(document.getElementById('paypal-express-payment')).toBeNull();
+        expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(0);
+        expect(paypalButtonRenderMock).toHaveBeenCalledTimes(0);
+        expect(enableDisableSectionMock).toHaveBeenCalledTimes(0);
     });
 });
