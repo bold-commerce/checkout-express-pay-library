@@ -8,6 +8,6 @@ export function getPaypalShippingTotal(): AmountWithCurrencyCode {
 
     return {
         currency_code: currencyCode,
-        value: getValueByCurrency(selectedShipping.amount, currencyCode)
+        value: getValueByCurrency(selectedShipping?.amount || 0, currencyCode)
     };
 }

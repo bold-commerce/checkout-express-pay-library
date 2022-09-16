@@ -1,0 +1,13 @@
+import {
+    getOrderInitialData,
+    ICountryInformation,
+    IProvince,
+} from '@bold-commerce/checkout-frontend-library';
+import {isSimilarStrings} from 'src/utils/isSimilarStrings';
+
+export function getCountryAndProvince(countryKey: string, provinceKey: string): {country?: ICountryInformation, province?: IProvince} {
+    const {country_info: countryInfo} = getOrderInitialData();
+    const country = countryInfo.find(info => isSimilarStrings(info.name, countryKey) || isSimilarStrings(info.iso_code, countryKey));
+    const province = country?.provinces.find(info => isSimilarStrings(info.name, provinceKey) || isSimilarStrings(info.iso_code, provinceKey));
+    return {country, province};
+}
