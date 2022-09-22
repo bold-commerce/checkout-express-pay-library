@@ -8,6 +8,7 @@ import {
     paypalOnShippingChange,
 } from 'src/paypal';
 import {enableDisableSection} from 'src/actions';
+import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
 
 export async function paypalOnload(payment: IExpressPayPaypal): Promise<void> {
     const paypal = getPaypalNameSpace();
@@ -17,7 +18,7 @@ export async function paypalOnload(payment: IExpressPayPaypal): Promise<void> {
         const button = paypal.Buttons({
             createOrder: paypalCreateOrder,
             onClick: paypalOnClick,
-            onShippingChange: paypalOnShippingChange,
+            onShippingChange: paypalOnShippingChange as (data: OnShippingChangeData, actions: OnShippingChangeActions) => Promise<void>,
             onApprove: paypalOnApprove,
             style: {
                 ...payment.button_style,

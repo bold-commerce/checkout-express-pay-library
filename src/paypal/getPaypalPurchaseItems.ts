@@ -1,9 +1,9 @@
 import {getCurrency, getFees, getLineItems, ITax} from '@bold-commerce/checkout-frontend-library';
 import {PurchaseItem} from '@paypal/paypal-js/types/apis/orders';
-import {getValueByCurrency} from 'src';
+import {getValueByCurrency, paypalState} from 'src';
 
 export function getPaypalPurchaseItems(): Array<PurchaseItem> {
-    const maxItemNameLength = 127;
+    const {MAX_STRING_LENGTH: maxItemNameLength} = paypalState;
     const items = getLineItems();
     const fees = getFees();
     const {iso_code: currencyCode} = getCurrency();

@@ -1,5 +1,6 @@
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {PayPalButtonsComponent} from '@paypal/paypal-js/types/components/buttons';
+import {AmountWithBreakdown, OrderResponseBody, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 
 export interface IShowPaymentMethods {
     stripe: boolean;
@@ -21,4 +22,14 @@ export interface IActionTypes {
 export interface IPaypalState {
     paypal: PayPalNamespace | null;
     button: PayPalButtonsComponent | null;
+    MAX_SHIPPING_OPTIONS_LENGTH: number;
+    MAX_STRING_LENGTH: number;
 }
+
+export interface IPaypalPatchOperation {
+    op: 'replace' | 'add';
+    path: string;
+    value: AmountWithBreakdown | Array<ShippingInfoOption>
+}
+
+export type IPaypalPatch = (operations: Array<IPaypalPatchOperation>) => Promise<OrderResponseBody>;
