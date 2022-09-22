@@ -1,7 +1,6 @@
 import {alternatePaymentMethodType, IExpressPayPaypal} from '@bold-commerce/checkout-frontend-library';
 import {
     getPaypalNameSpace,
-    setPaypalButton,
     paypalCreateOrder,
     paypalOnApprove,
     paypalOnClick,
@@ -25,8 +24,6 @@ export async function paypalOnload(payment: IExpressPayPaypal): Promise<void> {
                 height: 39
             }
         });
-
-        setPaypalButton(button); // TODO - Check if we will still need to use the button on a later moment
 
         // creating a paypal payment div inside express payment container
         const paypalDiv = document.createElement('div');

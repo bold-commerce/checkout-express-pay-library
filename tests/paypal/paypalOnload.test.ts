@@ -5,10 +5,11 @@ import {
 import {
     enableDisableSection,
     getPaypalNameSpace,
-    paypalCreateOrder, paypalOnApprove,
+    paypalCreateOrder,
+    paypalOnApprove,
     paypalOnClick,
-    paypalOnload, paypalOnShippingChange,
-    setPaypalButton
+    paypalOnload,
+    paypalOnShippingChange,
 } from 'src';
 import {mocked} from 'jest-mock';
 import {PayPalNamespace} from '@paypal/paypal-js';
@@ -16,7 +17,6 @@ import {PayPalNamespace} from '@paypal/paypal-js';
 jest.mock('src/paypal/managePaypalState');
 jest.mock('src/actions/enableDisableSection');
 const getPaypalNameSpaceMock = mocked(getPaypalNameSpace, true);
-const setPaypalButtonMock = mocked(setPaypalButton, true);
 const enableDisableSectionMock = mocked(enableDisableSection, true);
 
 describe('testing paypalOnload function', () => {
@@ -61,8 +61,6 @@ describe('testing paypalOnload function', () => {
         expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
         expect(paypalButtonsMock).toHaveBeenCalledTimes(1);
         expect(paypalButtonsMock).toHaveBeenCalledWith(paypalButtonsOptions);
-        expect(setPaypalButtonMock).toHaveBeenCalledTimes(1);
-        expect(setPaypalButtonMock).toHaveBeenCalledWith(paypalButtonMock);
         expect(document.getElementById('paypal-express-payment')).not.toBeNull();
         expect(document.getElementById('paypal-express-payment')?.style.display).toBe('');
         expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(1);
@@ -79,7 +77,6 @@ describe('testing paypalOnload function', () => {
 
         expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
         expect(paypalButtonsMock).toHaveBeenCalledTimes(0);
-        expect(setPaypalButtonMock).toHaveBeenCalledTimes(0);
         expect(document.getElementById('paypal-express-payment')).toBeNull();
         expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(0);
         expect(paypalButtonRenderMock).toHaveBeenCalledTimes(0);
@@ -97,8 +94,6 @@ describe('testing paypalOnload function', () => {
         expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
         expect(paypalButtonsMock).toHaveBeenCalledTimes(1);
         expect(paypalButtonsMock).toHaveBeenCalledWith(paypalButtonsOptions);
-        expect(setPaypalButtonMock).toHaveBeenCalledTimes(1);
-        expect(setPaypalButtonMock).toHaveBeenCalledWith(paypalButtonMock);
         expect(document.getElementById('paypal-express-payment')).not.toBeNull();
         expect(document.getElementById('paypal-express-payment')?.style.display).toBe('none');
         expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(1);
@@ -113,8 +108,6 @@ describe('testing paypalOnload function', () => {
         expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
         expect(paypalButtonsMock).toHaveBeenCalledTimes(1);
         expect(paypalButtonsMock).toHaveBeenCalledWith(paypalButtonsOptions);
-        expect(setPaypalButtonMock).toHaveBeenCalledTimes(1);
-        expect(setPaypalButtonMock).toHaveBeenCalledWith(paypalButtonMock);
         expect(document.getElementById('paypal-express-payment')).toBeNull();
         expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(0);
         expect(paypalButtonRenderMock).toHaveBeenCalledTimes(0);

@@ -1,23 +1,18 @@
 import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
 import {
-    isAddressValid,
     getPaypalPatchOperations,
     IPaypalPatch,
     API_RETRY,
     formatPaypalToApiAddress,
-    isObjectEmpty,
     paypalState,
     isSimilarStrings,
-    isObjectEquals
+    callShippingAddressEndpoint
 } from 'src';
 import {
     changeShippingLine,
     getShipping,
-    getShippingAddress,
     getShippingLines,
-    setShippingAddress,
     setTaxes,
-    updateShippingAddress
 } from '@bold-commerce/checkout-frontend-library';
 import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
 
@@ -29,30 +24,11 @@ export async function paypalOnShippingChange(data: OnShippingChangeData, actions
 
     if (address) {
         const formattedAddress = formatPaypalToApiAddress(address);
-        const shippingAddress = getShippingAddress();
-        let success;
+        const success = true;
 
-        if (!isObjectEquals(shippingAddress, formattedAddress)) {
-            const isShippingAddressValid = await isAddressValid(
-                address.country_code || '',
-                address.state || '',
-                address.postal_code || '',
-                'shipping');
-            if (!isShippingAddressValid) {
-                return reject();
-            }
-        }
-
-        if (isObjectEmpty(shippingAddress)) {
-            const response = await setShippingAddress(formattedAddress, API_RETRY);
-            success = response.success;
-        } else {
-            if (!isObjectEquals(shippingAddress, formattedAddress)) {
-                const response = await updateShippingAddress(formattedAddress, API_RETRY);
-                success = response.success;
-            } else {
-                success = true;
-            }
+        const shippingAddressResponse = await callShippingAddressEndpoint(formattedAddress, true);
+        if (!shippingAddressResponse.success) {
+            return reject();
         }
 
         if(success) {

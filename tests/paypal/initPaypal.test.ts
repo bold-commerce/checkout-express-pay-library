@@ -1,5 +1,12 @@
 import {alternatePaymentMethodType, IExpressPayPaypal,} from '@bold-commerce/checkout-frontend-library';
-import {getPaypalScriptOptions, hasPaypalNameSpace, initPaypal, paypalOnload, setPaypalNameSpace} from 'src';
+import {
+    getPaypalScriptOptions,
+    hasPaypalNameSpace,
+    initPaypal,
+    paypalOnload,
+    setPaypalGatewayPublicId,
+    setPaypalNameSpace
+} from 'src';
 import {mocked} from 'jest-mock';
 import {loadScript, PayPalNamespace, PayPalScriptOptions} from '@paypal/paypal-js';
 
@@ -11,6 +18,7 @@ const getPaypalScriptOptionsMock = mocked(getPaypalScriptOptions, true);
 const paypalOnloadMock = mocked(paypalOnload, true);
 const hasPaypalNameSpaceMock = mocked(hasPaypalNameSpace, true);
 const setPaypalNameSpaceMock = mocked(setPaypalNameSpace, true);
+const setPaypalGatewayPublicIdMock = mocked(setPaypalGatewayPublicId, true);
 const loadScriptMock = mocked(loadScript, true);
 
 describe('testing initPaypal function', () => {
@@ -43,6 +51,8 @@ describe('testing initPaypal function', () => {
     test('testing call initPaypal set paypal name space', async () => {
         await initPaypal(paypalPayment);
 
+        expect(setPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalGatewayPublicIdMock).toHaveBeenCalledWith(paypalPayment.public_id);
         expect(hasPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
         expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(1);
         expect(loadScriptMock).toHaveBeenCalledTimes(1);
@@ -58,6 +68,8 @@ describe('testing initPaypal function', () => {
 
         await initPaypal(paypalPayment);
 
+        expect(setPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalGatewayPublicIdMock).toHaveBeenCalledWith(paypalPayment.public_id);
         expect(hasPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
         expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(1);
         expect(loadScriptMock).toHaveBeenCalledTimes(1);
@@ -72,6 +84,8 @@ describe('testing initPaypal function', () => {
 
         await initPaypal(paypalPayment);
 
+        expect(setPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalGatewayPublicIdMock).toHaveBeenCalledWith(paypalPayment.public_id);
         expect(hasPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
         expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(0);
         expect(loadScriptMock).toHaveBeenCalledTimes(0);

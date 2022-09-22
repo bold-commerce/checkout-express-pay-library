@@ -1,17 +1,14 @@
 import {
-    getPaypalButton,
+    getPaypalGatewayPublicId,
     getPaypalNameSpace,
-    hasPaypalButton,
     hasPaypalNameSpace,
     paypalState,
-    setPaypalButton,
+    setPaypalGatewayPublicId,
     setPaypalNameSpace
 } from 'src';
 import {PayPalNamespace} from '@paypal/paypal-js';
-import {PayPalButtonsComponent} from '@paypal/paypal-js/types/components/buttons';
 
 const paypalMock: PayPalNamespace = {version: 'test'};
-const buttonMock: PayPalButtonsComponent = {close: jest.fn(), isEligible: jest.fn(), render: jest.fn()};
 
 describe('testing  managePaypalState functions', () => {
     describe('testing  paypalState.paypal sets and gets', () => {
@@ -50,38 +47,29 @@ describe('testing  managePaypalState functions', () => {
 
     });
 
-    describe('testing  paypalState.button sets and gets', () => {
+    describe('testing  paypalState.gatewayPublicId sets and gets', () => {
+        const gatewayPublicIdMock = 'abc123';
 
-        test('testing call setPaypalButton with mock', async () => {
-            paypalState.button = null;
-            setPaypalButton(buttonMock);
-            expect(paypalState.button).toBe(buttonMock);
+        test('testing call setPaypalGatewayPublicId with mock', async () => {
+            paypalState.gatewayPublicId = '';
+            setPaypalGatewayPublicId(gatewayPublicIdMock);
+            expect(paypalState.gatewayPublicId).toBe(gatewayPublicIdMock);
         });
 
-        test('testing call setPaypalButton with null', async () => {
-            paypalState.button = buttonMock;
-            setPaypalButton(null);
-            expect(paypalState.button).toBe(null);
+        test('testing call setPaypalGatewayPublicId with empty', async () => {
+            paypalState.gatewayPublicId = '';
+            setPaypalGatewayPublicId('');
+            expect(paypalState.gatewayPublicId).toBe('');
         });
 
-        test('testing call getPaypalButton with mock', async () => {
-            paypalState.button = buttonMock;
-            expect(getPaypalButton()).toBe(buttonMock);
+        test('testing call getPaypalGatewayPublicId with mock', async () => {
+            paypalState.gatewayPublicId = gatewayPublicIdMock;
+            expect(getPaypalGatewayPublicId()).toBe(gatewayPublicIdMock);
         });
 
-        test('testing call getPaypalButton with null', async () => {
-            paypalState.button = null;
-            expect(getPaypalButton()).toBe(null);
-        });
-
-        test('testing call hasPaypalButton true', async () => {
-            paypalState.button = buttonMock;
-            expect(hasPaypalButton()).toBe(true);
-        });
-
-        test('testing call hasPaypalButton false', async () => {
-            paypalState.button = null;
-            expect(hasPaypalButton()).toBe(false);
+        test('testing call getPaypalGatewayPublicId with empty', async () => {
+            paypalState.gatewayPublicId = '';
+            expect(getPaypalGatewayPublicId()).toBe('');
         });
 
     });
