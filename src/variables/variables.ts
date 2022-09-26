@@ -17,7 +17,7 @@ export const actionTypes: IActionTypes = {
 
 export const paypalState: IPaypalState = {
     paypal: null,
-    button: null,
+    gatewayPublicId: '',
     MAX_SHIPPING_OPTIONS_LENGTH: 10,
     MAX_STRING_LENGTH: 127,
 };

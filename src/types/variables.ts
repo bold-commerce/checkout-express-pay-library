@@ -1,5 +1,4 @@
 import {PayPalNamespace} from '@paypal/paypal-js';
-import {PayPalButtonsComponent} from '@paypal/paypal-js/types/components/buttons';
 import {AmountWithBreakdown, OrderResponseBody, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 
 export interface IShowPaymentMethods {
@@ -21,7 +20,7 @@ export interface IActionTypes {
 
 export interface IPaypalState {
     paypal: PayPalNamespace | null;
-    button: PayPalButtonsComponent | null;
+    gatewayPublicId: string;
     MAX_SHIPPING_OPTIONS_LENGTH: number;
     MAX_STRING_LENGTH: number;
 }

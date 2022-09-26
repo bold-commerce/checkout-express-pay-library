@@ -1,27 +1,25 @@
 import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
 import {
     API_RETRY,
+    callShippingAddressEndpoint,
     formatPaypalToApiAddress,
-    getPaypalPatchOperations, IPaypalPatchOperation,
-    isAddressValid,
-    isObjectEmpty,
-    isObjectEquals,
+    getPaypalPatchOperations,
+    IPaypalPatchOperation,
     paypalOnShippingChange
 } from 'src';
 import {mocked} from 'jest-mock';
 import {
     baseReturnObject,
-    changeShippingLine, getShipping,
-    getShippingAddress,
-    getShippingLines, ISetShippingAddressRequest, IShipping,
-    setShippingAddress,
-    updateShippingAddress,
+    changeShippingLine,
+    getShipping,
+    getShippingLines,
+    ISetShippingAddressRequest,
+    IShipping
 } from '@bold-commerce/checkout-frontend-library';
 import {setTaxes} from '@bold-commerce/checkout-frontend-library/lib/taxes/setTaxes';
-import {shippingAddressMock, shippingMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {shippingMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 import {AmountWithBreakdown, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShippingAddress');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShipping');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping/getShippingLines');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping/changeShippingLine');
@@ -30,21 +28,14 @@ jest.mock('@bold-commerce/checkout-frontend-library/lib/address/setShippingAddre
 jest.mock('@bold-commerce/checkout-frontend-library/lib/address/updateShippingAddress');
 jest.mock('src/paypal/formatPaypalToApiAddress');
 jest.mock('src/paypal/getPaypalPatchOperations');
-jest.mock('src/utils/isObjectEquals');
-jest.mock('src/utils/isObjectEmpty');
-jest.mock('src/utils/isAddressValid');
+jest.mock('src/utils/callShippingAddressEndpoint');
 const formatPaypalToApiAddressMock = mocked(formatPaypalToApiAddress, true);
 const getPaypalPatchOperationsMock = mocked(getPaypalPatchOperations, true);
-const getShippingAddressMock = mocked(getShippingAddress, true);
 const getShippingMock = mocked(getShipping, true);
 const getShippingLinesMock = mocked(getShippingLines, true);
 const changeShippingLineMock = mocked(changeShippingLine, true);
 const setTaxesMock = mocked(setTaxes, true);
-const isObjectEqualsMock = mocked(isObjectEquals, true);
-const isObjectEmptyMock = mocked(isObjectEmpty, true);
-const isAddressValidMock = mocked(isAddressValid, true);
-const setShippingAddressMock = mocked(setShippingAddress, true);
-const updateShippingAddressMock = mocked(updateShippingAddress, true);
+const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
 
 describe('testing  paypalOnShippingChange function', () => {
     const onShippingChangeActionsMock: OnShippingChangeActions = {
@@ -112,16 +103,11 @@ describe('testing  paypalOnShippingChange function', () => {
         jest.clearAllMocks();
         formatPaypalToApiAddressMock.mockReturnValue(formattedAddress);
         getPaypalPatchOperationsMock.mockReturnValue(paypalPatchOperations);
-        getShippingAddressMock.mockReturnValue(shippingAddressMock);
         getShippingMock.mockReturnValue(shippingMock);
         getShippingLinesMock.mockReturnValue(Promise.resolve(successfulReturnObject));
         changeShippingLineMock.mockReturnValue(Promise.resolve(successfulReturnObject));
         setTaxesMock.mockReturnValue(Promise.resolve(successfulReturnObject));
-        isObjectEqualsMock.mockReturnValue(false);
-        isObjectEmptyMock.mockReturnValue(true);
-        isAddressValidMock.mockReturnValue(Promise.resolve(true));
-        setShippingAddressMock.mockReturnValue(Promise.resolve(successfulReturnObject));
-        updateShippingAddressMock.mockReturnValue(Promise.resolve(successfulReturnObject));
+        callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successfulReturnObject));
     });
 
     test('new addr, old addr empty, all data in and success API calls', async () => {
@@ -130,16 +116,8 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledWith(shippingAddressMock, formattedAddress);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(1);
-        expect(isAddressValidMock).toHaveBeenCalledWith('CA', 'MB', 'R3Y0L6', 'shipping');
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEmptyMock).toHaveBeenCalledWith(shippingAddressMock);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(setShippingAddressMock).toHaveBeenCalledWith(formattedAddress, API_RETRY);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -158,12 +136,7 @@ describe('testing  paypalOnShippingChange function', () => {
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(0);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(0);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(0);
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(0);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(0);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(0);
         expect(getShippingMock).toHaveBeenCalledTimes(0);
         expect(changeShippingLineMock).toHaveBeenCalledTimes(0);
@@ -178,19 +151,14 @@ describe('testing  paypalOnShippingChange function', () => {
         const data = {...dataMock, shipping_address: {
             city: null, state: null, country_code: null, postal_code: null
         }, selected_shipping_option: undefined};
-        isAddressValidMock.mockReturnValueOnce(Promise.resolve(false));
+        callShippingAddressEndpointMock.mockReturnValueOnce(Promise.resolve(baseReturnObject));
 
         const result = await paypalOnShippingChange(data as unknown as OnShippingChangeData, onShippingChangeActionsMock);
 
         expect(result).toBe(undefined);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(1);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(1);
-        expect(isAddressValidMock).toHaveBeenCalledWith('', '', '', 'shipping');
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(0);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(0);
         expect(getShippingMock).toHaveBeenCalledTimes(0);
         expect(changeShippingLineMock).toHaveBeenCalledTimes(0);
@@ -201,22 +169,13 @@ describe('testing  paypalOnShippingChange function', () => {
     });
 
     test('same addr, old addr not empty, all data in and success API calls', async () => {
-        isObjectEqualsMock.mockReturnValueOnce(true).mockReturnValueOnce(true);
-        isObjectEmptyMock.mockReturnValueOnce(false);
-
         const result = await paypalOnShippingChange(dataMock, onShippingChangeActionsMock);
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(2);
-        expect(isObjectEqualsMock).toHaveBeenCalledWith(shippingAddressMock, formattedAddress);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(0);
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEmptyMock).toHaveBeenCalledWith(shippingAddressMock);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -229,23 +188,13 @@ describe('testing  paypalOnShippingChange function', () => {
     });
 
     test('new addr, old addr not empty, all data in and success API calls', async () => {
-        isObjectEmptyMock.mockReturnValueOnce(false);
-
         const result = await paypalOnShippingChange(dataMock, onShippingChangeActionsMock);
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(2);
-        expect(isObjectEqualsMock).toHaveBeenCalledWith(shippingAddressMock, formattedAddress);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(1);
-        expect(isAddressValidMock).toHaveBeenCalledWith('CA', 'MB', 'R3Y0L6', 'shipping');
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEmptyMock).toHaveBeenCalledWith(shippingAddressMock);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(updateShippingAddressMock).toHaveBeenCalledWith(formattedAddress, API_RETRY);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -258,8 +207,6 @@ describe('testing  paypalOnShippingChange function', () => {
     });
 
     test('same addr, old addr not empty, no selected line, no lines, and success API calls', async () => {
-        isObjectEqualsMock.mockReturnValueOnce(true).mockReturnValueOnce(true);
-        isObjectEmptyMock.mockReturnValueOnce(false);
         getShippingMock.mockReturnValueOnce(
             {...shippingMock, selected_shipping: null, available_shipping_lines: []} as unknown as IShipping
         );
@@ -269,14 +216,8 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(2);
-        expect(isObjectEqualsMock).toHaveBeenCalledWith(shippingAddressMock, formattedAddress);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(0);
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEmptyMock).toHaveBeenCalledWith(shippingAddressMock);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -289,8 +230,6 @@ describe('testing  paypalOnShippingChange function', () => {
     });
 
     test('same addr, old addr not empty, no selected line, with line matching selected option, and success API calls', async () => {
-        isObjectEqualsMock.mockReturnValueOnce(true).mockReturnValueOnce(true);
-        isObjectEmptyMock.mockReturnValueOnce(false);
         getShippingMock.mockReturnValueOnce(
             {...shippingMock,
                 selected_shipping: null,
@@ -304,14 +243,8 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(2);
-        expect(isObjectEqualsMock).toHaveBeenCalledWith(shippingAddressMock, formattedAddress);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(0);
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEmptyMock).toHaveBeenCalledWith(shippingAddressMock);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -326,8 +259,6 @@ describe('testing  paypalOnShippingChange function', () => {
 
     test('same addr, old addr not empty, no selected option and line, and success API calls', async () => {
         const data = {...dataMock, selected_shipping_option: undefined};
-        isObjectEqualsMock.mockReturnValueOnce(true).mockReturnValueOnce(true);
-        isObjectEmptyMock.mockReturnValueOnce(false);
         getShippingMock.mockReturnValueOnce(
             {...shippingMock, selected_shipping: null} as unknown as IShipping
         );
@@ -337,14 +268,8 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(2);
-        expect(isObjectEqualsMock).toHaveBeenCalledWith(shippingAddressMock, formattedAddress);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(0);
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEmptyMock).toHaveBeenCalledWith(shippingAddressMock);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -359,8 +284,6 @@ describe('testing  paypalOnShippingChange function', () => {
 
     test('same addr, old addr not empty, no selected option and line, and fail taxes API call', async () => {
         const data = {...dataMock, selected_shipping_option: undefined};
-        isObjectEqualsMock.mockReturnValueOnce(true).mockReturnValueOnce(true);
-        isObjectEmptyMock.mockReturnValueOnce(false);
         getShippingMock.mockReturnValueOnce(
             {...shippingMock, selected_shipping: null} as unknown as IShipping
         );
@@ -371,14 +294,8 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(result).toBe(undefined);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
-        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEqualsMock).toHaveBeenCalledTimes(2);
-        expect(isObjectEqualsMock).toHaveBeenCalledWith(shippingAddressMock, formattedAddress);
-        expect(isAddressValidMock).toHaveBeenCalledTimes(0);
-        expect(isObjectEmptyMock).toHaveBeenCalledTimes(1);
-        expect(isObjectEmptyMock).toHaveBeenCalledWith(shippingAddressMock);
-        expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
-        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
