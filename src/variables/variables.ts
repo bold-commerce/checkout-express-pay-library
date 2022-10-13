@@ -13,6 +13,7 @@ export const actionTypes: IActionTypes = {
     ENABLE_DISABLE_SECTION: 'ENABLE_DISABLE_SECTION',
     ORDER_COMPLETED: 'ORDER_COMPLETED',
     ORDER_PROCESSING: 'ORDER_PROCESSING',
+    DISPLAY_ERROR: 'DISPLAY_ERROR',
 };
 
 export const paypalState: IPaypalState = {
