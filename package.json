@@ -4,6 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "license": "MIT",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
@@ -23,7 +24,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@bold-commerce/checkout-frontend-library": "^0.30.2",
     "@types/jest": "^28.1.2",
