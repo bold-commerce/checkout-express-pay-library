@@ -17,12 +17,11 @@ import {
 } from '@bold-commerce/checkout-frontend-library';
 import {API_RETRY} from 'src/types';
 import {getPaypalGatewayPublicId} from 'src/paypal/managePaypalState';
-import {orderProcessing} from 'src/actions';
+import {orderProcessing, displayError} from 'src/actions';
 
 export async function paypalOnApprove(data: OnApproveData, actions: OnApproveActions): Promise<void> {
     const {iso_code: currencyCode} = getCurrency();
     return actions.order?.get().then(async ({ id, payer, purchase_units }: OrderResponseBody) => {
-        let success: boolean;
 
         // extract all shipping info
         const { name, address: shippingAddress } = purchase_units[0].shipping as ShippingInfo;
@@ -43,7 +42,11 @@ export async function paypalOnApprove(data: OnApproveData, actions: OnApproveAct
 
         // set customer
         const customerResult = await callGuestCustomerEndpoint(billingNames.firstName, billingNames.lastName, email);
-        success = customerResult.success;
+        const success = customerResult.success;
+        if(!success){
+            displayError('There was an unknown error while validating your customer information.', 'generic', 'unknown_error');
+            return;
+        }
 
         // check if shipping and billing are the same
         const isSameNames = isObjectEquals(shippingNames, billingNames);
@@ -53,41 +56,47 @@ export async function paypalOnApprove(data: OnApproveData, actions: OnApproveAct
         const formattedBillingAddress = formatPaypalToApiAddress(isBillingAddressFilled ? billingAddress : shippingAddress, billingNames.firstName, billingNames.lastName, phone);
 
         // check and update shipping address
-        if (success) {
-            const shippingAddressResponse = await callShippingAddressEndpoint(formattedShippingAddress, false);
-            success = shippingAddressResponse.success;
+        const shippingAddressResponse = await callShippingAddressEndpoint(formattedShippingAddress, false);
+        if(!shippingAddressResponse.success){
+            displayError('There was an unknown error while validating your shipping address.', 'shipping', 'unknown_error');
+            return;
         }
+
 
         // check and update billing address
-        if (success) {
-            const billingAddressToSet = isBillingSame ? formattedShippingAddress : formattedBillingAddress;
-            const billingAddressResponse = await callBillingAddressEndpoint(billingAddressToSet, (!isBillingSame && isBillingAddressFilled));
-            success = billingAddressResponse.success;
+        const billingAddressToSet = isBillingSame ? formattedShippingAddress : formattedBillingAddress;
+        const billingAddressResponse = await callBillingAddressEndpoint(billingAddressToSet, (!isBillingSame && isBillingAddressFilled));
+        if(!billingAddressResponse.success){
+            displayError('There was an unknown error while validating your billing address.', 'generic', 'unknown_error');
+            return;
         }
+
 
         // update taxes
-        if (success) {
-            const taxResponse = await setTaxes(API_RETRY);
-            success = taxResponse.success;
+
+        const taxResponse = await setTaxes(API_RETRY);
+        if(!taxResponse.success){
+            displayError('There was an unknown error while calculating the taxes.', 'payment_gateway', 'no_tax');
+            return;
         }
 
+
         // add payment
-        if (success) {
-            const {order_total} = getApplicationState();
-            const payment: IAddPaymentRequest = {
-                token: `${id}:${payer.payer_id}`,
-                nonce: `${id}:${payer.payer_id}`, // TODO: Temporarily required - It is not in the API documentation, but required for Paypal Express
-                gateway_public_id: getPaypalGatewayPublicId(),
-                currency: currencyCode,
-                amount: order_total
-            } as IAddPaymentRequest;
-            const paymentResult = await addPayment(payment, API_RETRY);
-            success = paymentResult.success;
+        const {order_total} = getApplicationState();
+        const payment: IAddPaymentRequest = {
+            token: `${id}:${payer.payer_id}`,
+            nonce: `${id}:${payer.payer_id}`, // TODO: Temporarily required - It is not in the API documentation, but required for Paypal Express
+            gateway_public_id: getPaypalGatewayPublicId(),
+            currency: currencyCode,
+            amount: order_total
+        } as IAddPaymentRequest;
+        const paymentResult = await addPayment(payment, API_RETRY);
+        if(!paymentResult.success){
+            displayError('There was an unknown error while processing your payment.', 'payment_gateway', 'unknown_error');
+            return;
         }
 
         // finalize order
-        if (success) {
-            orderProcessing();
-        }
+        orderProcessing();
     });
 }

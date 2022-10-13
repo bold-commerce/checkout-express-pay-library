@@ -16,6 +16,7 @@ export interface IActionTypes {
     ENABLE_DISABLE_SECTION: string;
     ORDER_COMPLETED: string;
     ORDER_PROCESSING: string;
+    DISPLAY_ERROR: string;
 }
 
 export interface IPaypalState {

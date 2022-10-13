@@ -108,6 +108,17 @@ This action defines whether the frontend needs to show the express pay section o
 
 This action indicates that the payment was successfully added to the order but order was not processed by the Checkout Express Pay Library. In this action, the frontend needs to call [Process Order](https://developer.boldcommerce.com/default/api/checkout#tag/Order/operation/post-process_order) endpoint separately to complete the order.
 
+#### Display Error
+
+* `string` type: `DISPLAY_ERROR`
+* `object`payload:
+  * `string` message - The error message
+  * `object` details - The details about `language_blob` for translation. Retrieve the `language_blob` from the [Initialize Order](https://developer.boldcommerce.com/default/api/orders#tag/Orders/operation/post-init) endpoint.
+    * `string` section: The section in the `language_blob` 
+    * `string` term: The term in the `language_blob`
+
+This action sends error details to your frontend application in case of any failure. 
+
 ### Payment Gateways
 
 The library creates specific dom element for each payment gateway inside `express-payment-container` div container. The below information can be used to apply custom styling if needed.
