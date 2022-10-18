@@ -1,4 +1,5 @@
 export * from './actions';
+export * from './braintree';
 export * from './initialize';
 export * from './paypal';
 export * from './stripe';

@@ -1,9 +1,9 @@
 import {getCurrency, getShipping} from '@bold-commerce/checkout-frontend-library';
 import {ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
-import {getValueByCurrency, paypalState} from 'src';
+import {getValueByCurrency, paypalConstants} from 'src';
 
 export function getPaypalShippingOptions(): Array<ShippingInfoOption> {
-    const {MAX_STRING_LENGTH: maxStringSize, MAX_SHIPPING_OPTIONS_LENGTH: maxOptions} = paypalState;
+    const {MAX_STRING_LENGTH: maxStringSize, MAX_SHIPPING_OPTIONS_LENGTH: maxOptions} = paypalConstants;
     const {selected_shipping: selectedShipping, available_shipping_lines: shippingLines} = getShipping();
     const {iso_code: currencyCode} = getCurrency();
     const options: Array<ShippingInfoOption> = [];

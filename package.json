@@ -25,7 +25,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@bold-commerce/checkout-frontend-library": "^0.30.2",
+    "@bold-commerce/checkout-frontend-library": "^0.31.2",
     "@types/jest": "^28.1.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
@@ -37,13 +37,13 @@
     "lint-staged": "^11.1.2",
     "ts-jest": "^28.0.5",
     "ttypescript": "^1.5.12",
-    "typescript": "^4.7.4",
-    "typescript-transform-paths": "^3.3.1",
     "typedoc": "^0.22.18",
-    "typedoc-plugin-markdown": "^3.13.6"
+    "typedoc-plugin-markdown": "^3.13.6",
+    "typescript": "^4.7.4",
+    "typescript-transform-paths": "^3.3.1"
   },
   "peerDependencies": {
-    "@bold-commerce/checkout-frontend-library": "^0.30.2"
+    "@bold-commerce/checkout-frontend-library": "^0.31.2"
   },
   "files": [
     "lib/**/*"
@@ -52,6 +52,7 @@
     "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0"
   },
   "dependencies": {
-    "@paypal/paypal-js": "^5.1.1"
+    "@paypal/paypal-js": "^5.1.1",
+    "@types/applepayjs": "^3.0.4"
   }
 }

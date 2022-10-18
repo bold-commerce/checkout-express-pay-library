@@ -5,9 +5,13 @@
 ### Interfaces
 
 - [IActionTypes](interfaces/IActionTypes.md)
+- [IBraintreeConstants](interfaces/IBraintreeConstants.md)
+- [IBraintreeState](interfaces/IBraintreeState.md)
+- [IBraintreeUrls](interfaces/IBraintreeUrls.md)
 - [IExpressPayContext](interfaces/IExpressPayContext.md)
 - [IGetFirstAndLastName](interfaces/IGetFirstAndLastName.md)
 - [IInitializeProps](interfaces/IInitializeProps.md)
+- [IPaypalConstants](interfaces/IPaypalConstants.md)
 - [IPaypalPatchOperation](interfaces/IPaypalPatchOperation.md)
 - [IPaypalState](interfaces/IPaypalState.md)
 - [IShowPaymentMethods](interfaces/IShowPaymentMethods.md)

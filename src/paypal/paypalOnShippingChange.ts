@@ -4,9 +4,9 @@ import {
     IPaypalPatch,
     API_RETRY,
     formatPaypalToApiAddress,
-    paypalState,
     isSimilarStrings,
-    callShippingAddressEndpoint
+    callShippingAddressEndpoint,
+    paypalConstants
 } from 'src';
 import {
     changeShippingLine,
@@ -19,7 +19,7 @@ import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
 export async function paypalOnShippingChange(data: OnShippingChangeData, actions: OnShippingChangeActions): Promise<void|OrderResponseBody> {
     const {shipping_address: address, selected_shipping_option: selectedOption} = data;
     const {reject, order: {patch: unCastedPatch}} = actions;
-    const {MAX_STRING_LENGTH: maxStringSize} = paypalState;
+    const {MAX_STRING_LENGTH: maxStringSize} = paypalConstants;
     const patch = unCastedPatch as IPaypalPatch;
 
     if (address) {
