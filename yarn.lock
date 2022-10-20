@@ -291,10 +291,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bold-commerce/checkout-frontend-library@^0.30.2":
-  version "0.30.2"
-  resolved "https://npm.boldapps.net/@bold-commerce%2fcheckout-frontend-library/-/checkout-frontend-library-0.30.2.tgz#e386b63a7e8235a5632e534bf3355ef6ef1e7169"
-  integrity sha512-uyyR0pxjSghD8lKBSpEZ/Svw1Cl9nvhmoGv8zfoWFTJn5l46FVX5Zgd2iGK1y+yX8c3SIRp5CiwoNBj7IOZFxQ==
+"@bold-commerce/checkout-frontend-library@^0.31.2":
+  version "0.31.2"
+  resolved "https://npm.boldapps.net/@bold-commerce%2fcheckout-frontend-library/-/checkout-frontend-library-0.31.2.tgz#8f8db8e55c69e5fb51f98b07772d508c11802b8f"
+  integrity sha512-IogiTq0IQ4QOesuplYB/NHFXf7VFOHhDqx6IpPydgDTK+mxsfY5GFO9oLM4uWshHUyxKjY0dhpq4Zg5lwWvp2Q==
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
@@ -625,6 +625,11 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
+
+"@types/applepayjs@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@types/applepayjs/-/applepayjs-3.0.4.tgz#9806a4b3ccd73dcf169c61a34be7a39f91d77540"
+  integrity sha512-RqaVZWy1Kj4e1PoUoOI8uA+4UuuLpicQFxfU9Y/xWJFZFT6mFB4PiiY911iDxFk7pdvaj5HKH7VsWRisRca1Rg==
 
 "@types/babel__core@^7.1.14":
   version "7.1.19"
