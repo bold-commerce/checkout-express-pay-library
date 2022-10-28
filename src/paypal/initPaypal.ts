@@ -20,5 +20,7 @@ export async function initPaypal(payment: IExpressPayPaypal): Promise<void> {
         if (paypal) {
             await paypalOnload(payment);
         }
+    } else {
+        await paypalOnload(payment);
     }
 }
