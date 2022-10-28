@@ -1,8 +1,10 @@
 import {
     changeStripeShippingLines,
-    checkStripeAddress, enableDisableSection,
+    checkStripeAddress,
+    enableDisableSection,
     getStripeDisplayItem,
     initStripe,
+    loadJS,
     stripeOnload
 } from 'src';
 import {
@@ -20,6 +22,7 @@ jest.mock('src/stripe/getStripeDisplayItem');
 jest.mock('src/stripe/checkStripeAddress');
 jest.mock('src/stripe/changeStripeShippingLines');
 jest.mock('src/actions/enableDisableSection');
+jest.mock('src/utils/loadJS');
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getCurrencyMock = mocked(getCurrency, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
@@ -27,6 +30,8 @@ const getStripeDisplayItemMock = mocked(getStripeDisplayItem, true);
 const checkStripeAddressMock = mocked(checkStripeAddress, true);
 const changeStripeShippingLinesMock = mocked(changeStripeShippingLines, true);
 const enableDisableSectionMock = mocked(enableDisableSection, true);
+const loadJSMock = mocked(loadJS, true);
+
 
 describe('testing init Stripe function', () => {
 
@@ -49,21 +54,12 @@ describe('testing init Stripe function', () => {
         getStripeDisplayItemMock.mockReturnValue(displayItemMock);
     });
 
-    test('testing initStripe', () => {
-        jest.spyOn(document.head, 'appendChild');
-        initStripe(stripe);
-
-        const script = document.getElementsByTagName('script')[0];
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        script.onload().catch(()=> {
-            expect(document.head.appendChild).toBeCalledWith(
-                expect.objectContaining({
-                    src: 'https://js.stripe.com/v3/',
-                })
-            );
+    test('testing initStripe', async () => {
+        loadJSMock.mockImplementation(async (src, onload) => {
+            onload && onload();
         });
-
+        await initStripe(stripe);
+        expect(loadJSMock).toBeCalled();
     });
 
     test('testing stripeOnload successfully', async () => {

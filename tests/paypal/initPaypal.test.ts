@@ -90,6 +90,6 @@ describe('testing initPaypal function', () => {
         expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(0);
         expect(loadScriptMock).toHaveBeenCalledTimes(0);
         expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(0);
-        expect(paypalOnloadMock).toHaveBeenCalledTimes(0);
+        expect(paypalOnloadMock).toHaveBeenCalledTimes(1);
     });
 });

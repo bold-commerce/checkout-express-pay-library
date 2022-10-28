@@ -5,18 +5,22 @@ import {
     getOrderInitialData,
     IExpressPayStripe
 } from '@bold-commerce/checkout-frontend-library';
-import {addStripePayment, changeStripeShippingLines, checkStripeAddress, getStripeDisplayItem, enableDisableSection, IStripeEvent, IStripePaymentEvent} from 'src';
+import {
+    addStripePayment,
+    changeStripeShippingLines,
+    checkStripeAddress,
+    getStripeDisplayItem,
+    enableDisableSection,
+    IStripeEvent,
+    IStripePaymentEvent,
+    loadJS
+} from 'src';
 
-export function initStripe(payment: IExpressPayStripe): void {
+export async function initStripe(payment: IExpressPayStripe): Promise<void> {
 
     const src = 'https://js.stripe.com/v3/';
-    const existentScriptElement = document.querySelector(`[src="${src}"]`);
-    if(!existentScriptElement) {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = async () => await stripeOnload(payment);
-        document.head.appendChild(script);
-    }
+    const onLoad = async () => await stripeOnload(payment);
+    await loadJS(src, onLoad);
 }
 
 export async function stripeOnload(payment: IExpressPayStripe): Promise<void> {
