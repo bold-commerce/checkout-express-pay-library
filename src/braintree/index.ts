@@ -1,4 +1,5 @@
+export * from './google';
+export * from './apple';
+export * from './braintreeOnLoadClient';
 export * from './getBraintreeJsUrls';
-export * from './initBraintreeGoogle';
-export * from './initBraintreeApple';
 export * from './manageBraintreeState';

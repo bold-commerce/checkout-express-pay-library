@@ -1,4 +1,12 @@
-import {loadJS, initBraintreeGoogle, getBraintreeJsUrls, setBraintreeGoogleCredentials, IBraintreeUrls} from 'src';
+import {
+    loadJS,
+    initBraintreeGoogle,
+    getBraintreeJsUrls,
+    setBraintreeGoogleCredentials,
+    IBraintreeUrls,
+    braintreeOnLoadClient,
+    braintreeOnLoadGoogle
+} from 'src';
 import {mocked} from 'jest-mock';
 import {
     alternatePaymentMethodType,
@@ -9,9 +17,13 @@ import {
 jest.mock('src/braintree/getBraintreeJsUrls');
 jest.mock('src/braintree/manageBraintreeState');
 jest.mock('src/utils/loadJS');
+jest.mock('src/braintree/braintreeOnLoadClient');
+jest.mock('src/braintree/google/braintreeOnLoadGoogle');
 const loadJSMock = mocked(loadJS, true);
 const getBraintreeJsUrlsMock = mocked(getBraintreeJsUrls, true);
 const setBraintreeGoogleCredentialsMock = mocked(setBraintreeGoogleCredentials, true);
+const braintreeOnLoadClientMock = mocked(braintreeOnLoadClient, true);
+const braintreeOnLoadGoogleMock = mocked(braintreeOnLoadGoogle, true);
 
 const braintreePayment: IExpressPayBraintree = {
     type: alternatePaymentMethodType.BRAINTREE_GOOGLE,
@@ -33,7 +45,8 @@ const jsUrls: IBraintreeUrls = {
     clientJsURL: 'https://test.com/clientJsURL.js',
     googleJsUrl: 'https://test.com/googleJsUrl.js',
     dataCollectorJsURL: 'https://test.com/dataCollectorJsURL.js',
-    appleJsURL: 'https://test.com/appleJsURL.js'
+    appleJsURL: 'https://test.com/appleJsURL.js',
+    braintreeGoogleJsURL: 'https://test.com/braintreeGoogleJsURL.js'
 };
 
 describe('testing initBraintreeGoogle function', () => {
@@ -49,25 +62,27 @@ describe('testing initBraintreeGoogle function', () => {
 
         expect(getBraintreeJsUrlsMock).toHaveBeenCalledTimes(1);
         expect(setBraintreeGoogleCredentialsMock).toHaveBeenCalledTimes(1);
-        expect(loadJSMock).toHaveBeenCalledTimes(3);
-        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.clientJsURL);
-        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.googleJsUrl);
+        expect(loadJSMock).toHaveBeenCalledTimes(4);
+        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.clientJsURL, braintreeOnLoadClientMock);
+        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.googleJsUrl, braintreeOnLoadGoogleMock);
         expect(loadJSMock).toHaveBeenCalledWith(jsUrls.dataCollectorJsURL);
+        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.braintreeGoogleJsURL, braintreeOnLoadClientMock);
     });
 
-    test('loadJS rejects', () => {
+    test('loadJS rejects', async () => {
         const rejectMsg = 'Test Reject';
         loadJSMock.mockReturnValueOnce(Promise.reject(rejectMsg));
 
-        initBraintreeGoogle(braintreePaymentGoogle).then(() => {
-            expect(loadJSMock).toHaveBeenCalledTimes(1);
-        }).catch(e => {
+        try {
+            await initBraintreeGoogle(braintreePaymentGoogle);
+            expect('This expect should not run, call should Throw').toBe(null);
+        } catch (e) {
             expect(e).toBe(rejectMsg);
             expect(getBraintreeJsUrlsMock).toHaveBeenCalledTimes(1);
             expect(setBraintreeGoogleCredentialsMock).toHaveBeenCalledTimes(1);
             expect(loadJSMock).toHaveBeenCalledTimes(1);
-            expect(loadJSMock).toHaveBeenCalledWith(jsUrls.clientJsURL);
-        });
+            expect(loadJSMock).toHaveBeenCalledWith(jsUrls.clientJsURL, braintreeOnLoadClientMock);
+        }
     });
 
 });

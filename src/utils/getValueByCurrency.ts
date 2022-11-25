@@ -5,6 +5,20 @@ export function getValueByCurrency(value: number, currencyCode: string): string 
         return value.toString();
     }
     switch (currencyCode) {
+        case 'DJF':
+        case 'BIF':
+        case 'GNF':
+        case 'KMF':
+        case 'MGA':
+        case 'VUV':
+        case 'XOF':
+        case 'CLP':
+        case 'PYG':
+        case 'RWF':
+        case 'UGX':
+        case 'VND':
+        case 'KRW':
+        case 'XPF':
         case 'HUF':
         case 'TWD':
         case 'JPY':

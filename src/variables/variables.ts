@@ -5,12 +5,21 @@ import {
     IPaypalState,
     IBraintreeState,
     IBraintreeConstants,
-    IPaypalConstants
+    IPaypalConstants, IShowPaymentMethodTypes
 } from 'src/types/variables';
 
 export const showPaymentMethods: IShowPaymentMethods = {
     stripe: false,
-    paypal: false
+    paypal: false,
+    braintreeGoogle: false,
+    braintreeApple: false
+};
+
+export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
+    STRIPE: 'stripe',
+    PAYPAL: 'paypal',
+    BRAINTREE_GOOGLE: 'braintreeGoogle',
+    BRAINTREE_APPLE: 'braintreeApple'
 };
 
 export const expressPayContext: IExpressPayContext = {
@@ -36,8 +45,10 @@ export const paypalConstants: IPaypalConstants = {
 
 export const braintreeState: IBraintreeState = {
     braintree: null,
-    google: null,
-    apple: null,
+    googlePayClient: null,
+    googlePayInstance: null,
+    appleInstance: null,
+    appleSession: null,
     googleCredentials: null,
     appleCredentials: null
 };
@@ -47,6 +58,21 @@ export const braintreeConstants: IBraintreeConstants = {
     GOOGLE_JS_URL: 'https://pay.google.com/gp/p/js/pay.js',
     CLIENT_JS: 'js/client.min.js',
     APPLE_JS: 'js/apple-pay.min.js',
+    GOOGLE_JS: 'js/google-payment.min.js',
     DATA_COLLECTOR_JS: 'js/data-collector.min.js',
-    JS_VERSION: '3.77.0'
+    JS_VERSION: '3.88.2',
+    APPLEPAY_VERSION_NUMBER: 3,
+    APPLEPAY_ERROR_CODE_SHIPPING_CONTACT: 'shippingContactInvalid',
+    APPLEPAY_ERROR_CODE_BILLING_CONTACT: 'billingContactInvalid',
+    APPLEPAY_ERROR_CODE_UNKNOWN: 'unknown',
+    GOOGLEPAY_ERROR_REASON_SHIPPING: 'SHIPPING_ADDRESS_INVALID',
+    GOOGLEPAY_ERROR_REASON_PAYMENT: 'PAYMENT_DATA_INVALID',
+    GOOGLEPAY_TRANSACTION_STATE_SUCCESS: 'SUCCESS',
+    GOOGLEPAY_TRANSACTION_STATE_ERROR: 'ERROR',
+    GOOGLEPAY_INTENT_SHIPPING_ADDRESS: 'SHIPPING_ADDRESS',
+    GOOGLEPAY_INTENT_SHIPPING_OPTION: 'SHIPPING_OPTION',
+    GOOGLEPAY_INTENT_PAYMENT_AUTHORIZATION: 'PAYMENT_AUTHORIZATION',
+    GOOGLEPAY_TRIGGER_INITIALIZE: 'INITIALIZE',
+    GOOGLEPAY_VERSION_NUMBER: 2,
+    GOOGLEPAY_VERSION_NUMBER_MINOR: 0,
 };

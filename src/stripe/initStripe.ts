@@ -1,5 +1,4 @@
 import {
-    alternatePaymentMethodType,
     getApplicationState,
     getCurrency,
     getOrderInitialData,
@@ -9,11 +8,12 @@ import {
     addStripePayment,
     changeStripeShippingLines,
     checkStripeAddress,
-    getStripeDisplayItem,
+    getPaymentRequestDisplayItems,
     enableDisableSection,
     IStripeEvent,
     IStripePaymentEvent,
-    loadJS
+    loadJS,
+    showPaymentMethodTypes
 } from 'src';
 
 export async function initStripe(payment: IExpressPayStripe): Promise<void> {
@@ -29,7 +29,7 @@ export async function stripeOnload(payment: IExpressPayStripe): Promise<void> {
     const {order_total} = getApplicationState();
     const {general_settings} = getOrderInitialData();
     const country = payment.account_country;
-    const displayItems = getStripeDisplayItem();
+    const displayItems = getPaymentRequestDisplayItems();
 
     const stripeInstance = window['Stripe'](payment.key, {stripeAccount: payment.stripe_user_id} );
     const paymentRequest = stripeInstance.paymentRequest({
@@ -67,7 +67,7 @@ export async function stripeOnload(payment: IExpressPayStripe): Promise<void> {
 
     if (result) {
         stripeButton.mount('#stripe-express-payment');
-        enableDisableSection( alternatePaymentMethodType.STRIPE, true);
+        enableDisableSection( showPaymentMethodTypes.STRIPE, true);
     } else {
         stripeDiv.style.display = 'none';
     }

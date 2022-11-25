@@ -1,13 +1,15 @@
-import {checkStripeAddress, formatStripeShippingAddress, getStripeDisplayItem, IStripeAddress} from 'src';
+import {checkStripeAddress, formatStripeShippingAddress, getPaymentRequestDisplayItems, IStripeAddress} from 'src';
 import {mocked} from 'jest-mock';
 import {applicationStateMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 import {
     baseReturnObject,
-    getApplicationState, getShipping,
+    getApplicationState,
+    getShipping,
     getShippingLines,
     IApplicationState,
     IShipping,
-    setShippingAddress, setTaxes
+    setShippingAddress,
+    setTaxes
 } from '@bold-commerce/checkout-frontend-library';
 
 jest.mock('src/stripe/formatStripeShippingAddress');
@@ -15,14 +17,14 @@ jest.mock('@bold-commerce/checkout-frontend-library/lib/address');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes');
-jest.mock('src/stripe/getStripeDisplayItem');
+jest.mock('src/utils/getPaymentRequestDisplayItems');
 const formatStripeAddressMock = mocked(formatStripeShippingAddress, true);
 const setShippingAddressMock = mocked(setShippingAddress, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getShippingMock = mocked(getShipping, true);
 const getShippingLinesMock = mocked(getShippingLines, true);
 const setTaxesMock = mocked(setTaxes, true);
-const getStripeDisplayItemMock = mocked(getStripeDisplayItem, true);
+const getPaymentRequestDisplayItemMock = mocked(getPaymentRequestDisplayItems, true);
 
 
 describe('testing check address function', () => {
@@ -50,7 +52,7 @@ describe('testing check address function', () => {
         jest.clearAllMocks();
         formatStripeAddressMock.mockReturnValue(applicationStateMock.addresses.shipping);
         getApplicationStateMock.mockReturnValue({order_total: orderTotal} as IApplicationState);
-        getStripeDisplayItemMock.mockReturnValueOnce(displayItemMock);
+        getPaymentRequestDisplayItemMock.mockReturnValueOnce(displayItemMock);
     });
 
     test.each(data)('$name', async ({setShipping, getShippingLines, setTaxes, getShipping, expected}) => {

@@ -1,4 +1,4 @@
-import {alternatePaymentMethodType, IExpressPayPaypal} from '@bold-commerce/checkout-frontend-library';
+import {IExpressPayPaypal} from '@bold-commerce/checkout-frontend-library';
 import {
     getPaypalNameSpace,
     paypalCreateOrder,
@@ -8,6 +8,7 @@ import {
 } from 'src/paypal';
 import {enableDisableSection} from 'src/actions';
 import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
+import {showPaymentMethodTypes} from 'src/variables';
 
 export async function paypalOnload(payment: IExpressPayPaypal): Promise<void> {
     const paypal = getPaypalNameSpace();
@@ -34,7 +35,7 @@ export async function paypalOnload(payment: IExpressPayPaypal): Promise<void> {
 
         if (container && button.isEligible()) {
             await button.render(`#${paypalDivId}`);
-            enableDisableSection( alternatePaymentMethodType.PAYPAL, true);
+            enableDisableSection( showPaymentMethodTypes.PAYPAL, true);
         } else {
             paypalDiv.style.display = 'none';
         }

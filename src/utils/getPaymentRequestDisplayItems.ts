@@ -1,8 +1,8 @@
 import {getApplicationState, IDiscount, IFees, ITax} from '@bold-commerce/checkout-frontend-library';
 
-export function getStripeDisplayItem(): Array<{label: string, amount: number}>{
-
+export function getPaymentRequestDisplayItems(): Array<{ amount: number; label: string }> {
     const {line_items, taxes, discounts, fees, shipping} = getApplicationState();
+    const shippingAmount = shipping.selected_shipping ? shipping.selected_shipping.amount : 0;
     let totalTaxes = 0, totalFees = 0, totalDiscounts = 0;
 
     taxes.map((item: ITax) => {
@@ -23,7 +23,7 @@ export function getStripeDisplayItem(): Array<{label: string, amount: number}>{
     })).concat([
         {label: 'Discounts', amount: totalDiscounts},
         {label: 'Taxes', amount: totalTaxes},
-        {label: 'Shipping', amount: shipping.selected_shipping? shipping.selected_shipping.amount : 0 },
+        {label: 'Shipping', amount: shippingAmount},
         {label: 'Fees', amount: totalFees}]
     );
 }
