@@ -2,7 +2,7 @@ import {
     changeStripeShippingLines,
     checkStripeAddress,
     enableDisableSection,
-    getStripeDisplayItem,
+    getPaymentRequestDisplayItems,
     initStripe,
     loadJS,
     stripeOnload
@@ -18,15 +18,15 @@ import {mocked} from 'jest-mock';
 import {currencyMock, orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
-jest.mock('src/stripe/getStripeDisplayItem');
 jest.mock('src/stripe/checkStripeAddress');
 jest.mock('src/stripe/changeStripeShippingLines');
 jest.mock('src/actions/enableDisableSection');
+jest.mock('src/utils/getPaymentRequestDisplayItems');
 jest.mock('src/utils/loadJS');
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getCurrencyMock = mocked(getCurrency, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
-const getStripeDisplayItemMock = mocked(getStripeDisplayItem, true);
+const getPaymentRequestDisplayItemsMock = mocked(getPaymentRequestDisplayItems, true);
 const checkStripeAddressMock = mocked(checkStripeAddress, true);
 const changeStripeShippingLinesMock = mocked(changeStripeShippingLines, true);
 const enableDisableSectionMock = mocked(enableDisableSection, true);
@@ -51,7 +51,7 @@ describe('testing init Stripe function', () => {
         getApplicationStateMock.mockReturnValue({order_total: orderTotal} as IApplicationState);
         getCurrencyMock.mockReturnValue(currencyMock);
         getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
-        getStripeDisplayItemMock.mockReturnValue(displayItemMock);
+        getPaymentRequestDisplayItemsMock.mockReturnValue(displayItemMock);
     });
 
     test('testing initStripe', async () => {

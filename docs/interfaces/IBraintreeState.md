@@ -4,19 +4,15 @@
 
 ### Properties
 
-- [apple](IBraintreeState.md#apple)
 - [appleCredentials](IBraintreeState.md#applecredentials)
+- [appleInstance](IBraintreeState.md#appleinstance)
+- [appleSession](IBraintreeState.md#applesession)
 - [braintree](IBraintreeState.md#braintree)
-- [google](IBraintreeState.md#google)
 - [googleCredentials](IBraintreeState.md#googlecredentials)
+- [googlePayClient](IBraintreeState.md#googlepayclient)
+- [googlePayInstance](IBraintreeState.md#googlepayinstance)
 
 ## Properties
-
-### apple
-
-• **apple**: ``null`` \| `Record`<`string`, `unknown`\>
-
-___
 
 ### appleCredentials
 
@@ -24,18 +20,36 @@ ___
 
 ___
 
-### braintree
+### appleInstance
 
-• **braintree**: ``null`` \| `Record`<`string`, `unknown`\>
+• **appleInstance**: ``null`` \| [`IBraintreeApplePayInstance`](IBraintreeApplePayInstance.md)
 
 ___
 
-### google
+### appleSession
 
-• **google**: ``null`` \| `Record`<`string`, `unknown`\>
+• **appleSession**: ``null`` \| `ApplePaySession`
+
+___
+
+### braintree
+
+• **braintree**: ``null`` \| [`IBraintreeClient`](IBraintreeClient.md)
 
 ___
 
 ### googleCredentials
 
 • **googleCredentials**: ``null`` \| `IExpressPayBraintreeGoogle`
+
+___
+
+### googlePayClient
+
+• **googlePayClient**: ``null`` \| `PaymentsClient`
+
+___
+
+### googlePayInstance
+
+• **googlePayInstance**: ``null`` \| [`IBraintreeGooglePayInstance`](IBraintreeGooglePayInstance.md)

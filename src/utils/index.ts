@@ -5,6 +5,7 @@ export * from './getCountryAndProvince';
 export * from './getCountryName';
 export * from './getFirstAndLastName';
 export * from './getFormattedValue';
+export * from './getPaymentRequestDisplayItems';
 export * from './getProvinceDetails';
 export * from './getValueByCurrency';
 export * from './isAddressValid';

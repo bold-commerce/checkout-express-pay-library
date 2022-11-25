@@ -6,6 +6,7 @@ The Checkout Express Pay Library is a Bold Javascript library, which contains re
 Currently, the library supports the following payment gateways:
 
 * Stripe (Google & Apple Pay)
+* Braintree (Google & Apple Pay)
 * PayPal
 
 ## Installation

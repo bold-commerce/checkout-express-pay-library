@@ -3,7 +3,7 @@ import {
     getBraintreeJsUrls,
     IBraintreeUrls,
     initBraintreeApple,
-    setBraintreeAppleCredentials
+    setBraintreeAppleCredentials, braintreeOnLoadClient, braintreeOnLoadApple
 } from 'src';
 import {mocked} from 'jest-mock';
 import {
@@ -14,7 +14,11 @@ import {
 
 jest.mock('src/braintree/getBraintreeJsUrls');
 jest.mock('src/braintree/manageBraintreeState');
+jest.mock('src/braintree/braintreeOnLoadClient');
+jest.mock('src/braintree/apple/braintreeOnLoadApple');
 jest.mock('src/utils/loadJS');
+const braintreeOnLoadClientMock = mocked(braintreeOnLoadClient, true);
+const braintreeOnLoadAppleMock = mocked(braintreeOnLoadApple, true);
 const loadJSMock = mocked(loadJS, true);
 const getBraintreeJsUrlsMock = mocked(getBraintreeJsUrls, true);
 const setBraintreeAppleCredentialsMock = mocked(setBraintreeAppleCredentials, true);
@@ -36,7 +40,8 @@ const jsUrls: IBraintreeUrls = {
     clientJsURL: 'https://test.com/clientJsURL.js',
     googleJsUrl: 'https://test.com/googleJsUrl.js',
     dataCollectorJsURL: 'https://test.com/dataCollectorJsURL.js',
-    appleJsURL: 'https://test.com/appleJsURL.js'
+    appleJsURL: 'https://test.com/appleJsURL.js',
+    braintreeGoogleJsURL: 'https://test.com/braintreeGoogleJsURL.js'
 };
 const supportsVersionMock = jest.fn();
 const canMakePaymentsMock = jest.fn();
@@ -59,24 +64,25 @@ describe('testing initBraintreeApple function', () => {
         expect(getBraintreeJsUrlsMock).toHaveBeenCalledTimes(1);
         expect(setBraintreeAppleCredentialsMock).toHaveBeenCalledTimes(1);
         expect(loadJSMock).toHaveBeenCalledTimes(3);
-        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.clientJsURL);
-        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.appleJsURL);
+        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.clientJsURL, braintreeOnLoadClientMock);
+        expect(loadJSMock).toHaveBeenCalledWith(jsUrls.appleJsURL, braintreeOnLoadAppleMock);
         expect(loadJSMock).toHaveBeenCalledWith(jsUrls.dataCollectorJsURL);
     });
 
-    test('loadJS rejects', () => {
+    test('loadJS rejects', async () => {
         const rejectMsg = 'Test Reject';
         loadJSMock.mockReturnValueOnce(Promise.reject(rejectMsg));
 
-        initBraintreeApple(braintreePaymentApple).then(() => {
-            expect(loadJSMock).toHaveBeenCalledTimes(1);
-        }).catch(e => {
+        try {
+            await initBraintreeApple(braintreePaymentApple);
+            expect('This expect should not run, call should Throw').toBe(null);
+        } catch (e) {
             expect(e).toBe(rejectMsg);
             expect(getBraintreeJsUrlsMock).toHaveBeenCalledTimes(1);
             expect(setBraintreeAppleCredentialsMock).toHaveBeenCalledTimes(1);
             expect(loadJSMock).toHaveBeenCalledTimes(1);
-            expect(loadJSMock).toHaveBeenCalledWith(jsUrls.clientJsURL);
-        });
+            expect(loadJSMock).toHaveBeenCalledWith(jsUrls.clientJsURL, braintreeOnLoadClientMock);
+        }
     });
 
     test('Its not Apple Session', async () => {

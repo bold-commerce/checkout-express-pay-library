@@ -22,7 +22,7 @@ export function initialize(props: IInitializeProps): void{
                 case alternatePaymentMethodType.PAYPAL:
                     initPaypal(paymentMethod as IExpressPayPaypal);
                     break;
-                case alternatePaymentMethodType.BRAINTREE_GOOGLE:
+                case 'braintree':
                     initBraintreeGoogle(paymentMethod as IExpressPayBraintreeGoogle);
                     break;
                 case alternatePaymentMethodType.BRAINTREE_APPLE:

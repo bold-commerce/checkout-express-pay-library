@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@paypal/paypal-js": "^5.1.1",
-    "@types/applepayjs": "^3.0.4"
+    "@types/applepayjs": "^3.0.4",
+    "@types/googlepay": "^0.6.4"
   }
 }

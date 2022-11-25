@@ -1,5 +1,11 @@
-import {alternatePaymentMethodType} from '@bold-commerce/checkout-frontend-library';
-import {actionTypes, enableDisableSection, getOnAction, IShowPaymentMethods, showPaymentMethods} from 'src';
+import {
+    actionTypes,
+    enableDisableSection,
+    getOnAction,
+    IShowPaymentMethods,
+    showPaymentMethods,
+    showPaymentMethodTypes
+} from 'src';
 import {mocked} from 'jest-mock';
 
 jest.mock('src/initialize/manageExpressPayContext');
@@ -8,16 +14,16 @@ const getOnActionMock = mocked(getOnAction, true);
 describe('testing showHideExpressPaySection function', () => {
     const enableDisableCallbackMock = jest.fn();
     const withCallbackAllFalseTestSet = [
-        { type: alternatePaymentMethodType.STRIPE, show: false, expectCallbackParam: false },
-        { type: alternatePaymentMethodType.STRIPE, show: true, expectCallbackParam: true },
-        { type: alternatePaymentMethodType.PAYPAL, show: false, expectCallbackParam: false },
-        { type: alternatePaymentMethodType.PAYPAL, show: true, expectCallbackParam: true },
+        { type: showPaymentMethodTypes.STRIPE, show: false, expectCallbackParam: false },
+        { type: showPaymentMethodTypes.STRIPE, show: true, expectCallbackParam: true },
+        { type: showPaymentMethodTypes.PAYPAL, show: false, expectCallbackParam: false },
+        { type: showPaymentMethodTypes.PAYPAL, show: true, expectCallbackParam: true },
     ];
     const withCallbackExtraTrueTestSet = [
-        { type: alternatePaymentMethodType.STRIPE, show: false, extraType: alternatePaymentMethodType.PAYPAL, expectCallbackParam: true },
-        { type: alternatePaymentMethodType.STRIPE, show: true, extraType: alternatePaymentMethodType.PAYPAL, expectCallbackParam: true },
-        { type: alternatePaymentMethodType.PAYPAL, show: false, extraType: alternatePaymentMethodType.STRIPE, expectCallbackParam: true },
-        { type: alternatePaymentMethodType.PAYPAL, show: true, extraType: alternatePaymentMethodType.STRIPE, expectCallbackParam: true },
+        { type: showPaymentMethodTypes.STRIPE, show: false, extraType: showPaymentMethodTypes.PAYPAL, expectCallbackParam: true },
+        { type: showPaymentMethodTypes.STRIPE, show: true, extraType: showPaymentMethodTypes.PAYPAL, expectCallbackParam: true },
+        { type: showPaymentMethodTypes.PAYPAL, show: false, extraType: showPaymentMethodTypes.STRIPE, expectCallbackParam: true },
+        { type: showPaymentMethodTypes.PAYPAL, show: true, extraType: showPaymentMethodTypes.STRIPE, expectCallbackParam: true },
     ];
 
     beforeEach(() => {
