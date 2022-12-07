@@ -14,7 +14,7 @@ export function getPaypalPurchaseItems(): Array<PurchaseItem> {
         const qty = product.quantity.toString();
         const title = product.product_title.substring(0, maxItemNameLength - qty.length - 3);
         const description = `${product.title} - ${product.description}`;
-        const taxValue = item.taxes.reduce(((sum: number, item: ITax) => sum + item.value), 0);
+        const taxValue = item.taxes.reduce(((sum: number, item: ITax) => sum + Math.round(item.value)), 0);
         purchaseItems.push({
             name: `${title} x ${qty}`,
             description: description.substring(0, maxItemNameLength),
