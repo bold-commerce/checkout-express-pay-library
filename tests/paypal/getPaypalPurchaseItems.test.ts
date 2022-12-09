@@ -15,10 +15,6 @@ const getLineItemsMock = mocked(getLineItems, true);
 const getValueByCurrencyMock = mocked(getValueByCurrency, true);
 
 describe('testing getPaypalPurchaseItems function', () => {
-    const breakdownItemMock: AmountWithCurrencyCode = {
-        currency_code: 'USD',
-        value: '0.00',
-    };
     const breakdownItem10Mock: AmountWithCurrencyCode = {
         currency_code: 'USD',
         value: '10.00',
@@ -40,7 +36,6 @@ describe('testing getPaypalPurchaseItems function', () => {
         name: 'title x 1',
         quantity: '1',
         sku: 'test_sku',
-        tax: breakdownItemMock,
         unit_amount: breakdownItem10Mock
     };
     const secondItemMock: PurchaseItem = {
@@ -52,7 +47,6 @@ describe('testing getPaypalPurchaseItems function', () => {
         description: '',
         name: ' Some Fee Description',
         quantity: '1',
-        tax: breakdownItemMock,
         unit_amount: breakdownItem12Mock
     };
 
@@ -63,9 +57,7 @@ describe('testing getPaypalPurchaseItems function', () => {
         getLineItemsMock.mockReturnValue([lineItemMock, secondLineItemMock]);
         getValueByCurrencyMock
             .mockReturnValueOnce('10.00')
-            .mockReturnValueOnce('0.00')
             .mockReturnValueOnce('10.00')
-            .mockReturnValueOnce('0.00')
             .mockReturnValueOnce('12.00');
     });
 
@@ -78,7 +70,7 @@ describe('testing getPaypalPurchaseItems function', () => {
         expect(getCurrencyMock).toHaveBeenCalledTimes(1);
         expect(getFeesMock).toHaveBeenCalledTimes(1);
         expect(getLineItemsMock).toHaveBeenCalledTimes(1);
-        expect(getValueByCurrencyMock).toHaveBeenCalledTimes(5);
+        expect(getValueByCurrencyMock).toHaveBeenCalledTimes(3);
     });
 
 });
