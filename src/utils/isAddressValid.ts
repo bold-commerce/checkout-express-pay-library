@@ -1,5 +1,5 @@
 import {validateAddress} from '@bold-commerce/checkout-frontend-library';
-import {getCountryAndProvince} from 'src/utils/getCountryAndProvince';
+import {getCountryAndProvince, getPhoneNumber} from 'src/utils';
 import {API_RETRY} from 'src';
 
 export async function isAddressValid(countryKey: string, provinceKey: string, postalCode: string, type: 'shipping' | 'billing'): Promise<boolean> {
@@ -26,7 +26,7 @@ export async function isAddressValid(countryKey: string, provinceKey: string, po
         country.name,
         country.iso_code,
         '',
-        '',
+        getPhoneNumber(),
         API_RETRY);
 
     return validateRes.success;

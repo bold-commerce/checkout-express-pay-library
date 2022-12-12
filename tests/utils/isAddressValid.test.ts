@@ -5,13 +5,15 @@ import {
     IProvince,
     validateAddress
 } from '@bold-commerce/checkout-frontend-library';
-import {getCountryAndProvince, isAddressValid} from 'src/utils';
+import {getCountryAndProvince, getPhoneNumber, isAddressValid} from 'src/utils';
 import {API_RETRY} from 'src';
 
 jest.mock('@bold-commerce/checkout-frontend-library/lib/address/validateAddress');
 jest.mock('src/utils/getCountryAndProvince');
+jest.mock('src/utils/getPhoneNumber');
 const getCountryAndProvinceMock = mocked(getCountryAndProvince, true);
 const validateAddressMock = mocked(validateAddress, true);
+const getPhoneNumberMock = mocked(getPhoneNumber, true);
 
 describe('testing getCountryName function', () => {
     const province: IProvince = {
@@ -35,6 +37,7 @@ describe('testing getCountryName function', () => {
         jest.clearAllMocks();
         getCountryAndProvinceMock.mockReturnValue({country, province});
         validateAddressMock.mockReturnValue(Promise.resolve({...baseReturnObject, success: true}));
+        getPhoneNumberMock.mockReturnValue('');
     });
 
     const dataWithApi = [
