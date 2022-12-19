@@ -2,7 +2,6 @@ import {ISetShippingAddressRequest} from '@bold-commerce/checkout-frontend-libra
 import {ShippingAddress} from '@paypal/paypal-js/types/apis/shipping';
 import {getCountryAndProvince} from 'src/utils/getCountryAndProvince';
 import {Address} from '@paypal/paypal-js/types/apis/commons';
-import {getPhoneNumber} from 'src/utils';
 
 export function formatPaypalToApiAddress(address?: ShippingAddress | Address, firstName = '', lastName = '', phone = ''): ISetShippingAddressRequest {
     const {city, country_code, state, postal_code} = (address || {}) as ShippingAddress;
@@ -22,7 +21,7 @@ export function formatPaypalToApiAddress(address?: ShippingAddress | Address, fi
         country_code: country?.iso_code || '',
         first_name: firstName,
         last_name: lastName,
-        phone_number: getPhoneNumber(phone),
+        phone_number: phone,
         postal_code: postal_code || '',
         province: province?.name || '',
         province_code: province?.iso_code || ''
