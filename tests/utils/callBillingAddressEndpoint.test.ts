@@ -67,8 +67,8 @@ const nullKeysAddress2: IAddress = {
     city: '',
     country: '',
     country_code: null,
-    first_name: 'Jane',
-    last_name: 'Doe',
+    first_name: '',
+    last_name: '',
     phone_number: '1111111111',
     postal_code: null,
     province: '',
@@ -95,9 +95,14 @@ describe('testing callBillingAddressEndpoint function', () => {
         expect(isAddressValidMock).toHaveBeenCalledTimes(1);
         expect(isAddressValidMock)
             .toHaveBeenCalledWith(
+                filledAddress1.first_name,
+                filledAddress1.last_name,
+                filledAddress1.address_line_1,
+                filledAddress1.address_line_2,
+                filledAddress1.city,
+                filledAddress1.postal_code,
                 filledAddress1.country_code,
                 filledAddress1.province_code,
-                filledAddress1.postal_code,
                 'billing');
         expect(setBillingAddressMock).toHaveBeenCalledTimes(1);
         expect(setBillingAddressMock).toHaveBeenCalledWith(filledAddress1, API_RETRY);
@@ -135,9 +140,14 @@ describe('testing callBillingAddressEndpoint function', () => {
         expect(isAddressValidMock).toHaveBeenCalledTimes(1);
         expect(isAddressValidMock)
             .toHaveBeenCalledWith(
+                filledAddress2.first_name,
+                filledAddress2.last_name,
+                filledAddress2.address_line_1,
+                filledAddress2.address_line_2,
+                filledAddress2.city,
+                filledAddress2.postal_code,
                 filledAddress2.country_code,
                 filledAddress2.province_code,
-                filledAddress2.postal_code,
                 'billing');
         expect(setBillingAddressMock).toHaveBeenCalledTimes(0);
         expect(updateBillingAddressMock).toHaveBeenCalledTimes(1);
@@ -165,7 +175,7 @@ describe('testing callBillingAddressEndpoint function', () => {
         expect(result).toStrictEqual(expectedReturn);
         expect(getBillingAddressMock).toHaveBeenCalledTimes(1);
         expect(isAddressValidMock).toHaveBeenCalledTimes(1);
-        expect(isAddressValidMock).toHaveBeenCalledWith('', '', '', 'billing');
+        expect(isAddressValidMock).toHaveBeenCalledWith('', '', '', '', '', '', '', '', 'billing');
         expect(setBillingAddressMock).toHaveBeenCalledTimes(0);
         expect(updateBillingAddressMock).toHaveBeenCalledTimes(0);
     });

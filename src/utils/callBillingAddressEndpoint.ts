@@ -18,9 +18,14 @@ export async function callBillingAddressEndpoint(billingAddress: ISetBillingAddr
 
     if (validate && !isEmpty && !isEqual) {
         success = await isAddressValid(
+            billingAddress.first_name || '',
+            billingAddress.last_name || '',
+            billingAddress.address_line_1 || '',
+            billingAddress.address_line_2 || '',
+            billingAddress.city || '',
+            billingAddress.postal_code || '',
             billingAddress.country_code || '',
             billingAddress.province_code || '',
-            billingAddress.postal_code || '',
             'billing');
     }
 
