@@ -18,9 +18,14 @@ export async function callShippingAddressEndpoint(shippingAddress: ISetShippingA
 
     if (validate && !isEmpty && !isEqual) {
         success = await isAddressValid(
+            shippingAddress.first_name || '',
+            shippingAddress.last_name || '',
+            shippingAddress.address_line_1 || '',
+            shippingAddress.address_line_2 || '',
+            shippingAddress.city || '',
+            shippingAddress.postal_code || '',
             shippingAddress.country_code || '',
             shippingAddress.province_code || '',
-            shippingAddress.postal_code || '',
             'shipping');
     }
 

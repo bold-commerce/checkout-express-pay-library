@@ -2,7 +2,7 @@ import {validateAddress} from '@bold-commerce/checkout-frontend-library';
 import {getCountryAndProvince, getPhoneNumber} from 'src/utils';
 import {API_RETRY} from 'src';
 
-export async function isAddressValid(countryKey: string, provinceKey: string, postalCode: string, type: 'shipping' | 'billing'): Promise<boolean> {
+export async function isAddressValid(firstName:string, lastName: string, addressLine1: string, addressLine2:string, city:string, postalCode: string, countryKey: string, provinceKey: string,  type: 'shipping' | 'billing'): Promise<boolean> {
     const {country, province} = getCountryAndProvince(countryKey, provinceKey);
 
     if(!country
@@ -20,6 +20,11 @@ export async function isAddressValid(countryKey: string, provinceKey: string, po
     }
 
     const validateRes = await validateAddress(
+        firstName,
+        lastName,
+        addressLine1,
+        addressLine2,
+        city,
         postalCode,
         province?.name || '',
         province?.iso_code || '',
