@@ -1,6 +1,6 @@
-import {getCurrency, getShipping, getTaxes, ITax} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getTaxes, ITax} from '@bold-commerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
-import {currencyMock, shippingMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {currencyMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 import {AmountWithCurrencyCode} from '@paypal/paypal-js';
 import {getPaypalTaxTotal, getValueByCurrency} from 'src';
 
@@ -9,7 +9,6 @@ jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShipping');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getTaxes');
 jest.mock('src/utils/getValueByCurrency');
 const getCurrencyMock = mocked(getCurrency, true);
-const getShippingMock = mocked(getShipping, true);
 const getTaxesMock = mocked(getTaxes, true);
 const getValueByCurrencyMock = mocked(getValueByCurrency, true);
 
@@ -31,7 +30,6 @@ describe('testing getPaypalTaxTotal function', () => {
         jest.clearAllMocks();
         getCurrencyMock.mockReturnValue(currencyMock);
         getTaxesMock.mockReturnValue(taxesArrayMock);
-        getShippingMock.mockReturnValue(shippingMock);
         getValueByCurrencyMock.mockReturnValue('12.34');
     });
 
@@ -46,7 +44,6 @@ describe('testing getPaypalTaxTotal function', () => {
         expect(result).toStrictEqual(expectation);
         expect(getCurrencyMock).toHaveBeenCalledTimes(1);
         expect(getTaxesMock).toHaveBeenCalledTimes(1);
-        expect(getShippingMock).toHaveBeenCalledTimes(1);
         expect(getValueByCurrencyMock).toHaveBeenCalledTimes(1);
         expect(getValueByCurrencyMock).toHaveBeenCalledWith(1234, expectation.currency_code);
     });
