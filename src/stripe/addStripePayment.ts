@@ -2,6 +2,7 @@ import {API_RETRY, IStripeAddress, IStripeCard, IStripePaymentEvent, IStripeToke
 import {
     addPayment,
     getApplicationState,
+    getOrderInitialData,
     IAddPaymentRequest,
     setBillingAddress,
     updateShippingAddress
@@ -17,6 +18,8 @@ import {
 
 export async function addStripePayment(event: IStripePaymentEvent, stripeGatewayId: string): Promise<void>  {
     const {order_total} = getApplicationState();
+    const {general_settings} = getOrderInitialData();
+    const phoneNumberRequired = general_settings.checkout_process.phone_number_required;
     const token = event.token as IStripeToken;
     const card = token.card as IStripeCard;
     let success = false;
@@ -25,7 +28,11 @@ export async function addStripePayment(event: IStripePaymentEvent, stripeGateway
     await callGuestCustomerEndpoint(firstName, lastName, event.payerEmail?? '').then(async (customerResult) => {
         if(customerResult.success) {
             const shippingAddress = event.shippingAddress as IStripeAddress;
-            const address = formatStripeShippingAddress(shippingAddress);
+            let shippingPhoneNumber = shippingAddress.phone;
+            if(phoneNumberRequired && !shippingPhoneNumber) {
+                shippingPhoneNumber = event.payerPhone;
+            }
+            const address = formatStripeShippingAddress(shippingAddress, shippingPhoneNumber);
             await updateShippingAddress(address, API_RETRY).then(async (shippingResult) => {
                 if (shippingResult.success) {
                     const billingAddress = formatStripeBillingAddress(card, event.payerName, event.payerPhone);

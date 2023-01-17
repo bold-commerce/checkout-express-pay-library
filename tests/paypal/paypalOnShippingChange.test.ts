@@ -115,7 +115,7 @@ describe('testing  paypalOnShippingChange function', () => {
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
@@ -173,7 +173,7 @@ describe('testing  paypalOnShippingChange function', () => {
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
@@ -192,7 +192,7 @@ describe('testing  paypalOnShippingChange function', () => {
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
@@ -215,7 +215,7 @@ describe('testing  paypalOnShippingChange function', () => {
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
@@ -242,7 +242,7 @@ describe('testing  paypalOnShippingChange function', () => {
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
@@ -267,7 +267,7 @@ describe('testing  paypalOnShippingChange function', () => {
 
         expect(result).toStrictEqual({id: '123'});
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
@@ -293,7 +293,7 @@ describe('testing  paypalOnShippingChange function', () => {
 
         expect(result).toBe(undefined);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address);
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);

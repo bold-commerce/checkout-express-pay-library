@@ -1,4 +1,10 @@
-import {checkStripeAddress, formatStripeShippingAddress, getPaymentRequestDisplayItems, IStripeAddress} from 'src';
+import {
+    checkStripeAddress,
+    formatStripeShippingAddress,
+    getPaymentRequestDisplayItems,
+    getPhoneNumber,
+    IStripeAddress
+} from 'src';
 import {mocked} from 'jest-mock';
 import {applicationStateMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 import {
@@ -18,6 +24,7 @@ jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
+jest.mock('src/utils/getPhoneNumber');
 const formatStripeAddressMock = mocked(formatStripeShippingAddress, true);
 const setShippingAddressMock = mocked(setShippingAddress, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
@@ -25,7 +32,7 @@ const getShippingMock = mocked(getShipping, true);
 const getShippingLinesMock = mocked(getShippingLines, true);
 const setTaxesMock = mocked(setTaxes, true);
 const getPaymentRequestDisplayItemMock = mocked(getPaymentRequestDisplayItems, true);
-
+const getPhoneNumberMock = mocked(getPhoneNumber, true);
 
 describe('testing check address function', () => {
     const successReturnObject = {...baseReturnObject, success: true};
@@ -53,6 +60,7 @@ describe('testing check address function', () => {
         formatStripeAddressMock.mockReturnValue(applicationStateMock.addresses.shipping);
         getApplicationStateMock.mockReturnValue({order_total: orderTotal} as IApplicationState);
         getPaymentRequestDisplayItemMock.mockReturnValueOnce(displayItemMock);
+        getPhoneNumberMock.mockReturnValue('');
     });
 
     test.each(data)('$name', async ({setShipping, getShippingLines, setTaxes, getShipping, expected}) => {

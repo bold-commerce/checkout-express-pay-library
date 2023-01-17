@@ -1,7 +1,7 @@
 import {IAddress} from '@bold-commerce/checkout-frontend-library';
 import {getCountryName, getFirstAndLastName, getProvinceDetails, IStripeAddress} from 'src';
 
-export function formatStripeShippingAddress(address: IStripeAddress): IAddress {
+export function formatStripeShippingAddress(address: IStripeAddress, phone = ''): IAddress {
     const countryIso = address.country ?? '';
     const region = address.region ?? '';
     const {code: provinceCode, name: provinceName} = getProvinceDetails(countryIso,region);
@@ -20,7 +20,7 @@ export function formatStripeShippingAddress(address: IStripeAddress): IAddress {
         'province_code': provinceCode,
         'postal_code': address.postalCode?? '',
         'business_name': address.organization?? '',
-        'phone_number': address.phone ?? ''
+        'phone_number': phone
     };
 
     if (formattedAddress.postal_code.length <= 4 && formattedAddress.country_code === 'CA') {

@@ -1,8 +1,9 @@
-import {applicationStateMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {applicationStateMock, orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 import {
     addPayment,
     baseReturnObject,
     getApplicationState,
+    getOrderInitialData,
     processOrder,
     setBillingAddress,
     updateShippingAddress
@@ -34,6 +35,7 @@ const setBillingAddressMock = mocked(setBillingAddress, true);
 const addPaymentMock = mocked(addPayment, true);
 const processOrderMock = mocked(processOrder, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
+const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const callGuestCustomerEndpointMock = mocked(callGuestCustomerEndpoint, true);
 
 describe('testing stripe payment function', () => {
@@ -43,6 +45,8 @@ describe('testing stripe payment function', () => {
     const failApi = {...baseReturnObject, success: false};
     const successApi = {...baseReturnObject, success: true};
     const completeMock = jest.fn();
+    const orderInitialData = {...orderInitialDataMock};
+    orderInitialData.general_settings.checkout_process.phone_number_required = true;
 
     const data = [
         {name: 'success on all endpoints', guestCustomer: successApi, updateShipping: successApi, setBilling: successApi, addPayment: successApi, processOrder: successApi, expected: 'success' },
@@ -88,6 +92,10 @@ describe('testing stripe payment function', () => {
             used: false,
             card: cardMock
         },
+        shippingAddress: {
+            phone: '',
+            recipient: 'Card holder'
+        },
         complete: completeMock
     };
 
@@ -96,6 +104,7 @@ describe('testing stripe payment function', () => {
         formatStripeShippingAddressMock.mockReturnValue(appState.addresses.shipping);
         formatStripeBillingAddressMock.mockReturnValue(appState.addresses.billing);
         getApplicationStateMock.mockReturnValue(appState);
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
 
     });
 
