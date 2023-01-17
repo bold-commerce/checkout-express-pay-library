@@ -1,4 +1,12 @@
-import {formatStripeShippingAddress, getPaymentRequestDisplayItems, API_RETRY, IStripeAddress, IStripeEvent, IStripePaymentItem} from 'src';
+import {
+    formatStripeShippingAddress,
+    getPaymentRequestDisplayItems,
+    API_RETRY,
+    IStripeAddress,
+    IStripeEvent,
+    IStripePaymentItem,
+    getPhoneNumber
+} from 'src';
 import {
     getApplicationState,
     getShipping,
@@ -10,7 +18,7 @@ import {
 export async function checkStripeAddress(event: IStripeEvent): Promise<void> {
     let error = false;
     const shippingAddress = event.shippingAddress as IStripeAddress;
-    const address = formatStripeShippingAddress(shippingAddress);
+    const address = formatStripeShippingAddress(shippingAddress, getPhoneNumber(shippingAddress.phone));
     const response = await setShippingAddress(address, API_RETRY);
 
     if(response.success){
