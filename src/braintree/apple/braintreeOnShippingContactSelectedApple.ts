@@ -5,10 +5,10 @@ import {
     callShippingAddressEndpoint,
     formatBraintreeShippingAddressApple,
     getPaymentRequestDisplayItems,
+    getTotals,
     getValueByCurrency,
 } from 'src';
 import {
-    getApplicationState,
     getCurrency,
     getShipping,
     getShippingLines,
@@ -22,10 +22,10 @@ export async function braintreeOnShippingContactSelectedApple(event: ApplePayShi
     const address = formatBraintreeShippingAddressApple(shippingAddress);
 
     const fail = () => {
-        const {order_total} = getApplicationState();
+        const {totalAmountDue} = getTotals();
         applePaySession.completeShippingContactSelection({
             errors: [new ApplePayError('shippingContactInvalid')],
-            newTotal: {label: 'Total', amount: getValueByCurrency(order_total, currencyCode)},
+            newTotal: {label: 'Total', amount: getValueByCurrency(totalAmountDue, currencyCode)},
         });
     };
 
@@ -36,7 +36,7 @@ export async function braintreeOnShippingContactSelectedApple(event: ApplePayShi
         const taxResponse = await setTaxes(API_RETRY);
 
         if(shippingLinesResponse.success && taxResponse.success){
-            const {order_total} = getApplicationState();
+            const {totalAmountDue} = getTotals();
             const displayItems = getPaymentRequestDisplayItems().map(
                 ({label, amount}) => ({
                     label,
@@ -54,7 +54,7 @@ export async function braintreeOnShippingContactSelectedApple(event: ApplePayShi
             applePaySession.completeShippingContactSelection({
                 newLineItems: displayItems,
                 newShippingMethods: shippingOptions,
-                newTotal: {label: 'Total', amount: getValueByCurrency(order_total, currencyCode)},
+                newTotal: {label: 'Total', amount: getValueByCurrency(totalAmountDue, currencyCode)},
             });
 
         } else {

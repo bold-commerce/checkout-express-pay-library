@@ -8,6 +8,7 @@ export * from './getFormattedValue';
 export * from './getPaymentRequestDisplayItems';
 export * from './getPhoneNumber';
 export * from './getProvinceDetails';
+export * from './getTotals';
 export * from './getValueByCurrency';
 export * from './isAddressValid';
 export * from './isJSAdded';

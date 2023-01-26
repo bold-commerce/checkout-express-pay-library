@@ -1,7 +1,6 @@
 import {API_RETRY, IStripeAddress, IStripeCard, IStripePaymentEvent, IStripeToken} from 'src/types';
 import {
     addPayment,
-    getApplicationState,
     getOrderInitialData,
     IAddPaymentRequest,
     setBillingAddress,
@@ -12,12 +11,12 @@ import {
     callGuestCustomerEndpoint,
     getFirstAndLastName,
     orderProcessing,
-    formatStripeShippingAddress
+    formatStripeShippingAddress,
+    getTotals
 } from 'src';
 
-
 export async function addStripePayment(event: IStripePaymentEvent, stripeGatewayId: string): Promise<void>  {
-    const {order_total} = getApplicationState();
+    const {totalAmountDue} = getTotals();
     const {general_settings} = getOrderInitialData();
     const phoneNumberRequired = general_settings.checkout_process.phone_number_required;
     const token = event.token as IStripeToken;
@@ -42,7 +41,7 @@ export async function addStripePayment(event: IStripePaymentEvent, stripeGateway
                                 token: token.id,
                                 gateway_public_id: stripeGatewayId,
                                 currency: card.currency,
-                                amount: order_total
+                                amount: totalAmountDue
                             };
                             await addPayment(payment, API_RETRY).then(async (paymentResult) => {
                                 if (paymentResult.success) {

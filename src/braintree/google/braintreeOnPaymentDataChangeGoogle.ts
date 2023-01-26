@@ -2,13 +2,13 @@ import IntermediatePaymentData = google.payments.api.IntermediatePaymentData;
 import PaymentDataRequestUpdate = google.payments.api.PaymentDataRequestUpdate;
 import {formatBraintreeShippingAddressGoogle} from 'src/braintree/google/formatBraintreeShippingAddressGoogle';
 import {getBraintreeShippingOptionsGoogle} from 'src/braintree/google/getBraintreeShippingOptionsGoogle';
-import {callShippingAddressEndpoint, getValueByCurrency} from 'src/utils';
+import {callShippingAddressEndpoint, getTotals, getValueByCurrency} from 'src/utils';
 import {
     changeShippingLine,
-    getApplicationState,
     getCurrency,
     getShipping,
-    getShippingLines, setTaxes
+    getShippingLines,
+    setTaxes
 } from '@bold-commerce/checkout-frontend-library';
 import {API_RETRY} from 'src/types';
 import CallbackIntent = google.payments.api.CallbackIntent;
@@ -50,10 +50,10 @@ export async function braintreeOnPaymentDataChangeGoogle(intermediatePaymentData
             await setTaxes(API_RETRY);
 
             const {iso_code: currencyCode} = getCurrency();
-            const {order_total} = getApplicationState();
+            const {totalAmountDue} = getTotals();
             paymentDataRequestUpdate.newTransactionInfo = {
                 currencyCode: currencyCode,
-                totalPrice: getValueByCurrency(order_total, currencyCode),
+                totalPrice: getValueByCurrency(totalAmountDue, currencyCode),
                 totalPriceStatus: 'ESTIMATED'
             };
             paymentDataRequestUpdate.newShippingOptionParameters = getBraintreeShippingOptionsGoogle();

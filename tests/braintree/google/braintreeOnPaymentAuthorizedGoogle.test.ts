@@ -5,20 +5,23 @@ import {
     isObjectEquals,
     callBillingAddressEndpoint,
     callShippingAddressEndpoint,
-    getBraintreeGoogleCredentialsChecked, orderProcessing, braintreeConstants
+    getBraintreeGoogleCredentialsChecked,
+    orderProcessing,
+    braintreeConstants,
+    getTotals,
+    ITotals
 } from 'src';
 import {
     addPayment,
-    getApplicationState,
     getCurrency,
-    getOrderInitialData, IFetchError
+    getOrderInitialData,
+    IFetchError
 } from '@bold-commerce/checkout-frontend-library';
 import PaymentData = google.payments.api.PaymentData;
 import CardNetwork = google.payments.api.CardNetwork;
 import {mocked} from 'jest-mock';
 import {baseReturnObject, IExpressPayBraintreeGoogle, setTaxes} from '@bold-commerce/checkout-frontend-library';
 import {
-    applicationStateMock,
     currencyMock,
     orderInitialDataMock
 } from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
@@ -31,6 +34,7 @@ jest.mock('src/utils/isObjectEquals');
 jest.mock('src/utils/callGuestCustomerEndpoint');
 jest.mock('src/utils/callShippingAddressEndpoint');
 jest.mock('src/utils/callBillingAddressEndpoint');
+jest.mock('src/utils/getTotals');
 jest.mock('src/actions/orderProcessing');
 
 const getBraintreeGooglePayInstanceCheckedMock = mocked(getBraintreeGooglePayInstanceChecked, true);
@@ -41,7 +45,7 @@ const callBillingAddressEndpointMock = mocked(callBillingAddressEndpoint, true);
 const setTaxesMock = mocked(setTaxes, true);
 const getBraintreeGoogleCredentialsCheckedMock = mocked(getBraintreeGoogleCredentialsChecked, true);
 const getCurrencyMock = mocked(getCurrency, true);
-const getApplicationStateMock = mocked(getApplicationState, true);
+const getTotalsMock = mocked(getTotals, true);
 const addPaymentMock = mocked(addPayment, true);
 const orderProcessingMock = mocked(orderProcessing, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
@@ -189,6 +193,16 @@ describe('testing braintreeOnPaymentAuthorizedGoogle function',() => {
             error: 'error'
         }
     ];
+    const totals: ITotals = {
+        totalSubtotal: 0,
+        totalOrder: 10000,
+        totalAmountDue: 10000,
+        totalPaid: 0,
+        totalFees: 1200,
+        totalTaxes: 0,
+        totalDiscounts: 1,
+        totalAdditionalFees: 0
+    };
 
     beforeEach(() => {
         jest.resetAllMocks();
@@ -201,12 +215,10 @@ describe('testing braintreeOnPaymentAuthorizedGoogle function',() => {
             })
         });
         getBraintreeGoogleCredentialsCheckedMock.mockReturnValue({public_id: 'test Id'} as IExpressPayBraintreeGoogle);
-        getApplicationStateMock.mockReturnValue(applicationStateMock);
+        getTotalsMock.mockReturnValue(totals);
         getCurrencyMock.mockReturnValue(currencyMock);
         getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
     });
-
-
 
     test('braintreeOnPaymentAuthorizedGoogle - successfully', async () => {
         isObjectEqualsMock.mockReturnValueOnce(true);
