@@ -13,39 +13,39 @@ const getTaxesMock = mocked(getTaxes, true);
 const getValueByCurrencyMock = mocked(getValueByCurrency, true);
 
 describe('testing getPaypalTaxTotal function', () => {
-    const taxesArrayMock: Array<ITax> = [
-        {
-            value: 0,
-            name: 'test_tax_name_included',
-            is_included: true
-        },
-        {
-            value: 1234,
-            name: 'test_tax_name',
-            is_included: false
-        },
+    const taxesArrayNotIncludedMock: Array<ITax> = [{value: 1234, name: 'test_tax_name_not_included', is_included: false}];
+    const taxesArrayIsIncludedMock: Array<ITax> = [{value: 1234, name: 'test_tax_name_is_included', is_included: true}];
+    const taxesArrayPartialIsIncludedMock: Array<ITax> = [
+        {value: 1234, name: 'test_tax_name_is_included', is_included: true},
+        {value: 1235, name: 'test_tax_name_is_included', is_included: false},
+    ];
+
+    const expectation: AmountWithCurrencyCode = {
+        currency_code: 'USD',
+        value: '12.34',
+    };
+    const dataSet = [
+        {name: 'tax not included', data: taxesArrayNotIncludedMock, expected: {currency_code: 'USD', value: 1234}},
+        {name: 'tax is included', data: taxesArrayIsIncludedMock, expected: {currency_code: 'USD', value: 0}},
+        {name: 'tax with partial is included', data: taxesArrayPartialIsIncludedMock, expected: {currency_code: 'USD', value: 1235}},
     ];
 
     beforeEach(() => {
         jest.clearAllMocks();
         getCurrencyMock.mockReturnValue(currencyMock);
-        getTaxesMock.mockReturnValue(taxesArrayMock);
         getValueByCurrencyMock.mockReturnValue('12.34');
     });
 
-    test('testing call getPaypalTaxTotal', async () => {
-        const expectation: AmountWithCurrencyCode = {
-            currency_code: 'USD',
-            value: '12.34',
-        };
+    test.each(dataSet)('$name', ({ data, expected}) => {
 
+        getTaxesMock.mockReturnValueOnce(data);
         const result = getPaypalTaxTotal();
 
         expect(result).toStrictEqual(expectation);
         expect(getCurrencyMock).toHaveBeenCalledTimes(1);
         expect(getTaxesMock).toHaveBeenCalledTimes(1);
         expect(getValueByCurrencyMock).toHaveBeenCalledTimes(1);
-        expect(getValueByCurrencyMock).toHaveBeenCalledWith(1234, expectation.currency_code);
+        expect(getValueByCurrencyMock).toHaveBeenCalledWith(expected.value, expected.currency_code);
     });
 
 });
