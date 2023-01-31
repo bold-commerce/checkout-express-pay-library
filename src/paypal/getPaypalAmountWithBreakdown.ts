@@ -1,4 +1,4 @@
-import {getApplicationState, getCurrency} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency} from '@bold-commerce/checkout-frontend-library';
 import {AmountWithBreakdown} from '@paypal/paypal-js/types/apis/orders';
 import {
     getPaypalDiscountTotal,
@@ -6,14 +6,15 @@ import {
     getPaypalShippingDiscountTotal,
     getPaypalShippingTotal,
     getPaypalTaxTotal,
-    getValueByCurrency
+    getValueByCurrency,
+    getTotals
 } from 'src';
 
 export function getPaypalAmountWithBreakdown(): AmountWithBreakdown {
-    const {order_total: orderTotal,} = getApplicationState();
+    const totals = getTotals();
     const {iso_code: currencyCode} = getCurrency();
 
-    const total = getValueByCurrency(orderTotal, currencyCode);
+    const total = getValueByCurrency(totals.totalAmountDue, currencyCode);
 
     return {
         currency_code: currencyCode,

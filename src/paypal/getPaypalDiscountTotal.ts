@@ -1,12 +1,13 @@
-import {getCurrency, getDiscounts, IDiscount} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency} from '@bold-commerce/checkout-frontend-library';
 import {AmountWithCurrencyCode} from '@paypal/paypal-js';
-import {getValueByCurrency} from 'src';
+import {getTotals, getValueByCurrency} from 'src';
 
 export function getPaypalDiscountTotal(): AmountWithCurrencyCode {
-    const discounts = getDiscounts();
+    const totals = getTotals();
     const {iso_code: currencyCode} = getCurrency();
 
-    const discountValue = discounts.reduce(((sum: number, item: IDiscount) => sum + item.value), 0);
+    // Previous paid amounts are added to discounts since Payment gateways do not have an specific place for it, and is required for total amount consistency validation.
+    const discountValue = totals.totalDiscounts + totals.totalPaid;
     return {
         currency_code: currencyCode,
         value: getValueByCurrency(discountValue, currencyCode)

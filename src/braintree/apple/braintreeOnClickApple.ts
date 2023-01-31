@@ -1,6 +1,5 @@
-import {getPaymentRequestDisplayItems, getValueByCurrency} from 'src/utils';
+import {getPaymentRequestDisplayItems, getTotals, getValueByCurrency} from 'src/utils';
 import {
-    getApplicationState,
     getCurrency,
     getOrderInitialData
 } from '@bold-commerce/checkout-frontend-library';
@@ -18,7 +17,7 @@ import {
 export function braintreeOnClickApple(): void {
     const appleInstance = getBraintreeApplePayInstanceChecked();
     const {iso_code: currencyCode} = getCurrency();
-    const {order_total} = getApplicationState();
+    const {totalAmountDue} = getTotals();
     const {general_settings: {checkout_process: {phone_number_required: isPhoneRequired}}} = getOrderInitialData();
     const displayItems = getPaymentRequestDisplayItems().map(
         ({label, amount}) => ({
@@ -30,7 +29,7 @@ export function braintreeOnClickApple(): void {
 
     const paymentRequest = appleInstance.createPaymentRequest({
         currencyCode: currencyCode,
-        total: {label: 'Total', amount: getValueByCurrency(order_total, currencyCode)},
+        total: {label: 'Total', amount: getValueByCurrency(totalAmountDue, currencyCode)},
         lineItems: displayItems,
         requiredBillingContactFields: isPhoneRequired ? fieldsWithPhone : fields,
         requiredShippingContactFields: isPhoneRequired ? fieldsWithPhone : fields,

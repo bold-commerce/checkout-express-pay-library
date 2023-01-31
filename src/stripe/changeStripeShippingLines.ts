@@ -1,5 +1,5 @@
-import {changeShippingLine, getApplicationState} from '@bold-commerce/checkout-frontend-library';
-import {API_RETRY, IStripeEvent, IStripeShippingOptions, getPaymentRequestDisplayItems} from 'src';
+import {changeShippingLine} from '@bold-commerce/checkout-frontend-library';
+import {API_RETRY, IStripeEvent, IStripeShippingOptions, getPaymentRequestDisplayItems, getTotals} from 'src';
 
 export async function changeStripeShippingLines(event: IStripeEvent): Promise<void> {
     const shippingOption = event.shippingOption as IStripeShippingOptions;
@@ -7,10 +7,10 @@ export async function changeStripeShippingLines(event: IStripeEvent): Promise<vo
     const displayItems = getPaymentRequestDisplayItems();
 
     if(response.success){
-        const {order_total} = getApplicationState();
+        const {totalAmountDue} = getTotals();
         const total = {
             label: 'Total',
-            amount: order_total
+            amount: totalAmountDue
         };
 
         event.updateWith({

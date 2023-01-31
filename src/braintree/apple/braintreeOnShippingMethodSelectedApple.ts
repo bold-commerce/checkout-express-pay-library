@@ -2,11 +2,11 @@ import {getBraintreeApplePaySessionChecked} from 'src/braintree/manageBraintreeS
 import {
     API_RETRY,
     getPaymentRequestDisplayItems,
+    getTotals,
     getValueByCurrency,
 } from 'src';
 import {
     changeShippingLine,
-    getApplicationState,
     getCurrency,
     getShipping,
     getShippingLines,
@@ -30,7 +30,7 @@ export async function braintreeOnShippingMethodSelectedApple(event: ApplePayShip
             const taxResponse = await setTaxes(API_RETRY);
 
             if (shippingLinesResponse.success && taxResponse.success) {
-                const {order_total} = getApplicationState();
+                const {totalAmountDue} = getTotals();
                 const displayItems = getPaymentRequestDisplayItems().map(
                     ({label, amount}) => ({
                         label,
@@ -39,7 +39,7 @@ export async function braintreeOnShippingMethodSelectedApple(event: ApplePayShip
 
                 applePaySession.completeShippingMethodSelection({
                     newLineItems: displayItems as Array<ApplePayLineItem>,
-                    newTotal: {label: 'Total', amount: getValueByCurrency(order_total, currencyCode)},
+                    newTotal: {label: 'Total', amount: getValueByCurrency(totalAmountDue, currencyCode)},
                 });
             }
         }

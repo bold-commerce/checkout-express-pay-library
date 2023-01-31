@@ -1,5 +1,4 @@
 import {
-    getApplicationState,
     getCurrency,
     getOrderInitialData,
     IExpressPayStripe
@@ -13,7 +12,8 @@ import {
     IStripeEvent,
     IStripePaymentEvent,
     loadJS,
-    showPaymentMethodTypes
+    showPaymentMethodTypes,
+    getTotals
 } from 'src';
 
 export async function initStripe(payment: IExpressPayStripe): Promise<void> {
@@ -24,9 +24,8 @@ export async function initStripe(payment: IExpressPayStripe): Promise<void> {
 }
 
 export async function stripeOnload(payment: IExpressPayStripe): Promise<void> {
-
     const currency = getCurrency();
-    const {order_total} = getApplicationState();
+    const {totalAmountDue} = getTotals();
     const {general_settings} = getOrderInitialData();
     const country = payment.account_country;
     const displayItems = getPaymentRequestDisplayItems();
@@ -41,7 +40,7 @@ export async function stripeOnload(payment: IExpressPayStripe): Promise<void> {
         country: country,
         total: {
             label: 'Total',
-            amount: order_total,
+            amount: totalAmountDue,
         },
         requestShipping: true,
         requestPayerName: true,

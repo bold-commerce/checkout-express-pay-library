@@ -5,10 +5,10 @@ import {
     IStripeAddress,
     IStripeEvent,
     IStripePaymentItem,
-    getPhoneNumber
+    getPhoneNumber,
+    getTotals
 } from 'src';
 import {
-    getApplicationState,
     getShipping,
     getShippingLines,
     setShippingAddress,
@@ -27,14 +27,14 @@ export async function checkStripeAddress(event: IStripeEvent): Promise<void> {
 
         if(shippingLinesResponse.success && taxResponse.success){
 
-            const {order_total} = getApplicationState();
+            const {totalAmountDue} = getTotals();
             const displayItems = getPaymentRequestDisplayItems();
             const {available_shipping_lines: shippingLines} = getShipping();
             if(shippingLines.length > 0) {
                 const shippingOptions = shippingLines.map(p => ({id: p.id, label: p.description, amount: p.amount}));
                 const total: IStripePaymentItem = {
                     label: 'Total',
-                    amount: order_total
+                    amount: totalAmountDue
                 };
 
                 event.updateWith({
