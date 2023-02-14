@@ -8,12 +8,12 @@ import {
     braintreeConstants,
     getBraintreeAppleCredentialsChecked,
     getBraintreeApplePayInstanceChecked,
-    getBraintreeApplePaySessionChecked
+    getBraintreeApplePaySessionChecked,
+    getTotals
 } from 'src';
 import {API_RETRY} from 'src/types';
 import {
     addPayment,
-    getApplicationState,
     getCurrency,
     IAddPaymentRequest,
     setTaxes
@@ -77,13 +77,13 @@ export async function braintreeOnPaymentAuthorizedApple(event: ApplePayPaymentAu
         const {nonce} = payload;
         const {public_id: gatewayPublicId} = getBraintreeAppleCredentialsChecked();
         const {iso_code: currencyCode} = getCurrency();
-        const {order_total} = getApplicationState();
+        const {totalAmountDue} = getTotals();
 
         const payment: IAddPaymentRequest = {
             token: nonce,
             gateway_public_id: gatewayPublicId,
             currency: currencyCode,
-            amount: order_total
+            amount: totalAmountDue
         };
 
         const paymentResult = await addPayment(payment, API_RETRY);

@@ -1,6 +1,5 @@
-import {getValueByCurrency} from 'src/utils';
+import {getTotals, getValueByCurrency} from 'src/utils';
 import {
-    getApplicationState,
     getCurrency,
     getOrderInitialData
 } from '@bold-commerce/checkout-frontend-library';
@@ -17,7 +16,7 @@ export function braintreeCreatePaymentRequestGoogle(): PaymentDataRequest {
     const {merchant_account: merchantAccount, tokenization_key: authorization} = getBraintreeGoogleCredentialsChecked();
     const {country_info: countryInfo} = getOrderInitialData();
     const {iso_code: currencyCode} = getCurrency();
-    const {order_total} = getApplicationState();
+    const {totalAmountDue} = getTotals();
     const {general_settings: {checkout_process: {phone_number_required: phoneNumberRequired}}} = getOrderInitialData();
     const allowedShippingCountries = countryInfo.filter(c => c.valid_for_shipping);
     const allowedCountryCodes = allowedShippingCountries.map(c => c.iso_code.toUpperCase());
@@ -25,7 +24,7 @@ export function braintreeCreatePaymentRequestGoogle(): PaymentDataRequest {
     const paymentDataRequest = googlePayInstance.createPaymentDataRequest({
         transactionInfo: {
             currencyCode: currencyCode,
-            totalPrice: getValueByCurrency(order_total, currencyCode),
+            totalPrice: getValueByCurrency(totalAmountDue, currencyCode),
             totalPriceStatus: 'ESTIMATED'
         }
     });

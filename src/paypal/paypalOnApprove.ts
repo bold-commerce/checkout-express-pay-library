@@ -5,12 +5,12 @@ import {
     callGuestCustomerEndpoint,
     callShippingAddressEndpoint,
     getFirstAndLastName,
+    getTotals,
     isObjectEquals
 } from 'src/utils';
 import {formatPaypalToApiAddress} from 'src/paypal/formatPaypalToApiAddress';
 import {
     addPayment,
-    getApplicationState,
     getCurrency,
     IAddPaymentRequest,
     setTaxes,
@@ -82,13 +82,13 @@ export async function paypalOnApprove(data: OnApproveData, actions: OnApproveAct
 
 
         // add payment
-        const {order_total} = getApplicationState();
+        const totals = getTotals();
         const payment: IAddPaymentRequest = {
             token: `${id}:${payer.payer_id}`,
             nonce: `${id}:${payer.payer_id}`, // TODO: Temporarily required - It is not in the API documentation, but required for Paypal Express
             gateway_public_id: getPaypalGatewayPublicId(),
             currency: currencyCode,
-            amount: order_total
+            amount: totals.totalAmountDue
         } as IAddPaymentRequest;
         const paymentResult = await addPayment(payment, API_RETRY);
         if(!paymentResult.success){

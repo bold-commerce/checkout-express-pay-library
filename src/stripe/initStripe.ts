@@ -1,5 +1,4 @@
 import {
-    getApplicationState,
     getCurrency,
     getOrderInitialData,
     IExpressPayStripe
@@ -13,7 +12,8 @@ import {
     IStripeEvent,
     IStripePaymentEvent,
     loadJS,
-    showPaymentMethodTypes
+    showPaymentMethodTypes,
+    getTotals
 } from 'src';
 
 export async function initStripe(payment: IExpressPayStripe): Promise<void> {
@@ -24,12 +24,15 @@ export async function initStripe(payment: IExpressPayStripe): Promise<void> {
 }
 
 export async function stripeOnload(payment: IExpressPayStripe): Promise<void> {
-
     const currency = getCurrency();
-    const {order_total} = getApplicationState();
+    const {totalAmountDue} = getTotals();
     const {general_settings} = getOrderInitialData();
     const country = payment.account_country;
     const displayItems = getPaymentRequestDisplayItems();
+    const {country_info: countryInfo} = getOrderInitialData();
+    const phoneNumberRequired = general_settings.checkout_process.phone_number_required;
+    const allowedShippingCountries = countryInfo.filter(c => c.valid_for_shipping);
+    const allowedCountryCodes = allowedShippingCountries.map(c => c.iso_code.toUpperCase());
 
     const stripeInstance = window['Stripe'](payment.key, {stripeAccount: payment.stripe_user_id} );
     const paymentRequest = stripeInstance.paymentRequest({
@@ -37,14 +40,16 @@ export async function stripeOnload(payment: IExpressPayStripe): Promise<void> {
         country: country,
         total: {
             label: 'Total',
-            amount: order_total,
+            amount: totalAmountDue,
         },
         requestShipping: true,
         requestPayerName: true,
         requestPayerEmail: true,
-        requestPayerPhone: general_settings.checkout_process.phone_number_required,
+        requestPayerPhone: phoneNumberRequired,
         displayItems: displayItems
     });
+    paymentRequest.shippingAddressParameters = {allowedCountryCodes, phoneNumberRequired};
+
     const elements = stripeInstance.elements();
     const stripeButton = elements.create('paymentRequestButton', {
         paymentRequest: paymentRequest,

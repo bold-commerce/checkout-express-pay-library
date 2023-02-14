@@ -1,6 +1,7 @@
 
 export function getFormattedValue(value: number, decimalFactor = 2, decimalPoint = '.', separator = ','): string {
     // TODO: Explore the possibility of using Intl.NumberFormat browser functionality instead.
+    value = Math.round(value);
     const sign = value < 0 ? '-' : '';
     const absValue = Math.abs(value);
     const factor = decimalFactor && parseInt(`1${'0'.repeat(decimalFactor)}`, 10);

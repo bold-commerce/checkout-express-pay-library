@@ -1,6 +1,5 @@
 import {
     addPayment,
-    getApplicationState,
     getCurrency,
     IAddPaymentRequest,
     setTaxes
@@ -15,7 +14,8 @@ import {
     IBraintreeGooglePayPaymentData,
     braintreeConstants,
     getBraintreeGoogleCredentialsChecked,
-    getBraintreeGooglePayInstanceChecked
+    getBraintreeGooglePayInstanceChecked,
+    getTotals
 } from 'src';
 import {API_RETRY} from 'src/types';
 import PaymentData = google.payments.api.PaymentData;
@@ -76,12 +76,12 @@ export async function braintreeOnPaymentAuthorizedGoogle(paymentData: PaymentDat
 
     const {public_id: gatewayPublicId} = getBraintreeGoogleCredentialsChecked();
     const {iso_code: currencyCode} = getCurrency();
-    const {order_total} = getApplicationState();
+    const {totalAmountDue} = getTotals();
     const payment: IAddPaymentRequest = {
         token: nonce,
         gateway_public_id: gatewayPublicId,
         currency: currencyCode,
-        amount: order_total,
+        amount: totalAmountDue,
         display_string: description
     };
     const paymentResult = await addPayment(payment, API_RETRY);

@@ -6,7 +6,8 @@ import {
     formatPaypalToApiAddress,
     isSimilarStrings,
     callShippingAddressEndpoint,
-    paypalConstants
+    paypalConstants,
+    getPhoneNumber
 } from 'src';
 import {
     changeShippingLine,
@@ -23,7 +24,7 @@ export async function paypalOnShippingChange(data: OnShippingChangeData, actions
     const patch = unCastedPatch as IPaypalPatch;
 
     if (address) {
-        const formattedAddress = formatPaypalToApiAddress(address);
+        const formattedAddress = formatPaypalToApiAddress(address, undefined, undefined , getPhoneNumber());
         const success = true;
 
         const shippingAddressResponse = await callShippingAddressEndpoint(formattedAddress, true);

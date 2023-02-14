@@ -95,3 +95,14 @@ export interface IBraintreeUrls {
     googleJsUrl: string;
     braintreeGoogleJsURL: string;
 }
+
+export interface ITotals {
+    totalSubtotal: number,
+    totalOrder: number,
+    totalAmountDue: number,
+    totalPaid: number,
+    totalDiscounts: number,
+    totalTaxes: number,
+    totalFees: number,
+    totalAdditionalFees: number
+}

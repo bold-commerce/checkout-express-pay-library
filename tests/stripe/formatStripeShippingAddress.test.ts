@@ -21,7 +21,6 @@ describe('testing format address function', () => {
             city: 'winnipeg',
             country: 'CA',
             organization: 'Bold',
-            phone:'111-111-1111',
             postalCode: 'R3M',
             recipient: 'John Steve',
             region: 'MB',
@@ -43,7 +42,7 @@ describe('testing format address function', () => {
             'phone_number': '111-111-1111'
         };
 
-        const result = formatStripeShippingAddress(params);
+        const result = formatStripeShippingAddress(params, '111-111-1111');
         expect(result).toStrictEqual(expectedResult);
 
     });

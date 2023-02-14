@@ -3,16 +3,16 @@ import {
     checkStripeAddress,
     enableDisableSection,
     getPaymentRequestDisplayItems,
+    getTotals,
     initStripe,
+    ITotals,
     loadJS,
     stripeOnload
 } from 'src';
 import {
     alternatePaymentMethodType,
-    getApplicationState,
     getCurrency,
     getOrderInitialData,
-    IApplicationState,
 } from '@bold-commerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
 import {currencyMock, orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
@@ -22,8 +22,9 @@ jest.mock('src/stripe/checkStripeAddress');
 jest.mock('src/stripe/changeStripeShippingLines');
 jest.mock('src/actions/enableDisableSection');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
+jest.mock('src/utils/getTotals');
 jest.mock('src/utils/loadJS');
-const getApplicationStateMock = mocked(getApplicationState, true);
+const getTotalsMock = mocked(getTotals, true);
 const getCurrencyMock = mocked(getCurrency, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const getPaymentRequestDisplayItemsMock = mocked(getPaymentRequestDisplayItems, true);
@@ -45,10 +46,20 @@ describe('testing init Stripe function', () => {
 
     const orderTotal = 200;
     const displayItemMock = [{label: 'test', amount: 1200}];
+    const totals: ITotals = {
+        totalSubtotal: 0,
+        totalOrder: orderTotal,
+        totalAmountDue: orderTotal,
+        totalPaid: 0,
+        totalFees: 1200,
+        totalTaxes: 0,
+        totalDiscounts: 1,
+        totalAdditionalFees: 0
+    };
 
     beforeEach(() => {
         jest.clearAllMocks();
-        getApplicationStateMock.mockReturnValue({order_total: orderTotal} as IApplicationState);
+        getTotalsMock.mockReturnValue(totals);
         getCurrencyMock.mockReturnValue(currencyMock);
         getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
         getPaymentRequestDisplayItemsMock.mockReturnValue(displayItemMock);

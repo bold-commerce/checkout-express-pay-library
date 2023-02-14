@@ -45,6 +45,10 @@ describe('testing getFormattedValue function', () => {
         {value: -123456789, decimalFactor: 4, decimalPoint: '.', separator: ',', expected: '-12,345.6789'},
         {value: -123456789, decimalFactor: 5, decimalPoint: '.', separator: ',', expected: '-1,234.56789'},
         {value: -123456789, decimalFactor: 6, decimalPoint: '.', separator: ',', expected: '-123.456789'},
+        {value: 423.234, decimalFactor: 0, decimalPoint: '.', separator: ',', expected: '423'},
+        {value: 423.634, decimalFactor: 0, decimalPoint: '.', separator: ',', expected: '424'},
+        {value: 423.234, decimalFactor: 2, decimalPoint: '.', separator: ',', expected: '4.23'},
+        {value: 423.634, decimalFactor: 2, decimalPoint: '.', separator: ',', expected: '4.24'},
     ];
 
     beforeEach(() => {
