@@ -10,7 +10,7 @@ export async function braintreeOnClickGoogle(): Promise<void> {
 
     try {
         await googlePayClient.loadPaymentData(paymentDataRequest);
-    } catch (e) {
+    } catch (error) {
         displayError('There was an unknown error while loading the wallet pay', 'generic', 'unknown_error');
         return;
     }

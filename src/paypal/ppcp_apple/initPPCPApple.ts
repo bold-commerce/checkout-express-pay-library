@@ -3,9 +3,10 @@ import {loadScript} from '@paypal/paypal-js';
 import {PayPalScriptOptions} from '@paypal/paypal-js/types/script-options';
 import {
     getPaypalScriptOptions,
-    hasPaypalNameSpace,
+    hasPaypalNameSpaceApple,
     loadJS,
     paypalConstants,
+    ppcpOnLoadApple,
     setPPCPAppleCredentials
 } from 'src';
 
@@ -17,12 +18,12 @@ export async function initPPCPApple(payment: IExpressPayPaypalCommercePlatform):
         && window.ApplePaySession.supportsVersion(paypalConstants.APPLEPAY_VERSION_NUMBER)
         && window.ApplePaySession.canMakePayments()
     ) {
-        if (!hasPaypalNameSpace()) {
+        if (!hasPaypalNameSpaceApple()) {
             const components = payment.apple_pay_enabled ? 'applepay' : undefined;
             const paypalScriptOptions: PayPalScriptOptions = getPaypalScriptOptions(payment.partner_id, payment.is_test, payment.merchant_id, components);
 
             await loadScript(paypalScriptOptions);
-            await loadJS(paypalConstants.APPLEPAY_JS, () => {/*todo PPCPOnLoadApple*/});
+            await loadJS(paypalConstants.APPLEPAY_JS, ppcpOnLoadApple);
 
         }
     }
