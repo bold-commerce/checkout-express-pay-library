@@ -1,3 +1,4 @@
+import {IExpressPayPaypalCommercePlatform} from '@bold-commerce/checkout-frontend-library';
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {paypalState} from 'src';
 
@@ -19,4 +20,8 @@ export function setPaypalGatewayPublicId(gatewayPublicId: string): void {
 
 export function getPaypalGatewayPublicId(): string {
     return paypalState.gatewayPublicId;
+}
+
+export function setPPCPAppleCredentials(credentials: IExpressPayPaypalCommercePlatform | null): void {
+    paypalState.ppcpAppleCredentials = credentials;
 }

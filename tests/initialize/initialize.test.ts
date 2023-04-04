@@ -4,21 +4,32 @@ import {
     IExpressPayBraintree,
     IExpressPayBraintreeApple,
     IExpressPayBraintreeGoogle,
-    IExpressPayPaypal
+    IExpressPayPaypal,
+    IExpressPayPaypalCommercePlatform,
 } from '@bold-commerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
-import {initialize, initStripe, initPaypal, setOnAction, initBraintreeGoogle, initBraintreeApple} from 'src';
+import {
+    initialize,
+    initBraintreeApple,
+    initBraintreeGoogle,
+    initStripe,
+    initPaypal,
+    initPPCPApple,
+    setOnAction,
+} from 'src';
 
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
 jest.mock('src/initialize/manageExpressPayContext');
 jest.mock('src/stripe/initStripe');
 jest.mock('src/paypal/initPaypal');
+jest.mock('src/paypal/ppcp_apple/initPPCPApple');
 jest.mock('src/braintree/google/initBraintreeGoogle');
 jest.mock('src/braintree/apple/initBraintreeApple');
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const setOnActionMock = mocked(setOnAction, true);
 const initStripeMock = mocked(initStripe, true);
 const initPaypalMock = mocked(initPaypal, true);
+const initPPCPAppleMock = mocked(initPPCPApple, true);
 const initBraintreeGoogleMock = mocked(initBraintreeGoogle, true);
 const initBraintreeAppleMock = mocked(initBraintreeApple, true);
 
@@ -41,7 +52,7 @@ describe('testing initialize function', () => {
             }
         },
         alternative_payment_methods: [],
-        external_payment_gateways: []
+        external_payment_gateways:  [],
     };
     const braintreePayment: IExpressPayBraintree = {
         type: alternatePaymentMethodType.BRAINTREE_GOOGLE,
@@ -96,6 +107,25 @@ describe('testing initialize function', () => {
         expect(consoleSpy).toHaveBeenCalledTimes(0);
         expect(initPaypalMock).toHaveBeenCalledTimes(1);
         expect(initPaypalMock).toHaveBeenCalledWith(paypalPayment);
+        expect(setOnActionMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('testing with ppcp apple payment options', () => {
+        const ppcpPayment: IExpressPayPaypalCommercePlatform = {
+            type: alternatePaymentMethodType.PPCP_APPLE,
+            is_test: true,
+            public_id: 'somePublicId',
+            apple_pay_enabled: true,
+            partner_id: 'somePartnerId',
+            merchant_id: 'someMerchantId',
+        };
+
+        const orderInitData = {...initData, alternative_payment_methods: [ppcpPayment]};
+        getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
+        initialize({onAction: onActionMock});
+        expect(consoleSpy).toHaveBeenCalledTimes(0);
+        expect(initPPCPAppleMock).toHaveBeenCalledTimes(1);
+        expect(initPPCPAppleMock).toHaveBeenCalledWith(ppcpPayment);
         expect(setOnActionMock).toHaveBeenCalledTimes(1);
     });
 

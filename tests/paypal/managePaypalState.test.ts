@@ -4,9 +4,11 @@ import {
     hasPaypalNameSpace,
     paypalState,
     setPaypalGatewayPublicId,
-    setPaypalNameSpace
+    setPaypalNameSpace,
+    setPPCPAppleCredentials,
 } from 'src';
 import {PayPalNamespace} from '@paypal/paypal-js';
+import {alternatePaymentMethodType, IExpressPayPaypalCommercePlatform} from '@bold-commerce/checkout-frontend-library';
 
 const paypalMock: PayPalNamespace = {version: 'test'};
 
@@ -70,6 +72,32 @@ describe('testing  managePaypalState functions', () => {
         test('testing call getPaypalGatewayPublicId with empty', async () => {
             paypalState.gatewayPublicId = '';
             expect(getPaypalGatewayPublicId()).toBe('');
+        });
+
+    });
+
+
+    describe('testing  paypalState.ppcpAppleCredentials sets', () => {
+        const ppcpCredentialsMock: IExpressPayPaypalCommercePlatform = {
+            type: alternatePaymentMethodType.PPCP_APPLE,
+            is_test: true,
+            public_id: 'somePublicId',
+            apple_pay_enabled: true,
+            partner_id: 'somePartnerId',
+            merchant_id: 'someMerchantId',
+        };
+
+        test('testing call setPaypalGatewayPublicId with mock', async () => {
+            paypalState.ppcpAppleCredentials = null;
+            expect(paypalState.ppcpAppleCredentials).toBe(null);
+            setPPCPAppleCredentials(ppcpCredentialsMock);
+            expect(paypalState.ppcpAppleCredentials).toBe(ppcpCredentialsMock);
+        });
+
+        test('testing call setPaypalGatewayPublicId with null', async () => {
+            paypalState.ppcpAppleCredentials = null;
+            setPPCPAppleCredentials(null);
+            expect(paypalState.ppcpAppleCredentials).toBe(null);
         });
 
     });
