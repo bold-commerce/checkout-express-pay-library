@@ -1,6 +1,10 @@
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {AmountWithBreakdown, OrderResponseBody, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
-import {IExpressPayBraintreeApple, IExpressPayBraintreeGoogle} from '@bold-commerce/checkout-frontend-library';
+import {
+    IExpressPayBraintreeApple,
+    IExpressPayBraintreeGoogle,
+    IExpressPayPaypalCommercePlatform
+} from '@bold-commerce/checkout-frontend-library';
 import {IBraintreeApplePayInstance, IBraintreeClient, IBraintreeGooglePayInstance} from 'src/types/braintree';
 import GooglePaymentsClient = google.payments.api.PaymentsClient;
 import ApplePayErrorCode = ApplePayJS.ApplePayErrorCode;
@@ -39,11 +43,14 @@ export interface IActionTypes {
 export interface IPaypalState {
     paypal: PayPalNamespace | null;
     gatewayPublicId: string;
+    ppcpAppleCredentials: IExpressPayPaypalCommercePlatform | null;
 }
 
 export interface IPaypalConstants {
     MAX_SHIPPING_OPTIONS_LENGTH: number;
     MAX_STRING_LENGTH: number;
+    APPLEPAY_VERSION_NUMBER: number;
+    APPLEPAY_JS: string;
 }
 
 export interface IPaypalPatchOperation {
