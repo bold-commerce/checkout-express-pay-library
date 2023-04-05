@@ -6,6 +6,7 @@ import {
     loadJS,
     paypalConstants,
     ppcpOnLoadApple,
+    setPaypalNameSpace,
     setPPCPAppleCredentials,
 } from 'src';
 import {mocked} from 'jest-mock';
@@ -21,6 +22,7 @@ const getPaypalScriptOptionsMock = mocked(getPaypalScriptOptions, true);
 const hasPaypalNameSpaceAppleMock = mocked(hasPaypalNameSpaceApple, true);
 const ppcpOnLoadAppleMock = mocked(ppcpOnLoadApple, true);
 const setPPCPAppleCredentialsMock = mocked(setPPCPAppleCredentials, true);
+const setPaypalNameSpaceMock = mocked(setPaypalNameSpace, true);
 const loadScriptMock = mocked(loadScript, true);
 const loadJSMock = mocked(loadJS, true);
 
@@ -38,7 +40,6 @@ describe('testing initPPCPApple function', () => {
         merchant_id: 'someMerchantId',
     };
     const paypalNameSpaceMock: PayPalNamespace = {version: 'test_mock_version'};
-    const loadScriptReturn = Promise.resolve(paypalNameSpaceMock);
     const paypalScriptOptions: PayPalScriptOptions = {
         'client-id': ppcpPayment.partner_id,
         'debug': ppcpPayment.is_test,
@@ -55,7 +56,7 @@ describe('testing initPPCPApple function', () => {
         jest.clearAllMocks();
         getPaypalScriptOptionsMock.mockReturnValue(paypalScriptOptions);
         hasPaypalNameSpaceAppleMock.mockReturnValue(false);
-        loadScriptMock.mockReturnValue(loadScriptReturn);
+        loadScriptMock.mockReturnValue(Promise.resolve(paypalNameSpaceMock));
         loadJSMock.mockReturnValue(Promise.resolve());
         loadJSMock.mockImplementation((urlString: string, fn?: () => void) => {
             fn && fn();
@@ -76,7 +77,9 @@ describe('testing initPPCPApple function', () => {
         expect(loadScriptMock).toHaveBeenCalledTimes(1);
         expect(loadScriptMock).toHaveBeenCalledWith(paypalScriptOptions);
         expect(loadJSMock).toHaveBeenCalledTimes(1);
-        expect(loadJSMock).toHaveBeenCalledWith(paypalConstants.APPLEPAY_JS, ppcpOnLoadApple);
+        expect(loadJSMock).toHaveBeenCalledWith(paypalConstants.APPLEPAY_JS);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledWith(paypalNameSpaceMock);
         expect(ppcpOnLoadAppleMock).toHaveBeenCalledTimes(1);
     });
 
@@ -92,8 +95,10 @@ describe('testing initPPCPApple function', () => {
         expect(loadScriptMock).toHaveBeenCalledTimes(1);
         expect(loadScriptMock).toHaveBeenCalledWith(paypalScriptOptions);
         expect(loadJSMock).toHaveBeenCalledTimes(1);
-        expect(loadJSMock).toHaveBeenCalledWith(paypalConstants.APPLEPAY_JS, ppcpOnLoadApple);
-        expect(ppcpOnLoadAppleMock).toHaveBeenCalledTimes(1);
+        expect(loadJSMock).toHaveBeenCalledWith(paypalConstants.APPLEPAY_JS);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledWith(null);
+        expect(ppcpOnLoadAppleMock).toHaveBeenCalledTimes(0);
     });
 
     test('testing call initPPCPApple has paypal name space', async () => {
@@ -106,7 +111,8 @@ describe('testing initPPCPApple function', () => {
         expect(hasPaypalNameSpaceAppleMock).toHaveBeenCalledTimes(1);
         expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(0);
         expect(loadScriptMock).toHaveBeenCalledTimes(0);
-        expect(loadJSMock).toHaveBeenCalledTimes(0);
+        expect(loadJSMock).toHaveBeenCalledTimes(1);
+        expect(loadJSMock).toHaveBeenCalledWith(paypalConstants.APPLEPAY_JS, ppcpOnLoadApple);
     });
 
 
@@ -128,7 +134,9 @@ describe('testing initPPCPApple function', () => {
         expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(1);
         expect(loadScriptMock).toHaveBeenCalledTimes(1);
         expect(loadJSMock).toHaveBeenCalledTimes(1);
-        expect(loadJSMock).toHaveBeenCalledWith(paypalConstants.APPLEPAY_JS, ppcpOnLoadApple);
+        expect(loadJSMock).toHaveBeenCalledWith(paypalConstants.APPLEPAY_JS);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledWith(paypalNameSpaceMock);
         expect(ppcpOnLoadAppleMock).toHaveBeenCalledTimes(1);
     });
 
@@ -153,6 +161,7 @@ describe('testing initPPCPApple function', () => {
         expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(0);
         expect(loadScriptMock).toHaveBeenCalledTimes(0);
         expect(loadJSMock).toHaveBeenCalledTimes(0);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(0);
     });
 
     test('Apple Session can not Make Payments', async () => {
@@ -164,6 +173,7 @@ describe('testing initPPCPApple function', () => {
         expect(getPaypalScriptOptionsMock).toHaveBeenCalledTimes(0);
         expect(loadScriptMock).toHaveBeenCalledTimes(0);
         expect(loadJSMock).toHaveBeenCalledTimes(0);
+        expect(setPaypalNameSpaceMock).toHaveBeenCalledTimes(0);
     });
 
 });

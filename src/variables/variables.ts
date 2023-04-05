@@ -13,14 +13,16 @@ export const showPaymentMethods: IShowPaymentMethods = {
     stripe: false,
     paypal: false,
     braintreeGoogle: false,
-    braintreeApple: false
+    braintreeApple: false,
+    ppcpApple: false,
 };
 
 export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
     STRIPE: 'stripe',
     PAYPAL: 'paypal',
     BRAINTREE_GOOGLE: 'braintreeGoogle',
-    BRAINTREE_APPLE: 'braintreeApple'
+    BRAINTREE_APPLE: 'braintreeApple',
+    PPCP_APPLE: 'ppcpApple',
 };
 
 export const expressPayContext: IExpressPayContext = {
