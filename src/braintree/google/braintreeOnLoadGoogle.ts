@@ -51,13 +51,13 @@ export async function braintreeOnLoadGoogle(): Promise<void> {
             }) as IBraintreeGooglePayInstance;
             setBraintreeGooglePayInstance(googleInstance);
             await createBraintreeGoogle();
-        } catch (e) {
-            if (e instanceof Error) {
-                e.name = 'GooglePayLoadingError';
-                throw e;
+        } catch (error) {
+            if (error instanceof Error) {
+                error.name = GooglePayLoadingError.name;
+                throw error;
             }
 
-            throw new GooglePayLoadingError(`Error loading Google Pay: ${e}`);
+            throw new GooglePayLoadingError(`Error loading Google Pay: ${error}`);
         }
     }
 }

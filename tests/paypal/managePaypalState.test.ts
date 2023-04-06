@@ -1,16 +1,17 @@
 import {
     getPaypalGatewayPublicId,
-    getPaypalNameSpace,
-    hasPaypalNameSpace,
+    getPaypalNameSpace, getPPCPApplePayInstance,
+    hasPaypalNameSpace, hasPaypalNameSpaceApple, IPPCPApplePayInstance,
     paypalState,
     setPaypalGatewayPublicId,
     setPaypalNameSpace,
-    setPPCPAppleCredentials,
+    setPPCPAppleCredentials, setPPCPApplePayInstance,
 } from 'src';
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {alternatePaymentMethodType, IExpressPayPaypalCommercePlatform} from '@bold-commerce/checkout-frontend-library';
 
 const paypalMock: PayPalNamespace = {version: 'test'};
+const ppcpApplePayInstanceMock: IPPCPApplePayInstance = {config: jest.fn(), validateMerchant: jest.fn(), confirmOrder: jest.fn()};
 
 describe('testing  managePaypalState functions', () => {
     describe('testing  paypalState.paypal sets and gets', () => {
@@ -47,6 +48,21 @@ describe('testing  managePaypalState functions', () => {
             expect(hasPaypalNameSpace()).toBe(false);
         });
 
+        test('testing call hasPaypalNameSpaceApple true', async () => {
+            paypalState.paypal = {...paypalMock, Applepay: jest.fn()};
+            expect(hasPaypalNameSpaceApple()).toBe(true);
+        });
+
+        test('testing call hasPaypalNameSpaceApple false with null', async () => {
+            paypalState.paypal = null;
+            expect(hasPaypalNameSpaceApple()).toBe(false);
+        });
+
+        test('testing call hasPaypalNameSpaceApple false with mock', async () => {
+            paypalState.paypal = paypalMock;
+            expect(hasPaypalNameSpaceApple()).toBe(false);
+        });
+
     });
 
     describe('testing  paypalState.gatewayPublicId sets and gets', () => {
@@ -76,7 +92,6 @@ describe('testing  managePaypalState functions', () => {
 
     });
 
-
     describe('testing  paypalState.ppcpAppleCredentials sets', () => {
         const ppcpCredentialsMock: IExpressPayPaypalCommercePlatform = {
             type: alternatePaymentMethodType.PPCP_APPLE,
@@ -98,6 +113,32 @@ describe('testing  managePaypalState functions', () => {
             paypalState.ppcpAppleCredentials = null;
             setPPCPAppleCredentials(null);
             expect(paypalState.ppcpAppleCredentials).toBe(null);
+        });
+
+    });
+
+    describe('testing  paypalState.ppcpApplePayInstance sets and gets', () => {
+
+        test('testing call setPPCPApplePayInstance with mock', async () => {
+            paypalState.ppcpApplePayInstance = null;
+            setPPCPApplePayInstance(ppcpApplePayInstanceMock);
+            expect(paypalState.ppcpApplePayInstance).toBe(ppcpApplePayInstanceMock);
+        });
+
+        test('testing call setPPCPApplePayInstance with null', async () => {
+            paypalState.ppcpApplePayInstance = ppcpApplePayInstanceMock;
+            setPPCPApplePayInstance(null);
+            expect(paypalState.ppcpApplePayInstance).toBe(null);
+        });
+
+        test('testing call getPPCPApplePayInstance with mock', async () => {
+            paypalState.ppcpApplePayInstance = ppcpApplePayInstanceMock;
+            expect(getPPCPApplePayInstance()).toBe(ppcpApplePayInstanceMock);
+        });
+
+        test('testing call getPPCPApplePayInstance with null', async () => {
+            paypalState.ppcpApplePayInstance = null;
+            expect(getPPCPApplePayInstance()).toBe(null);
         });
 
     });
