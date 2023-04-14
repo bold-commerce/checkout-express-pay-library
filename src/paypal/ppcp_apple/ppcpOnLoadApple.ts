@@ -1,5 +1,6 @@
 import {
     ApplePayLoadingError,
+    createPPCPApple,
     getPaypalNameSpace,
     hasPaypalNameSpaceApple,
     IPaypalNamespaceApple,
@@ -15,7 +16,7 @@ export async function ppcpOnLoadApple(): Promise<void>  {
             const applePayConfig = await applePay.config();
             setPPCPApplePayInstance(applePay);
             if (applePayConfig.isEligible) {
-                /*TODO Add call to createPaypalApple() when implemented*/
+                createPPCPApple();
             }
         } catch (error) {
             if (error instanceof Error) {

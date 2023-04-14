@@ -7,6 +7,7 @@ import {
     loadJS,
     paypalConstants,
     ppcpOnLoadApple,
+    setPaypalNameSpace,
     setPPCPAppleCredentials
 } from 'src';
 
@@ -22,9 +23,16 @@ export async function initPPCPApple(payment: IExpressPayPaypalCommercePlatform):
             const components = payment.apple_pay_enabled ? 'applepay' : undefined;
             const paypalScriptOptions: PayPalScriptOptions = getPaypalScriptOptions(payment.partner_id, payment.is_test, payment.merchant_id, components);
 
-            await loadScript(paypalScriptOptions);
-            await loadJS(paypalConstants.APPLEPAY_JS, ppcpOnLoadApple);
+            await loadJS(paypalConstants.APPLEPAY_JS);
+            const paypal = await loadScript(paypalScriptOptions);
 
+            setPaypalNameSpace(paypal);
+
+            if (paypal) {
+                ppcpOnLoadApple();
+            }
+        } else {
+            await loadJS(paypalConstants.APPLEPAY_JS, ppcpOnLoadApple);
         }
     }
 }

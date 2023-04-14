@@ -19,6 +19,7 @@ export interface IShowPaymentMethods {
     paypal: boolean;
     braintreeApple: boolean;
     braintreeGoogle: boolean;
+    ppcpApple: boolean;
 }
 
 export interface IShowPaymentMethodTypes {
@@ -26,6 +27,7 @@ export interface IShowPaymentMethodTypes {
     PAYPAL: string;
     BRAINTREE_GOOGLE: string;
     BRAINTREE_APPLE: string;
+    PPCP_APPLE: string;
 }
 
 export type IOnAction = (actionType: string, payload?: Record<string, unknown>) => void;
