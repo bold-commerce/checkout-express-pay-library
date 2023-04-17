@@ -24,7 +24,9 @@ describe('testing getPaypalScriptOptions function', () => {
             'disable-funding': 'credit,card,venmo,sepa,bancontact,eps,giropay,ideal,mybank,p24,sofort',
             'vault': 'true',
             'intent': 'authorize',
-            'integration-date': '2020-03-10'
+            'integration-date': '2020-03-10',
+            'merchant-id': undefined,
+            'components': undefined,
         };
 
         const result = getPaypalScriptOptions(clientId, isDebug);

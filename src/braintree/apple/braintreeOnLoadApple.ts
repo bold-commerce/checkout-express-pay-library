@@ -19,13 +19,13 @@ export async function braintreeOnLoadApple(): Promise<void> {
             const appleInstance = await braintree.applePay.create({client}) as IBraintreeApplePayInstance;
             setBraintreeApplePayInstance(appleInstance);
             createBraintreeApple();
-        } catch (e) {
-            if (e instanceof Error) {
-                e.name = 'ApplePayLoadingError';
-                throw e;
+        } catch (error) {
+            if (error instanceof Error) {
+                error.name = ApplePayLoadingError.name;
+                throw error;
             }
 
-            throw new ApplePayLoadingError(`Error loading Apple Pay: ${e}`);
+            throw new ApplePayLoadingError(`Error loading Apple Pay: ${error}`);
         }
     }
 }

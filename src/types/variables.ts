@@ -1,7 +1,12 @@
+import {
+    IExpressPayBraintreeApple,
+    IExpressPayBraintreeGoogle,
+    IExpressPayPaypalCommercePlatform
+} from '@bold-commerce/checkout-frontend-library';
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {AmountWithBreakdown, OrderResponseBody, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
-import {IExpressPayBraintreeApple, IExpressPayBraintreeGoogle} from '@bold-commerce/checkout-frontend-library';
 import {IBraintreeApplePayInstance, IBraintreeClient, IBraintreeGooglePayInstance} from 'src/types/braintree';
+import {IPaypalNamespaceApple, IPPCPApplePayInstance} from 'src/types/paypal';
 import GooglePaymentsClient = google.payments.api.PaymentsClient;
 import ApplePayErrorCode = ApplePayJS.ApplePayErrorCode;
 import ErrorReason = google.payments.api.ErrorReason;
@@ -14,6 +19,7 @@ export interface IShowPaymentMethods {
     paypal: boolean;
     braintreeApple: boolean;
     braintreeGoogle: boolean;
+    ppcpApple: boolean;
 }
 
 export interface IShowPaymentMethodTypes {
@@ -21,6 +27,7 @@ export interface IShowPaymentMethodTypes {
     PAYPAL: string;
     BRAINTREE_GOOGLE: string;
     BRAINTREE_APPLE: string;
+    PPCP_APPLE: string;
 }
 
 export type IOnAction = (actionType: string, payload?: Record<string, unknown>) => void;
@@ -37,13 +44,17 @@ export interface IActionTypes {
 }
 
 export interface IPaypalState {
-    paypal: PayPalNamespace | null;
+    paypal: PayPalNamespace | IPaypalNamespaceApple | null;
     gatewayPublicId: string;
+    ppcpAppleCredentials: IExpressPayPaypalCommercePlatform | null;
+    ppcpApplePayInstance: IPPCPApplePayInstance | null;
 }
 
 export interface IPaypalConstants {
     MAX_SHIPPING_OPTIONS_LENGTH: number;
     MAX_STRING_LENGTH: number;
+    APPLEPAY_VERSION_NUMBER: number;
+    APPLEPAY_JS: string;
 }
 
 export interface IPaypalPatchOperation {

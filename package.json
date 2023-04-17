@@ -1,6 +1,6 @@
 {
   "name": "@bold-commerce/checkout-express-pay-library",
-  "version": "0.14.2",
+  "version": "0.15.0",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -42,7 +42,7 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "peerDependencies": {
-    "@bold-commerce/checkout-frontend-library": "0.36.2"
+    "@bold-commerce/checkout-frontend-library": "0.38.0"
   },
   "files": [
     "lib/**/*"
@@ -51,7 +51,7 @@
     "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0"
   },
   "dependencies": {
-    "@bold-commerce/checkout-frontend-library": "0.36.2",
+    "@bold-commerce/checkout-frontend-library": "0.38.0",
     "@paypal/paypal-js": "^5.1.1",
     "@types/applepayjs": "^3.0.4",
     "@types/googlepay": "^0.6.4"

@@ -4,9 +4,18 @@ import {
     IExpressPayBraintreeApple,
     IExpressPayBraintreeGoogle,
     IExpressPayPaypal,
-    IExpressPayStripe
+    IExpressPayPaypalCommercePlatform,
+    IExpressPayStripe,
 } from '@bold-commerce/checkout-frontend-library';
-import {initStripe, initPaypal, IInitializeProps, setOnAction, initBraintreeApple, initBraintreeGoogle} from 'src';
+import {
+    IInitializeProps,
+    initBraintreeApple,
+    initBraintreeGoogle,
+    initStripe,
+    initPaypal,
+    initPPCPApple,
+    setOnAction,
+} from 'src';
 
 export function initialize(props: IInitializeProps): void{
     const {alternative_payment_methods} = getOrderInitialData();
@@ -22,11 +31,14 @@ export function initialize(props: IInitializeProps): void{
                 case alternatePaymentMethodType.PAYPAL:
                     initPaypal(paymentMethod as IExpressPayPaypal);
                     break;
-                case 'braintree':
+                case alternatePaymentMethodType.BRAINTREE_GOOGLE:
                     initBraintreeGoogle(paymentMethod as IExpressPayBraintreeGoogle);
                     break;
                 case alternatePaymentMethodType.BRAINTREE_APPLE:
                     initBraintreeApple(paymentMethod as IExpressPayBraintreeApple);
+                    break;
+                case alternatePaymentMethodType.PPCP_APPLE:
+                    initPPCPApple(paymentMethod as IExpressPayPaypalCommercePlatform);
                     break;
                 default:
                     // eslint-disable-next-line no-console

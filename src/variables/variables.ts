@@ -1,25 +1,28 @@
 import {
     IActionTypes,
-    IExpressPayContext,
-    IShowPaymentMethods,
-    IPaypalState,
-    IBraintreeState,
     IBraintreeConstants,
-    IPaypalConstants, IShowPaymentMethodTypes
+    IBraintreeState,
+    IExpressPayContext,
+    IPaypalConstants,
+    IPaypalState,
+    IShowPaymentMethods,
+    IShowPaymentMethodTypes,
 } from 'src/types/variables';
 
 export const showPaymentMethods: IShowPaymentMethods = {
     stripe: false,
     paypal: false,
     braintreeGoogle: false,
-    braintreeApple: false
+    braintreeApple: false,
+    ppcpApple: false,
 };
 
 export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
     STRIPE: 'stripe',
     PAYPAL: 'paypal',
     BRAINTREE_GOOGLE: 'braintreeGoogle',
-    BRAINTREE_APPLE: 'braintreeApple'
+    BRAINTREE_APPLE: 'braintreeApple',
+    PPCP_APPLE: 'ppcpApple',
 };
 
 export const expressPayContext: IExpressPayContext = {
@@ -35,12 +38,16 @@ export const actionTypes: IActionTypes = {
 
 export const paypalState: IPaypalState = {
     paypal: null,
-    gatewayPublicId: ''
+    gatewayPublicId: '',
+    ppcpAppleCredentials: null,
+    ppcpApplePayInstance: null,
 };
 
 export const paypalConstants: IPaypalConstants = {
     MAX_SHIPPING_OPTIONS_LENGTH: 10,
     MAX_STRING_LENGTH: 127,
+    APPLEPAY_VERSION_NUMBER: 3,
+    APPLEPAY_JS: 'https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js',
 };
 
 export const braintreeState: IBraintreeState = {
