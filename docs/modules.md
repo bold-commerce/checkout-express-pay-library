@@ -30,7 +30,11 @@
 - [IExpressPayContext](interfaces/IExpressPayContext.md)
 - [IGetFirstAndLastName](interfaces/IGetFirstAndLastName.md)
 - [IInitializeProps](interfaces/IInitializeProps.md)
+- [IPPCPAppleConfig](interfaces/IPPCPAppleConfig.md)
+- [IPPCPApplePayInstance](interfaces/IPPCPApplePayInstance.md)
+- [IPPCPApplePayValidateMerchantResponse](interfaces/IPPCPApplePayValidateMerchantResponse.md)
 - [IPaypalConstants](interfaces/IPaypalConstants.md)
+- [IPaypalNamespaceApple](interfaces/IPaypalNamespaceApple.md)
 - [IPaypalPatchOperation](interfaces/IPaypalPatchOperation.md)
 - [IPaypalState](interfaces/IPaypalState.md)
 - [IShowPaymentMethodTypes](interfaces/IShowPaymentMethodTypes.md)
@@ -43,6 +47,7 @@
 - [IStripeShippingOptions](interfaces/IStripeShippingOptions.md)
 - [IStripeToken](interfaces/IStripeToken.md)
 - [IStripeUpdateWithParam](interfaces/IStripeUpdateWithParam.md)
+- [ITotals](interfaces/ITotals.md)
 
 ### Type Aliases
 

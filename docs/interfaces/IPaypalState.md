@@ -6,6 +6,8 @@
 
 - [gatewayPublicId](IPaypalState.md#gatewaypublicid)
 - [paypal](IPaypalState.md#paypal)
+- [ppcpAppleCredentials](IPaypalState.md#ppcpapplecredentials)
+- [ppcpApplePayInstance](IPaypalState.md#ppcpapplepayinstance)
 
 ## Properties
 
@@ -17,4 +19,16 @@ ___
 
 ### paypal
 
-• **paypal**: ``null`` \| `PayPalNamespace`
+• **paypal**: ``null`` \| [`IPaypalNamespaceApple`](IPaypalNamespaceApple.md) \| `PayPalNamespace`
+
+___
+
+### ppcpAppleCredentials
+
+• **ppcpAppleCredentials**: ``null`` \| `IExpressPayPaypalCommercePlatform`
+
+___
+
+### ppcpApplePayInstance
+
+• **ppcpApplePayInstance**: ``null`` \| [`IPPCPApplePayInstance`](IPPCPApplePayInstance.md)
