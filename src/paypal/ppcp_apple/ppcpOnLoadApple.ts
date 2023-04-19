@@ -4,7 +4,8 @@ import {
     getPaypalNameSpace,
     hasPaypalNameSpaceApple,
     IPaypalNamespaceApple,
-    setPPCPApplePayInstance
+    setPPCPApplePayConfig,
+    setPPCPApplePayInstance,
 } from 'src';
 
 export async function ppcpOnLoadApple(): Promise<void>  {
@@ -15,6 +16,7 @@ export async function ppcpOnLoadApple(): Promise<void>  {
             const applePay = paypal.Applepay();
             const applePayConfig = await applePay.config();
             setPPCPApplePayInstance(applePay);
+            setPPCPApplePayConfig(applePayConfig);
             if (applePayConfig.isEligible) {
                 createPPCPApple();
             }
