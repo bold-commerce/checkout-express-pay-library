@@ -14,7 +14,8 @@ import {
     getBraintreeApplePayInstanceChecked
 } from 'src';
 
-export function braintreeOnClickApple(): void {
+export function braintreeOnClickApple(ev: MouseEvent): void {
+    ev.preventDefault();
     const appleInstance = getBraintreeApplePayInstanceChecked();
     const {iso_code: currencyCode} = getCurrency();
     const {totalAmountDue} = getTotals();

@@ -1,17 +1,28 @@
 import {
     getPaypalGatewayPublicId,
-    getPaypalNameSpace, getPPCPApplePayInstance,
-    hasPaypalNameSpace, hasPaypalNameSpaceApple, IPPCPApplePayInstance,
+    getPaypalNameSpace,
+    getPPCPApplePayConfig,
+    getPPCPApplePayInstance,
+    getPPCPApplePaySession,
+    hasPaypalNameSpace,
+    hasPaypalNameSpaceApple,
+    IPPCPAppleConfig,
+    IPPCPApplePayInstance,
     paypalState,
     setPaypalGatewayPublicId,
     setPaypalNameSpace,
-    setPPCPAppleCredentials, setPPCPApplePayInstance,
+    setPPCPAppleCredentials,
+    setPPCPApplePayConfig,
+    setPPCPApplePayInstance,
+    setPPCPApplePaySession,
 } from 'src';
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {alternatePaymentMethodType, IExpressPayPaypalCommercePlatform} from '@bold-commerce/checkout-frontend-library';
 
 const paypalMock: PayPalNamespace = {version: 'test'};
 const ppcpApplePayInstanceMock: IPPCPApplePayInstance = {config: jest.fn(), validateMerchant: jest.fn(), confirmOrder: jest.fn()};
+const ppcpAppleConfigMock: IPPCPAppleConfig = {countryCode: 'US', isEligible: true, merchantCapabilities: [], supportedNetworks: []};
+const applePaySessionMock = {begin: jest.fn()} as unknown as ApplePaySession;
 
 describe('testing  managePaypalState functions', () => {
     describe('testing  paypalState.paypal sets and gets', () => {
@@ -139,6 +150,58 @@ describe('testing  managePaypalState functions', () => {
         test('testing call getPPCPApplePayInstance with null', async () => {
             paypalState.ppcpApplePayInstance = null;
             expect(getPPCPApplePayInstance()).toBe(null);
+        });
+
+    });
+
+    describe('testing  paypalState.ppcpApplePayConfig sets and gets', () => {
+
+        test('testing call setPPCPApplePayConfig with mock', async () => {
+            paypalState.ppcpApplePayConfig = null;
+            setPPCPApplePayConfig(ppcpAppleConfigMock);
+            expect(paypalState.ppcpApplePayConfig).toBe(ppcpAppleConfigMock);
+        });
+
+        test('testing call setPPCPApplePayConfig with null', async () => {
+            paypalState.ppcpApplePayConfig = ppcpAppleConfigMock;
+            setPPCPApplePayConfig(null);
+            expect(paypalState.ppcpApplePayConfig).toBe(null);
+        });
+
+        test('testing call getPPCPApplePayInstance with mock', async () => {
+            paypalState.ppcpApplePayConfig = ppcpAppleConfigMock;
+            expect(getPPCPApplePayConfig()).toBe(ppcpAppleConfigMock);
+        });
+
+        test('testing call getPPCPApplePayInstance with null', async () => {
+            paypalState.ppcpApplePayConfig = null;
+            expect(getPPCPApplePayConfig()).toBe(null);
+        });
+
+    });
+
+    describe('testing  paypalState.ppcpApplePaySession sets and gets', () => {
+
+        test('testing call setPPCPApplePaySession with mock', async () => {
+            paypalState.ppcpApplePaySession = null;
+            setPPCPApplePaySession(applePaySessionMock as ApplePaySession);
+            expect(paypalState.ppcpApplePaySession).toBe(applePaySessionMock);
+        });
+
+        test('testing call setPPCPApplePaySession with null', async () => {
+            paypalState.ppcpApplePaySession = applePaySessionMock;
+            setPPCPApplePaySession(null);
+            expect(paypalState.ppcpApplePaySession).toBe(null);
+        });
+
+        test('testing call getPPCPApplePaySession with mock', async () => {
+            paypalState.ppcpApplePaySession = applePaySessionMock;
+            expect(getPPCPApplePaySession()).toBe(applePaySessionMock);
+        });
+
+        test('testing call getPPCPApplePaySession with null', async () => {
+            paypalState.ppcpApplePaySession = null;
+            expect(getPPCPApplePaySession()).toBe(null);
         });
 
     });

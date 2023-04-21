@@ -37,6 +37,9 @@ describe('testing braintreeOnClickApple function', () => {
     const performValidation = jest.fn();
     const tokenize = jest.fn();
     const applePaySessionBegin = jest.fn();
+    const preventDefaultMock = jest.fn();
+    const mouseEventMock: MouseEvent = new MouseEvent('click');
+    mouseEventMock.preventDefault = preventDefaultMock;
     const applePaySessionObj = {
         onvalidatemerchant: null,
         onshippingcontactselected: null,
@@ -80,8 +83,9 @@ describe('testing braintreeOnClickApple function', () => {
     });
 
     test('called successfully phone not required', () => {
-        braintreeOnClickApple();
+        braintreeOnClickApple(mouseEventMock);
 
+        expect(preventDefaultMock).toBeCalledTimes(1);
         expect(getBraintreeApplePayInstanceCheckedMock).toBeCalledTimes(1);
         expect(getCurrencyMock).toBeCalledTimes(1);
         expect(getApplicationStateMock).toBeCalledTimes(1);
@@ -115,8 +119,9 @@ describe('testing braintreeOnClickApple function', () => {
         };
         getOrderInitialDataMock.mockReturnValueOnce(initialData);
 
-        braintreeOnClickApple();
+        braintreeOnClickApple(mouseEventMock);
 
+        expect(preventDefaultMock).toBeCalledTimes(1);
         expect(getBraintreeApplePayInstanceCheckedMock).toBeCalledTimes(1);
         expect(getCurrencyMock).toBeCalledTimes(1);
         expect(getApplicationStateMock).toBeCalledTimes(1);
@@ -145,10 +150,11 @@ describe('testing braintreeOnClickApple function', () => {
         });
 
         try {
-            braintreeOnClickApple();
+            braintreeOnClickApple(mouseEventMock);
             expect('This expect should not run, call should Throw').toBe(null);
         } catch (e) {
             expect(e).toBe(error);
+            expect(preventDefaultMock).toBeCalledTimes(1);
             expect(getBraintreeApplePayInstanceCheckedMock).toBeCalledTimes(1);
             expect(getCurrencyMock).toBeCalledTimes(0);
             expect(getApplicationStateMock).toBeCalledTimes(0);
