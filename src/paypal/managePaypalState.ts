@@ -1,6 +1,12 @@
 import {IExpressPayPaypalCommercePlatform} from '@bold-commerce/checkout-frontend-library';
 import {PayPalNamespace} from '@paypal/paypal-js';
-import {IPaypalNamespaceApple, IPPCPAppleConfig, IPPCPApplePayInstance, paypalState} from 'src';
+import {
+    PaypalNullStateKeyError,
+    IPaypalNamespaceApple,
+    IPPCPAppleConfig,
+    IPPCPApplePayInstance,
+    paypalState
+} from 'src';
 
 export function setPaypalNameSpace(paypal: PayPalNamespace | IPaypalNamespaceApple | null): void {
     paypalState.paypal = paypal;
@@ -27,6 +33,13 @@ export function getPPCPApplePayInstance(): IPPCPApplePayInstance | null {
     return paypalState.ppcpApplePayInstance;
 }
 
+export function getPPCPApplePayInstanceChecked(): IPPCPApplePayInstance {
+    if (!paypalState.ppcpApplePayInstance) {
+        throw new PaypalNullStateKeyError('Precondition violated: ppcpApplePayInstance is null');
+    }
+    return paypalState.ppcpApplePayInstance;
+}
+
 export function setPPCPApplePayConfig(ppcpApplePayConfig: IPPCPAppleConfig | null): void {
     paypalState.ppcpApplePayConfig = ppcpApplePayConfig;
 }
@@ -35,11 +48,25 @@ export function getPPCPApplePayConfig(): IPPCPAppleConfig | null {
     return paypalState.ppcpApplePayConfig;
 }
 
+export function getPPCPApplePayConfigChecked(): IPPCPAppleConfig {
+    if (!paypalState.ppcpApplePayConfig) {
+        throw new PaypalNullStateKeyError('Precondition violated: ppcpApplePayConfig is null');
+    }
+    return paypalState.ppcpApplePayConfig;
+}
+
 export function setPPCPApplePaySession(ppcpApplePaySession: ApplePaySession | null): void {
     paypalState.ppcpApplePaySession = ppcpApplePaySession;
 }
 
 export function getPPCPApplePaySession(): ApplePaySession | null {
+    return paypalState.ppcpApplePaySession;
+}
+
+export function getPPCPApplePaySessionChecked(): ApplePaySession {
+    if (!paypalState.ppcpApplePaySession) {
+        throw new PaypalNullStateKeyError('Precondition violated: ppcpApplePaySession is null');
+    }
     return paypalState.ppcpApplePaySession;
 }
 

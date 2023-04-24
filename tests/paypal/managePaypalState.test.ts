@@ -2,12 +2,16 @@ import {
     getPaypalGatewayPublicId,
     getPaypalNameSpace,
     getPPCPApplePayConfig,
+    getPPCPApplePayConfigChecked,
     getPPCPApplePayInstance,
+    getPPCPApplePayInstanceChecked,
     getPPCPApplePaySession,
+    getPPCPApplePaySessionChecked,
     hasPaypalNameSpace,
     hasPaypalNameSpaceApple,
     IPPCPAppleConfig,
     IPPCPApplePayInstance,
+    PaypalNullStateKeyError,
     paypalState,
     setPaypalGatewayPublicId,
     setPaypalNameSpace,
@@ -152,6 +156,11 @@ describe('testing  managePaypalState functions', () => {
             expect(getPPCPApplePayInstance()).toBe(null);
         });
 
+        test('testing call getPPCPApplePayInstanceChecked with mock', async () => {
+            paypalState.ppcpApplePayInstance = ppcpApplePayInstanceMock;
+            expect(getPPCPApplePayInstanceChecked()).toBe(ppcpApplePayInstanceMock);
+        });
+
     });
 
     describe('testing  paypalState.ppcpApplePayConfig sets and gets', () => {
@@ -176,6 +185,11 @@ describe('testing  managePaypalState functions', () => {
         test('testing call getPPCPApplePayInstance with null', async () => {
             paypalState.ppcpApplePayConfig = null;
             expect(getPPCPApplePayConfig()).toBe(null);
+        });
+
+        test('testing call getPPCPApplePayConfigChecked with mock', async () => {
+            paypalState.ppcpApplePayConfig = ppcpAppleConfigMock;
+            expect(getPPCPApplePayConfigChecked()).toBe(ppcpAppleConfigMock);
         });
 
     });
@@ -204,5 +218,39 @@ describe('testing  managePaypalState functions', () => {
             expect(getPPCPApplePaySession()).toBe(null);
         });
 
+        test('testing call getPPCPApplePaySessionChecked with mock', async () => {
+            paypalState.ppcpApplePaySession = applePaySessionMock;
+            expect(getPPCPApplePaySessionChecked()).toBe(applePaySessionMock);
+        });
+
+    });
+
+    describe('call all getters checked failure', () => {
+        const gettersCheckedData = [
+            {
+                name: 'getPPCPApplePayInstanceChecked with null',
+                key: 'ppcpApplePayInstance',
+                call: getPPCPApplePayInstanceChecked
+            },{
+                name: 'getPPCPApplePaySessionChecked with null',
+                key: 'ppcpApplePaySession',
+                call: getPPCPApplePaySessionChecked
+            },{
+                name: 'getPPCPApplePayConfigChecked with null',
+                key: 'ppcpApplePayConfig',
+                call: getPPCPApplePayConfigChecked
+            },
+        ];
+        test.each(gettersCheckedData)('$name', async ({key, call}) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            paypalState[key] = null;
+            try {
+                call();
+                expect('This expect should not run, call should Throw').toBe(null);
+            } catch (e) {
+                expect(e).toStrictEqual(new PaypalNullStateKeyError(`Precondition violated: ${key} is null`));
+            }
+        });
     });
 });
