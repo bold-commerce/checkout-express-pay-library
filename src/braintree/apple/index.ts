@@ -5,5 +5,4 @@ export * from './braintreeOnShippingContactSelectedApple';
 export * from './braintreeOnShippingMethodSelectedApple';
 export * from './braintreeOnValidateMerchantApple';
 export * from './createBraintreeApple';
-export * from './formatBraintreeShippingAddressApple';
 export * from './initBraintreeApple';

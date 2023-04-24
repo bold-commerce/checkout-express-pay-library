@@ -1,10 +1,10 @@
-import {getBraintreeApplePaySessionChecked} from 'src/braintree/manageBraintreeState';
 import ApplePayShippingContactSelectedEvent = ApplePayJS.ApplePayShippingContactSelectedEvent;
 import {
     API_RETRY,
     callShippingAddressEndpoint,
     formatApplePayContactToCheckoutAddress,
     getPaymentRequestDisplayItems,
+    getPPCPApplePaySessionChecked,
     getTotals,
     getValueByCurrency,
 } from 'src';
@@ -15,11 +15,10 @@ import {
     setTaxes
 } from '@bold-commerce/checkout-frontend-library';
 
-export async function braintreeOnShippingContactSelectedApple(event: ApplePayShippingContactSelectedEvent): Promise<void> {
+export async function ppcpOnShippingContactSelectedApple(event: ApplePayShippingContactSelectedEvent): Promise<void> {
     const {iso_code: currencyCode} = getCurrency();
-    const applePaySession = getBraintreeApplePaySessionChecked();
-    const shippingAddress = event.shippingContact;
-    const address = formatApplePayContactToCheckoutAddress(shippingAddress);
+    const applePaySession = getPPCPApplePaySessionChecked();
+    const address = formatApplePayContactToCheckoutAddress(event.shippingContact);
 
     const fail = () => {
         const {totalAmountDue} = getTotals();
@@ -44,11 +43,11 @@ export async function braintreeOnShippingContactSelectedApple(event: ApplePayShi
                 }));
             const {available_shipping_lines: shippingLines} = getShipping();
 
-            const shippingOptions = shippingLines.map(p => ({
-                label: p.description,
+            const shippingOptions = shippingLines.map(line => ({
+                label: line.description,
                 detail: '',
-                amount: getValueByCurrency(p.amount, currencyCode),
-                identifier: p.id
+                amount: getValueByCurrency(line.amount, currencyCode),
+                identifier: line.id
             }));
 
             applePaySession.completeShippingContactSelection({
