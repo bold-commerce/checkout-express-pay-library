@@ -1,12 +1,13 @@
 import {
     ppcpOnClickApple,
     getPaymentRequestDisplayItems,
-    getPPCPApplePayConfig,
+    getPPCPApplePayConfigChecked,
     getTotals,
     IPPCPAppleConfig,
     ITotals,
     setPPCPApplePaySession,
-    paypalConstants
+    paypalConstants,
+    ppcpOnValidateMerchantApple
 } from 'src';
 import {mocked} from 'jest-mock';
 import {getCurrency, getOrderInitialData, IOrderInitialData} from '@bold-commerce/checkout-frontend-library';
@@ -20,7 +21,7 @@ jest.mock('src/utils/getPaymentRequestDisplayItems');
 jest.mock('src/utils/getTotals');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getOrderInitialData');
-const getPPCPApplePayConfigMock = mocked(getPPCPApplePayConfig, true);
+const getPPCPApplePayConfigCheckedMock = mocked(getPPCPApplePayConfigChecked, true);
 const getCurrencyMock = mocked(getCurrency, true);
 const getTotalsMock = mocked(getTotals, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
@@ -72,7 +73,7 @@ describe('testing ppcpOnClickApple function', () => {
         applePaySessionObj.onshippingcontactselected = null;
         applePaySessionObj.onshippingmethodselected = null;
         applePaySessionObj.onpaymentauthorized = null;
-        getPPCPApplePayConfigMock.mockReturnValue(ppcpAppleConfigMock);
+        getPPCPApplePayConfigCheckedMock.mockReturnValue(ppcpAppleConfigMock);
         getCurrencyMock.mockReturnValue(currencyMock);
         getTotalsMock.mockReturnValue(totalsMock);
         getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
@@ -85,7 +86,7 @@ describe('testing ppcpOnClickApple function', () => {
         ppcpOnClickApple(mouseEventMock);
 
         expect(preventDefaultMock).toBeCalledTimes(1);
-        expect(getPPCPApplePayConfigMock).toBeCalledTimes(1);
+        expect(getPPCPApplePayConfigCheckedMock).toBeCalledTimes(1);
         expect(getCurrencyMock).toBeCalledTimes(1);
         expect(getTotalsMock).toBeCalledTimes(1);
         expect(getOrderInitialDataMock).toBeCalledTimes(1);
@@ -95,33 +96,7 @@ describe('testing ppcpOnClickApple function', () => {
             paypalConstants.APPLEPAY_VERSION_NUMBER,
             applePaymentRequest
         );
-        // expect(applePaySessionObj.onvalidatemerchant).toBe(() => {/*TODO implement ppcpOnValidateMerchant*/});
-        // expect(applePaySessionObj.onshippingcontactselected).toBe(() => {/*TODO implement ppcpOnShippingContactSelected*/});
-        // expect(applePaySessionObj.onshippingmethodselected).toBe(() => {/*TODO implement ppcpOnShippingMethodSelected*/});
-        // expect(applePaySessionObj.onpaymentauthorized).toBe(() => {/*TODO implement ppcpOnPaymentAuthorized*/});
-        expect(applePaySessionBegin).toBeCalledTimes(1);
-        expect(setPPCPApplePaySessionMock).toBeCalledTimes(1);
-        expect(setPPCPApplePaySessionMock).toBeCalledWith(applePaySessionObj);
-    });
-
-    test('called successfully empty appleConfig', () => {
-        getPPCPApplePayConfigMock.mockReturnValueOnce(null);
-        const newApplePaymentRequest: ApplePayPaymentRequest = {...applePaymentRequest, countryCode: '', merchantCapabilities: [], supportedNetworks: []};
-
-        ppcpOnClickApple(mouseEventMock);
-
-        expect(preventDefaultMock).toBeCalledTimes(1);
-        expect(getPPCPApplePayConfigMock).toBeCalledTimes(1);
-        expect(getCurrencyMock).toBeCalledTimes(1);
-        expect(getTotalsMock).toBeCalledTimes(1);
-        expect(getOrderInitialDataMock).toBeCalledTimes(1);
-        expect(getPaymentRequestDisplayItemMock).toBeCalledTimes(1);
-        expect(applePaySessionMock).toBeCalledTimes(1);
-        expect(applePaySessionMock).toBeCalledWith(
-            paypalConstants.APPLEPAY_VERSION_NUMBER,
-            newApplePaymentRequest
-        );
-        // expect(applePaySessionObj.onvalidatemerchant).toBe(() => {/*TODO implement ppcpOnValidateMerchant*/});
+        expect(applePaySessionObj.onvalidatemerchant).toBe(ppcpOnValidateMerchantApple);
         // expect(applePaySessionObj.onshippingcontactselected).toBe(() => {/*TODO implement ppcpOnShippingContactSelected*/});
         // expect(applePaySessionObj.onshippingmethodselected).toBe(() => {/*TODO implement ppcpOnShippingMethodSelected*/});
         // expect(applePaySessionObj.onpaymentauthorized).toBe(() => {/*TODO implement ppcpOnPaymentAuthorized*/});
@@ -142,7 +117,7 @@ describe('testing ppcpOnClickApple function', () => {
         ppcpOnClickApple(mouseEventMock);
 
         expect(preventDefaultMock).toBeCalledTimes(1);
-        expect(getPPCPApplePayConfigMock).toBeCalledTimes(1);
+        expect(getPPCPApplePayConfigCheckedMock).toBeCalledTimes(1);
         expect(getCurrencyMock).toBeCalledTimes(1);
         expect(getTotalsMock).toBeCalledTimes(1);
         expect(getOrderInitialDataMock).toBeCalledTimes(1);
@@ -152,7 +127,7 @@ describe('testing ppcpOnClickApple function', () => {
             paypalConstants.APPLEPAY_VERSION_NUMBER,
             newApplePaymentRequest
         );
-        // expect(applePaySessionObj.onvalidatemerchant).toBe(() => {/*TODO implement ppcpOnValidateMerchant*/});
+        expect(applePaySessionObj.onvalidatemerchant).toBe(ppcpOnValidateMerchantApple);
         // expect(applePaySessionObj.onshippingcontactselected).toBe(() => {/*TODO implement ppcpOnShippingContactSelected*/});
         // expect(applePaySessionObj.onshippingmethodselected).toBe(() => {/*TODO implement ppcpOnShippingMethodSelected*/});
         // expect(applePaySessionObj.onpaymentauthorized).toBe(() => {/*TODO implement ppcpOnPaymentAuthorized*/});
@@ -163,7 +138,7 @@ describe('testing ppcpOnClickApple function', () => {
 
     test('call with failure', () => {
         const error = new Error('Error Test!');
-        getPPCPApplePayConfigMock.mockImplementationOnce(() => {
+        getPPCPApplePayConfigCheckedMock.mockImplementationOnce(() => {
             throw error;
         });
 
@@ -173,7 +148,7 @@ describe('testing ppcpOnClickApple function', () => {
         } catch (e) {
             expect(e).toBe(error);
             expect(preventDefaultMock).toBeCalledTimes(1);
-            expect(getPPCPApplePayConfigMock).toBeCalledTimes(1);
+            expect(getPPCPApplePayConfigCheckedMock).toBeCalledTimes(1);
             expect(getCurrencyMock).toBeCalledTimes(0);
             expect(getTotalsMock).toBeCalledTimes(0);
             expect(getOrderInitialDataMock).toBeCalledTimes(0);

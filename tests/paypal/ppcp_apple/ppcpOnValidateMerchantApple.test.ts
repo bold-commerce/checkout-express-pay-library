@@ -1,51 +1,51 @@
 import {mocked} from 'jest-mock';
 import {
     ApplePayValidateMerchantError,
-    braintreeOnValidateMerchantApple,
+    ppcpOnValidateMerchantApple,
     displayError,
-    getBraintreeApplePayInstanceChecked,
-    getBraintreeApplePaySessionChecked,
-    IBraintreeApplePayInstance,
+    getPPCPApplePayInstanceChecked,
+    getPPCPApplePaySessionChecked,
+    IPPCPApplePayInstance,
 } from 'src';
 import {getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
 import {orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
 import ApplePayValidateMerchantEvent = ApplePayJS.ApplePayValidateMerchantEvent;
 
-jest.mock('src/braintree/manageBraintreeState');
+jest.mock('src/paypal/managePaypalState');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getOrderInitialData');
 jest.mock('src/actions/displayError');
-const getBraintreeApplePayInstanceCheckedMock = mocked(getBraintreeApplePayInstanceChecked, true);
-const getBraintreeApplePaySessionCheckedMock = mocked(getBraintreeApplePaySessionChecked, true);
+const getPPCPApplePayInstanceCheckedMock = mocked(getPPCPApplePayInstanceChecked, true);
+const getPPCPApplePaySessionCheckedMock = mocked(getPPCPApplePaySessionChecked, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const displayErrorMock = mocked(displayError, true);
 
-describe('testing braintreeOnValidateMerchantApple function',() => {
+describe('testing ppcpOnValidateMerchantApple function',() => {
     const errorMessage = 'Some Error Message';
     const validationURL = 'test.com';
     const displayErrorMsg = 'There was an error while loading Apple Pay.';
     const displayName = orderInitialDataMock.shop_name;
-    const performValidation = jest.fn();
+    const validateMerchant = jest.fn();
     const completeMerchantValidation = jest.fn();
     const abort = jest.fn();
-    const appleInstance = {performValidation} as unknown as IBraintreeApplePayInstance;
+    const appleInstance = {validateMerchant} as unknown as IPPCPApplePayInstance;
     const appleSession = {completeMerchantValidation, abort} as unknown as ApplePaySession;
     const eventMock = {validationURL} as ApplePayValidateMerchantEvent;
 
     beforeEach(() => {
         jest.resetAllMocks();
-        getBraintreeApplePayInstanceCheckedMock.mockReturnValue(appleInstance);
-        getBraintreeApplePaySessionCheckedMock.mockReturnValue(appleSession);
+        getPPCPApplePayInstanceCheckedMock.mockReturnValue(appleInstance);
+        getPPCPApplePaySessionCheckedMock.mockReturnValue(appleSession);
         getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
-        performValidation.mockReturnValue({testing:true});
+        validateMerchant.mockReturnValue({testing:true});
     });
 
     test('call successfully',async () => {
-        await braintreeOnValidateMerchantApple(eventMock).then(() => {
-            expect(getBraintreeApplePayInstanceCheckedMock).toBeCalledTimes(1);
-            expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
+        await ppcpOnValidateMerchantApple(eventMock).then(() => {
+            expect(getPPCPApplePayInstanceCheckedMock).toBeCalledTimes(1);
+            expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(getOrderInitialDataMock).toBeCalledTimes(1);
-            expect(performValidation).toBeCalledTimes(1);
-            expect(performValidation).toBeCalledWith({validationURL, displayName});
+            expect(validateMerchant).toBeCalledTimes(1);
+            expect(validateMerchant).toBeCalledWith({validationUrl: validationURL, displayName});
             expect(completeMerchantValidation).toBeCalledTimes(1);
             expect(completeMerchantValidation).toBeCalledWith({testing:true});
         });
@@ -70,19 +70,19 @@ describe('testing braintreeOnValidateMerchantApple function',() => {
     ];
 
     test.each(errorData)('$name',async ({errorMock, expectedError}) => {
-        performValidation.mockImplementation(() => {
+        validateMerchant.mockImplementation(() => {
             throw errorMock;
         });
 
-        await braintreeOnValidateMerchantApple(eventMock).then(() => {
+        await ppcpOnValidateMerchantApple(eventMock).then(() => {
             expect('This expect should not run, call should Throw').toBe(null);
         }).catch((e) => {
             expect(e).toStrictEqual(expectedError);
-            expect(getBraintreeApplePayInstanceCheckedMock).toBeCalledTimes(1);
-            expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
+            expect(getPPCPApplePayInstanceCheckedMock).toBeCalledTimes(1);
+            expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(getOrderInitialDataMock).toBeCalledTimes(1);
-            expect(performValidation).toBeCalledTimes(1);
-            expect(performValidation).toBeCalledWith({validationURL, displayName});
+            expect(validateMerchant).toBeCalledTimes(1);
+            expect(validateMerchant).toBeCalledWith({validationUrl: validationURL, displayName});
             expect(completeMerchantValidation).toBeCalledTimes(0);
             expect(displayErrorMock).toBeCalledTimes(1);
             expect(displayErrorMock).toBeCalledWith(displayErrorMsg, 'generic', 'unknown_error');

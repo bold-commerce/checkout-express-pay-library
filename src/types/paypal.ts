@@ -7,9 +7,14 @@ export interface IPaypalNamespaceApple extends PayPalNamespace {
     Applepay: () => IPPCPApplePayInstance;
 }
 
+export interface IPPCPApplePayInstanceValidateMerchantParam {
+    validationUrl: string;
+    displayName: string;
+}
+
 export interface IPPCPApplePayInstance {
     config: () => Promise<IPPCPAppleConfig>;
-    validateMerchant: (validationUrl: string, displayName?: string) => Promise<IPPCPApplePayValidateMerchantResponse>;
+    validateMerchant: (validateMerchantParam: IPPCPApplePayInstanceValidateMerchantParam) => Promise<IPPCPApplePayValidateMerchantResponse>;
     confirmOrder: (
         orderId: string,
         token: ApplePayPaymentToken,
