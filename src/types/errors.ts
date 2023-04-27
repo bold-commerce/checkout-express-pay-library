@@ -29,3 +29,11 @@ export class BraintreeNullStateKeyError extends Error {
         Object.setPrototypeOf(this, BraintreeNullStateKeyError.prototype);
     }
 }
+
+export class PaypalNullStateKeyError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = PaypalNullStateKeyError.name;
+        Object.setPrototypeOf(this, PaypalNullStateKeyError.prototype);
+    }
+}

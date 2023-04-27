@@ -1,4 +1,4 @@
-import {enableDisableSection, showPaymentMethodTypes} from 'src';
+import {enableDisableSection, ppcpOnClickApple, showPaymentMethodTypes} from 'src';
 
 export function createPPCPApple(): void {
 
@@ -13,7 +13,7 @@ export function createPPCPApple(): void {
         const button = document.createElement('button');
         button.className = 'ppcp-apple-pay-button';
         button.id = 'ppcp-apple-pay-button';
-        button.addEventListener('click', () => {/*todo on-CLick PPCP Action and Add e.preventDefault() in it*/});
+        button.addEventListener('click', ppcpOnClickApple);
         ppcpAppleDiv.appendChild(button);
 
         const container = document.getElementById('express-payment-container');

@@ -6,7 +6,7 @@ import {
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {AmountWithBreakdown, OrderResponseBody, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 import {IBraintreeApplePayInstance, IBraintreeClient, IBraintreeGooglePayInstance} from 'src/types/braintree';
-import {IPaypalNamespaceApple, IPPCPApplePayInstance} from 'src/types/paypal';
+import {IPaypalNamespaceApple, IPPCPAppleConfig, IPPCPApplePayInstance} from 'src/types/paypal';
 import GooglePaymentsClient = google.payments.api.PaymentsClient;
 import ApplePayErrorCode = ApplePayJS.ApplePayErrorCode;
 import ErrorReason = google.payments.api.ErrorReason;
@@ -48,6 +48,8 @@ export interface IPaypalState {
     gatewayPublicId: string;
     ppcpAppleCredentials: IExpressPayPaypalCommercePlatform | null;
     ppcpApplePayInstance: IPPCPApplePayInstance | null;
+    ppcpApplePayConfig: IPPCPAppleConfig | null;
+    ppcpApplePaySession: ApplePaySession | null;
 }
 
 export interface IPaypalConstants {

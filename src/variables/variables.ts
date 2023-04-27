@@ -41,6 +41,8 @@ export const paypalState: IPaypalState = {
     gatewayPublicId: '',
     ppcpAppleCredentials: null,
     ppcpApplePayInstance: null,
+    ppcpApplePayConfig: null,
+    ppcpApplePaySession: null,
 };
 
 export const paypalConstants: IPaypalConstants = {

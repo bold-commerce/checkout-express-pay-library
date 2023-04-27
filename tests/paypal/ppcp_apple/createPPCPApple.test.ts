@@ -1,10 +1,10 @@
 import {mocked} from 'jest-mock';
-import {createPPCPApple, enableDisableSection, showPaymentMethodTypes} from 'src';
+import {createPPCPApple, enableDisableSection, ppcpOnClickApple, showPaymentMethodTypes} from 'src';
 
 jest.mock('src/actions/enableDisableSection');
-//jest.mock('src/paypal/ppcp_apple/ppcpOnClickApple');
+jest.mock('src/paypal/ppcp_apple/ppcpOnClickApple');
 const enableDisableSectionMock = mocked(enableDisableSection, true);
-//const braintreeOnClickAppleMock = mocked(ppcpOnClickApple, true);
+const ppcpOnClickAppleMock = mocked(ppcpOnClickApple, true);
 
 describe('testing createBraintreeApple function',() => {
     const container = document.createElement('div');
@@ -29,7 +29,7 @@ describe('testing createBraintreeApple function',() => {
         expect(document.getElementById('ppcp-apple-express-payment')).not.toBeNull();
         expect(document.getElementById('ppcp-apple-pay-button')).not.toBeNull();
         document.getElementById('ppcp-apple-pay-button')?.click();
-        //expect(braintreeOnClickAppleMock).toBeCalledTimes(1);
+        expect(ppcpOnClickAppleMock).toBeCalledTimes(1);
     });
 
     test('call pre mounted',async () => {
