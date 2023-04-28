@@ -10,7 +10,7 @@ export async function ppcpOnValidateMerchantApple(event: ApplePayValidateMerchan
     const {shop_name: shopName} = getOrderInitialData();
 
     try {
-        const merchantSession = await appleInstance.validateMerchant({
+        const {merchantSession} = await appleInstance.validateMerchant({
             validationUrl: event.validationURL,
             displayName: shopName
         });

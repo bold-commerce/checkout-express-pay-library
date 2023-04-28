@@ -1,6 +1,7 @@
 export * from './callBillingAddressEndpoint';
 export * from './callGuestCustomerEndpoint';
 export * from './callShippingAddressEndpoint';
+export * from './formatApplePayContactToCheckoutAddress';
 export * from './getCountryAndProvince';
 export * from './getCountryName';
 export * from './getFirstAndLastName';

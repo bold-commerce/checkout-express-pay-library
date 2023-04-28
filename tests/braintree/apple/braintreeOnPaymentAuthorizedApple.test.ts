@@ -5,7 +5,7 @@ import {
     callBillingAddressEndpoint,
     callGuestCustomerEndpoint,
     callShippingAddressEndpoint,
-    formatBraintreeShippingAddressApple,
+    formatApplePayContactToCheckoutAddress,
     getBraintreeAppleCredentialsChecked,
     getBraintreeApplePayInstanceChecked,
     getBraintreeApplePaySessionChecked,
@@ -32,10 +32,10 @@ import ApplePayPaymentAuthorizedEvent = ApplePayJS.ApplePayPaymentAuthorizedEven
 
 jest.mock('src/actions/orderProcessing');
 jest.mock('src/braintree/manageBraintreeState');
-jest.mock('src/braintree/apple/formatBraintreeShippingAddressApple');
 jest.mock('src/utils/callGuestCustomerEndpoint');
 jest.mock('src/utils/callShippingAddressEndpoint');
 jest.mock('src/utils/callBillingAddressEndpoint');
+jest.mock('src/utils/formatApplePayContactToCheckoutAddress');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/payment/addPayment');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
 jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getApplicationState');
@@ -44,7 +44,7 @@ const orderProcessingMock = mocked(orderProcessing, true);
 const getBraintreeApplePayInstanceCheckedMock = mocked(getBraintreeApplePayInstanceChecked, true);
 const getBraintreeApplePaySessionCheckedMock = mocked(getBraintreeApplePaySessionChecked, true);
 const getBraintreeAppleCredentialsCheckedMock = mocked(getBraintreeAppleCredentialsChecked, true);
-const formatBraintreeShippingAddressAppleMock = mocked(formatBraintreeShippingAddressApple, true);
+const formatApplePayContactToCheckoutAddressMock = mocked(formatApplePayContactToCheckoutAddress, true);
 const callGuestCustomerEndpointMock = mocked(callGuestCustomerEndpoint, true);
 const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
 const callBillingAddressEndpointMock = mocked(callBillingAddressEndpoint, true);
@@ -97,7 +97,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
         jest.resetAllMocks();
         getBraintreeApplePayInstanceCheckedMock.mockReturnValue(appleInstance);
         getBraintreeApplePaySessionCheckedMock.mockReturnValue(applePaySessionObj);
-        formatBraintreeShippingAddressAppleMock.mockReturnValue(addressesMock.shipping);
+        formatApplePayContactToCheckoutAddressMock.mockReturnValue(addressesMock.shipping);
         callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(successReturn));
         callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
         callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
@@ -153,7 +153,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             notSame,
             eventParam }
     ) => {
-        formatBraintreeShippingAddressAppleMock
+        formatApplePayContactToCheckoutAddressMock
             .mockReturnValueOnce(shipping)
             .mockReturnValueOnce(billing);
         const expectedPayment = {
@@ -167,9 +167,9 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
 
         expect(getBraintreeApplePayInstanceCheckedMock).toBeCalledTimes(1);
         expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
-        expect(formatBraintreeShippingAddressAppleMock).toBeCalledTimes(2);
-        expect(formatBraintreeShippingAddressAppleMock).toBeCalledWith(eventParam.payment.shippingContact);
-        expect(formatBraintreeShippingAddressAppleMock).toBeCalledWith(eventParam.payment.billingContact);
+        expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(2);
+        expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(eventParam.payment.shippingContact);
+        expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(eventParam.payment.billingContact);
         expect(callGuestCustomerEndpointMock).toBeCalledTimes(1);
         expect(callGuestCustomerEndpointMock).toBeCalledWith(givenName, familyName, emailAddress);
         expect(callShippingAddressEndpointMock).toBeCalledTimes(1);

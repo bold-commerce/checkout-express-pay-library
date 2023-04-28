@@ -1,5 +1,5 @@
 import {
-    formatBraintreeShippingAddressApple,
+    formatApplePayContactToCheckoutAddress,
     callBillingAddressEndpoint,
     callGuestCustomerEndpoint,
     callShippingAddressEndpoint,
@@ -28,8 +28,8 @@ export async function braintreeOnPaymentAuthorizedApple(event: ApplePayPaymentAu
     const {token, shippingContact, billingContact} = event.payment;
     const {givenName, familyName, emailAddress} = shippingContact ?? {} as ApplePayPaymentContact;
 
-    const shippingAddress = formatBraintreeShippingAddressApple(shippingContact as ApplePayPaymentContact);
-    const billingAddress = formatBraintreeShippingAddressApple(billingContact as ApplePayPaymentContact);
+    const shippingAddress = formatApplePayContactToCheckoutAddress(shippingContact as ApplePayPaymentContact);
+    const billingAddress = formatApplePayContactToCheckoutAddress(billingContact as ApplePayPaymentContact);
     const isSameAddress = isObjectEquals(shippingAddress, billingAddress);
 
     const fail = (error: ApplePayError) => {

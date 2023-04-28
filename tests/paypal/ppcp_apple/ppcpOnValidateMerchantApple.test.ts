@@ -36,7 +36,7 @@ describe('testing ppcpOnValidateMerchantApple function',() => {
         getPPCPApplePayInstanceCheckedMock.mockReturnValue(appleInstance);
         getPPCPApplePaySessionCheckedMock.mockReturnValue(appleSession);
         getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
-        validateMerchant.mockReturnValue({testing:true});
+        validateMerchant.mockReturnValue({merchantSession: {testing: true}});
     });
 
     test('call successfully',async () => {
