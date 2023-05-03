@@ -4,3 +4,4 @@ export * from './ppcpOnClickApple';
 export * from './ppcpOnLoadApple';
 export * from './ppcpOnValidateMerchantApple';
 export * from './ppcpOnShippingContactSelectedApple';
+export * from './ppcpOnShippingMethodSelectedApple';

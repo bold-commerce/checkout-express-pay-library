@@ -1,7 +1,7 @@
-import {getBraintreeApplePaySessionChecked} from 'src/braintree/manageBraintreeState';
 import {
     API_RETRY,
     getPaymentRequestDisplayItems,
+    getPPCPApplePaySessionChecked,
     getTotals,
     getValueByCurrency,
 } from 'src';
@@ -15,9 +15,9 @@ import {
 import ApplePayLineItem = ApplePayJS.ApplePayLineItem;
 import ApplePayShippingMethodSelectedEvent = ApplePayJS.ApplePayShippingMethodSelectedEvent;
 
-export async function braintreeOnShippingMethodSelectedApple(event: ApplePayShippingMethodSelectedEvent): Promise<void> {
+export async function ppcpOnShippingMethodSelectedApple(event: ApplePayShippingMethodSelectedEvent): Promise<void> {
     const {iso_code: currencyCode} = getCurrency();
-    const applePaySession = getBraintreeApplePaySessionChecked();
+    const applePaySession = getPPCPApplePaySessionChecked();
     const {available_shipping_lines: shippingLines} = getShipping();
     const selectedShippingMethod = event.shippingMethod;
     const option = shippingLines.find(line => line.id === selectedShippingMethod.identifier);
