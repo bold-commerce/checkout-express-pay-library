@@ -5,6 +5,7 @@ import {
     ppcpOnValidateMerchantApple,
     getPPCPApplePayConfigChecked,
     ppcpOnShippingContactSelectedApple,
+    ppcpOnShippingMethodSelectedApple,
 } from 'src';
 import {getPaymentRequestDisplayItems, getTotals, getValueByCurrency} from 'src/utils';
 import ApplePayContactField = ApplePayJS.ApplePayContactField;
@@ -39,7 +40,7 @@ export function ppcpOnClickApple(ev: MouseEvent): void {
     applePaySession.oncancel = () => applePaySession.abort();
     applePaySession.onvalidatemerchant = ppcpOnValidateMerchantApple;
     applePaySession.onshippingcontactselected = ppcpOnShippingContactSelectedApple;
-    // applePaySession.onshippingmethodselected = () => {/*TODO implement ppcpOnShippingMethodSelected*/};
+    applePaySession.onshippingmethodselected = ppcpOnShippingMethodSelectedApple;
     // applePaySession.onpaymentauthorized = () => {/*TODO implement ppcpOnPaymentAuthorized*/};
     applePaySession.begin();
 
