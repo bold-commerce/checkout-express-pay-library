@@ -1,4 +1,4 @@
-import {changeShippingLine} from '@bold-commerce/checkout-frontend-library';
+import {changeShippingLine} from '@boldcommerce/checkout-frontend-library';
 import {API_RETRY, IStripeEvent, IStripeShippingOptions, getPaymentRequestDisplayItems, getTotals} from 'src';
 
 export async function changeStripeShippingLines(event: IStripeEvent): Promise<void> {

@@ -14,7 +14,7 @@ import {
     getCurrency,
     IAddPaymentRequest,
     setTaxes,
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {API_RETRY} from 'src/types';
 import {getPaypalGatewayPublicId} from 'src/paypal/managePaypalState';
 import {orderProcessing, displayError} from 'src/actions';

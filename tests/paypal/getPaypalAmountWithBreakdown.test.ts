@@ -1,6 +1,6 @@
-import {getApplicationState, getCurrency} from '@bold-commerce/checkout-frontend-library';
+import {getApplicationState, getCurrency} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
-import {applicationStateMock, currencyMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {applicationStateMock, currencyMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {
     getPaypalAmountWithBreakdown,
     getPaypalDiscountTotal,
@@ -12,8 +12,8 @@ import {
 } from 'src';
 import {AmountWithBreakdown, AmountWithCurrencyCode} from '@paypal/paypal-js';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getApplicationState');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
 jest.mock('src/paypal/getPaypalDiscountTotal');
 jest.mock('src/paypal/getPaypalItemsTotal');
 jest.mock('src/paypal/getPaypalShippingDiscountTotal');

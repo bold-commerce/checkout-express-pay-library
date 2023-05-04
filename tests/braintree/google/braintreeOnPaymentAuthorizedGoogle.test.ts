@@ -16,19 +16,19 @@ import {
     getCurrency,
     getOrderInitialData,
     IFetchError
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import PaymentData = google.payments.api.PaymentData;
 import CardNetwork = google.payments.api.CardNetwork;
 import {mocked} from 'jest-mock';
-import {baseReturnObject, IExpressPayBraintreeGoogle, setTaxes} from '@bold-commerce/checkout-frontend-library';
+import {baseReturnObject, IExpressPayBraintreeGoogle, setTaxes} from '@boldcommerce/checkout-frontend-library';
 import {
     currencyMock,
     orderInitialDataMock
-} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes/setTaxes');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/payment/addPayment');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/payment/addPayment');
 jest.mock('src/braintree/manageBraintreeState');
 jest.mock('src/utils/isObjectEquals');
 jest.mock('src/utils/callGuestCustomerEndpoint');

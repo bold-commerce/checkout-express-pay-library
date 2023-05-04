@@ -1,9 +1,9 @@
 import {getPhoneNumber} from 'src';
-import {getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
-import {orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {orderInitialDataMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getOrderInitialData');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 
 describe('testing getPhoneNumber function', () => {

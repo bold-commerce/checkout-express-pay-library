@@ -1,4 +1,4 @@
-import {validateAddress} from '@bold-commerce/checkout-frontend-library';
+import {validateAddress} from '@boldcommerce/checkout-frontend-library';
 import {getCountryAndProvince, getPhoneNumber} from 'src/utils';
 import {API_RETRY} from 'src';
 

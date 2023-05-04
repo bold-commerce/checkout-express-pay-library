@@ -3,11 +3,11 @@ import {
     getValueByCurrency
 } from 'src';
 import {mocked} from 'jest-mock';
-import {getCurrency, getShipping} from '@bold-commerce/checkout-frontend-library';
-import {currencyMock, shippingMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {getCurrency, getShipping} from '@boldcommerce/checkout-frontend-library';
+import {currencyMock, shippingMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShipping');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
 jest.mock('src/utils/getValueByCurrency');
 const getCurrencyMock = mocked(getCurrency, true);
 const getShippingMock = mocked(getShipping, true);

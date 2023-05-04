@@ -1,5 +1,5 @@
 import {formatPaypalToApiAddress, getCountryAndProvince} from 'src';
-import {ICountryInformation, IProvince, ISetShippingAddressRequest} from '@bold-commerce/checkout-frontend-library';
+import {ICountryInformation, IProvince, ISetShippingAddressRequest} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
 import {ShippingAddress} from '@paypal/paypal-js/types/apis/shipping';
 import {Address} from '@paypal/paypal-js/types/apis/commons';

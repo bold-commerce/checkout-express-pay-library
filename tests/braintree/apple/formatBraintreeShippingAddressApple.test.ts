@@ -1,6 +1,6 @@
 import {mocked} from 'jest-mock';
 import {getCountryName, getProvinceDetails, formatBraintreeShippingAddressApple} from 'src';
-import {IAddress} from '@bold-commerce/checkout-frontend-library';
+import {IAddress} from '@boldcommerce/checkout-frontend-library';
 import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;
 
 jest.mock('src/utils');

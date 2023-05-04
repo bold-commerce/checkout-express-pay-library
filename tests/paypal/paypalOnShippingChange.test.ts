@@ -15,17 +15,17 @@ import {
     getShippingLines,
     ISetShippingAddressRequest,
     IShipping
-} from '@bold-commerce/checkout-frontend-library';
-import {setTaxes} from '@bold-commerce/checkout-frontend-library/lib/taxes/setTaxes';
-import {shippingMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+} from '@boldcommerce/checkout-frontend-library';
+import {setTaxes} from '@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes';
+import {shippingMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {AmountWithBreakdown, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShipping');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping/getShippingLines');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping/changeShippingLine');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes/setTaxes');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/address/setShippingAddress');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/address/updateShippingAddress');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/getShippingLines');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/changeShippingLine');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/address/setShippingAddress');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/address/updateShippingAddress');
 jest.mock('src/paypal/formatPaypalToApiAddress');
 jest.mock('src/paypal/getPaypalPatchOperations');
 jest.mock('src/utils/callShippingAddressEndpoint');

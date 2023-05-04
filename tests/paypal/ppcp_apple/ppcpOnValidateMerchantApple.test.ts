@@ -7,12 +7,12 @@ import {
     getPPCPApplePaySessionChecked,
     IPPCPApplePayInstance,
 } from 'src';
-import {getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
-import {orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
+import {orderInitialDataMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import ApplePayValidateMerchantEvent = ApplePayJS.ApplePayValidateMerchantEvent;
 
 jest.mock('src/paypal/managePaypalState');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getOrderInitialData');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
 jest.mock('src/actions/displayError');
 const getPPCPApplePayInstanceCheckedMock = mocked(getPPCPApplePayInstanceChecked, true);
 const getPPCPApplePaySessionCheckedMock = mocked(getPPCPApplePaySessionChecked, true);

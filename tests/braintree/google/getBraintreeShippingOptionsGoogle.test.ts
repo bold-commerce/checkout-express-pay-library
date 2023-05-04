@@ -1,10 +1,10 @@
 import mocked = jest.mocked;
-import {getCurrency, getShipping} from '@bold-commerce/checkout-frontend-library';
-import {currencyMock, shippingMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {getCurrency, getShipping} from '@boldcommerce/checkout-frontend-library';
+import {currencyMock, shippingMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {getBraintreeShippingOptionsGoogle} from 'src';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShipping');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
 const getCurrencyMock = mocked(getCurrency, true);
 const getShippingMock = mocked(getShipping, true);
 

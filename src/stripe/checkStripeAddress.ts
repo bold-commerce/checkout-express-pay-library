@@ -13,7 +13,7 @@ import {
     getShippingLines,
     setShippingAddress,
     setTaxes
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 
 export async function checkStripeAddress(event: IStripeEvent): Promise<void> {
     let error = false;

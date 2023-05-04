@@ -1,10 +1,10 @@
-import {getCurrency} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
-import {currencyMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {currencyMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {getPaypalScriptOptions} from 'src';
 import {PayPalScriptOptions} from '@paypal/paypal-js/types/script-options';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
 const getCurrencyMock = mocked(getCurrency, true);
 
 describe('testing getPaypalScriptOptions function', () => {

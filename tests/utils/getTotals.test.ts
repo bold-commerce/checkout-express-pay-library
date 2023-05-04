@@ -1,5 +1,5 @@
 import {getTotals} from 'src/utils';
-import {applicationStateMock, feesMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {applicationStateMock, feesMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {mocked} from 'jest-mock';
 import {
     getApplicationState,
@@ -8,9 +8,9 @@ import {
     getLineItems,
     getPayments,
     getTaxes
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
 const getLineItemsMock = mocked(getLineItems, true);
 const getPaymentsMock = mocked(getPayments, true);
 const getTaxesMock = mocked(getTaxes, true);

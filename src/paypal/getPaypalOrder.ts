@@ -1,4 +1,4 @@
-import {getPublicOrderId,} from '@bold-commerce/checkout-frontend-library';
+import {getPublicOrderId,} from '@boldcommerce/checkout-frontend-library';
 import {CreateOrderRequestBody} from '@paypal/paypal-js/types/apis/orders';
 import {getPaypalAmountWithBreakdown, getPaypalPurchaseItems} from 'src';
 

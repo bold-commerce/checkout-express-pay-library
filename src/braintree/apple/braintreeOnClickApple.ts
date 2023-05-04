@@ -2,7 +2,7 @@ import {getPaymentRequestDisplayItems, getTotals, getValueByCurrency} from 'src/
 import {
     getCurrency,
     getOrderInitialData
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {IBraintreeRequiredContactField} from 'src/types';
 import {
     setBraintreeApplePaySession,

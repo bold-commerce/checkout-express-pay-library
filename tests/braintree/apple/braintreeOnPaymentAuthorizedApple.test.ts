@@ -21,12 +21,12 @@ import {
     IExpressPayBraintreeApple,
     IFetchError,
     setTaxes
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {
     applicationStateMock,
     currencyMock,
     addressesMock
-} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;
 import ApplePayPaymentAuthorizedEvent = ApplePayJS.ApplePayPaymentAuthorizedEvent;
 
@@ -36,10 +36,10 @@ jest.mock('src/braintree/apple/formatBraintreeShippingAddressApple');
 jest.mock('src/utils/callGuestCustomerEndpoint');
 jest.mock('src/utils/callShippingAddressEndpoint');
 jest.mock('src/utils/callBillingAddressEndpoint');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/payment/addPayment');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getApplicationState');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes/setTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/payment/addPayment');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 const orderProcessingMock = mocked(orderProcessing, true);
 const getBraintreeApplePayInstanceCheckedMock = mocked(getBraintreeApplePayInstanceChecked, true);
 const getBraintreeApplePaySessionCheckedMock = mocked(getBraintreeApplePaySessionChecked, true);

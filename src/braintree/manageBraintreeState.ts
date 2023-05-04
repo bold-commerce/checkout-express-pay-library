@@ -1,4 +1,4 @@
-import {IExpressPayBraintreeApple, IExpressPayBraintreeGoogle} from '@bold-commerce/checkout-frontend-library';
+import {IExpressPayBraintreeApple, IExpressPayBraintreeGoogle} from '@boldcommerce/checkout-frontend-library';
 import {
     BraintreeNullStateKeyError,
     braintreeState,

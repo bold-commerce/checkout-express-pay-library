@@ -1,5 +1,5 @@
 import {getValueByCurrency} from 'src';
-import {getCurrency, getShipping} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getShipping} from '@boldcommerce/checkout-frontend-library';
 import ShippingOptionParameters = google.payments.api.ShippingOptionParameters;
 import SelectionOption = google.payments.api.SelectionOption;
 

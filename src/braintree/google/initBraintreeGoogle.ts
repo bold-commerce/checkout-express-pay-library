@@ -1,4 +1,4 @@
-import {IExpressPayBraintreeGoogle} from '@bold-commerce/checkout-frontend-library';
+import {IExpressPayBraintreeGoogle} from '@boldcommerce/checkout-frontend-library';
 import {
     loadJS,
     getBraintreeJsUrls,

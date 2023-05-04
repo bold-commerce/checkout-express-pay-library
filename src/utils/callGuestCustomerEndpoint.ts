@@ -4,7 +4,7 @@ import {
     getApplicationState,
     IApiReturnObject,
     updateCustomer as putGuestCustomer,
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {API_RETRY, isObjectEmpty, isObjectEquals} from 'src';
 
 export async function callGuestCustomerEndpoint(firstName: string, lastName: string, email: string): Promise<IApiReturnObject> {

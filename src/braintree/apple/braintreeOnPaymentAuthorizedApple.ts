@@ -17,7 +17,7 @@ import {
     getCurrency,
     IAddPaymentRequest,
     setTaxes
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import ApplePayError = ApplePayJS.ApplePayError;
 import ApplePayPaymentAuthorizedEvent = ApplePayJS.ApplePayPaymentAuthorizedEvent;
 import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;

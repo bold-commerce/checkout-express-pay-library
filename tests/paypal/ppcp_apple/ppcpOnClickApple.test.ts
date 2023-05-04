@@ -10,8 +10,8 @@ import {
     ppcpOnValidateMerchantApple
 } from 'src';
 import {mocked} from 'jest-mock';
-import {getCurrency, getOrderInitialData, IOrderInitialData} from '@bold-commerce/checkout-frontend-library';
-import {currencyMock, orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {getCurrency, getOrderInitialData, IOrderInitialData} from '@boldcommerce/checkout-frontend-library';
+import {currencyMock, orderInitialDataMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import ApplePayPaymentRequest = ApplePayJS.ApplePayPaymentRequest;
 import ApplePayContactField = ApplePayJS.ApplePayContactField;
 import ApplePayLineItem = ApplePayJS.ApplePayLineItem;
@@ -19,8 +19,8 @@ import ApplePayLineItem = ApplePayJS.ApplePayLineItem;
 jest.mock('src/paypal/managePaypalState');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
 jest.mock('src/utils/getTotals');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getOrderInitialData');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
 const getPPCPApplePayConfigCheckedMock = mocked(getPPCPApplePayConfigChecked, true);
 const getCurrencyMock = mocked(getCurrency, true);
 const getTotalsMock = mocked(getTotals, true);
