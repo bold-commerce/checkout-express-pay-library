@@ -12,7 +12,7 @@ import {
     IBraintreeClientInstance,
     setBraintreeApplePayInstance,
 } from 'src';
-import {IExpressPayBraintreeApple} from '@bold-commerce/checkout-frontend-library';
+import {IExpressPayBraintreeApple} from '@boldcommerce/checkout-frontend-library';
 
 jest.mock('src/braintree/manageBraintreeState');
 jest.mock('src/braintree/apple/createBraintreeApple');

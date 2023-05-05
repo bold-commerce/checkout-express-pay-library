@@ -1,9 +1,9 @@
 import {mocked} from 'jest-mock';
-import {getApplicationState} from '@bold-commerce/checkout-frontend-library';
-import {applicationStateMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {getApplicationState} from '@boldcommerce/checkout-frontend-library';
+import {applicationStateMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {getPaymentRequestDisplayItems, getTotals, ITotals} from 'src';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
 jest.mock('src/utils/getTotals');
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getTotalsMock = mocked(getTotals, true);

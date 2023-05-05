@@ -18,14 +18,14 @@ import {
     getCurrency,
     IAddress,
     setTaxes
-} from '@bold-commerce/checkout-frontend-library';
-import {applicationStateMock, currencyMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+} from '@boldcommerce/checkout-frontend-library';
+import {applicationStateMock, currencyMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/payment/addPayment');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getApplicationState');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes/setTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/payment/addPayment');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 jest.mock('src/actions/orderProcessing');
 jest.mock('src/actions/displayError');
 jest.mock('src/paypal/formatPaypalToApiAddress');

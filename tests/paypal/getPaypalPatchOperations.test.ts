@@ -1,10 +1,10 @@
 import {getPaypalAmountWithBreakdown, getPaypalPatchOperations, getPaypalShippingOptions} from 'src';
 import {mocked} from 'jest-mock';
-import {getShipping} from '@bold-commerce/checkout-frontend-library';
-import {shippingMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
-import {IShipping} from '@bold-commerce/checkout-frontend-library/lib/types/apiInterfaces';
+import {getShipping} from '@boldcommerce/checkout-frontend-library';
+import {shippingMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
+import {IShipping} from '@boldcommerce/checkout-frontend-library/lib/types/apiInterfaces';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShipping');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
 jest.mock('src/paypal/getPaypalAmountWithBreakdown');
 jest.mock('src/paypal/getPaypalShippingOptions');
 const getShippingMock = mocked(getShipping, true);

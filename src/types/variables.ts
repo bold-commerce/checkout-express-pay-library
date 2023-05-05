@@ -2,7 +2,7 @@ import {
     IExpressPayBraintreeApple,
     IExpressPayBraintreeGoogle,
     IExpressPayPaypalCommercePlatform
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {AmountWithBreakdown, OrderResponseBody, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 import {IBraintreeApplePayInstance, IBraintreeClient, IBraintreeGooglePayInstance} from 'src/types/braintree';

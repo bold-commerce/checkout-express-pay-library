@@ -1,4 +1,4 @@
-import {getCurrency, getTaxes, ITax} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getTaxes, ITax} from '@boldcommerce/checkout-frontend-library';
 import {AmountWithCurrencyCode} from '@paypal/paypal-js';
 import {getValueByCurrency} from 'src';
 

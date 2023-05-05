@@ -1,4 +1,4 @@
-import {IAddress} from '@bold-commerce/checkout-frontend-library';
+import {IAddress} from '@boldcommerce/checkout-frontend-library';
 import {getCountryName, getFirstAndLastName, getProvinceDetails} from 'src';
 import Address = google.payments.api.Address;
 

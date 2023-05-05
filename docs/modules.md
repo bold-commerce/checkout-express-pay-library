@@ -1,4 +1,4 @@
-# @bold-commerce/checkout-express-pay-library
+# @boldcommerce/checkout-express-pay-library
 
 ## Table of contents
 

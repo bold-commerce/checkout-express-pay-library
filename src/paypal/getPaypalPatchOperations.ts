@@ -1,5 +1,5 @@
 import {getPaypalAmountWithBreakdown, getPaypalShippingOptions, IPaypalPatchOperation} from 'src';
-import {getShipping} from '@bold-commerce/checkout-frontend-library';
+import {getShipping} from '@boldcommerce/checkout-frontend-library';
 
 export function getPaypalPatchOperations(hasOptionSelected: boolean): Array<IPaypalPatchOperation> {
     const {available_shipping_lines: shippingLines} = getShipping();

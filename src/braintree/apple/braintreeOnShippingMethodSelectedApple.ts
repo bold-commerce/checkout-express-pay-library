@@ -11,7 +11,7 @@ import {
     getShipping,
     getShippingLines,
     setTaxes
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import ApplePayLineItem = ApplePayJS.ApplePayLineItem;
 import ApplePayShippingMethodSelectedEvent = ApplePayJS.ApplePayShippingMethodSelectedEvent;
 

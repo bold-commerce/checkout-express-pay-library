@@ -1,4 +1,4 @@
-import {getCurrency, getFees, getLineItems} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getFees, getLineItems} from '@boldcommerce/checkout-frontend-library';
 import {PurchaseItem} from '@paypal/paypal-js/types/apis/orders';
 import {getValueByCurrency, paypalConstants} from 'src';
 

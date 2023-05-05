@@ -1,4 +1,4 @@
-import {getCurrency, getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 import {
     paypalConstants,
     setPPCPApplePaySession,

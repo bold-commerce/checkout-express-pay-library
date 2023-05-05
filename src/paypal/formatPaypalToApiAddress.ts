@@ -1,4 +1,4 @@
-import {ISetShippingAddressRequest} from '@bold-commerce/checkout-frontend-library';
+import {ISetShippingAddressRequest} from '@boldcommerce/checkout-frontend-library';
 import {ShippingAddress} from '@paypal/paypal-js/types/apis/shipping';
 import {getCountryAndProvince} from 'src/utils/getCountryAndProvince';
 import {Address} from '@paypal/paypal-js/types/apis/commons';

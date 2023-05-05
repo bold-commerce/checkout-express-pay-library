@@ -19,7 +19,7 @@ import {
     IExpressPayBraintree,
     IExpressPayBraintreeApple,
     IExpressPayBraintreeGoogle
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import PaymentsClient = google.payments.api.PaymentsClient;
 
 const braintreePayment: IExpressPayBraintree = {

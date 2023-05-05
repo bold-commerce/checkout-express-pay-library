@@ -1,6 +1,6 @@
 import {mocked} from 'jest-mock';
 import {getCountryName, getFirstAndLastName, getProvinceDetails, formatStripeShippingAddress, IStripeAddress} from 'src';
-import {IAddress} from '@bold-commerce/checkout-frontend-library';
+import {IAddress} from '@boldcommerce/checkout-frontend-library';
 
 jest.mock('src/utils');
 const getProvinceDetailsMock = mocked(getProvinceDetails, true);

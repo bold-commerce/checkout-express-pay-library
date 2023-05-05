@@ -12,7 +12,7 @@ import {
     alternatePaymentMethodType,
     IExpressPayBraintree,
     IExpressPayBraintreeGoogle
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 
 jest.mock('src/braintree/getBraintreeJsUrls');
 jest.mock('src/braintree/manageBraintreeState');

@@ -1,9 +1,9 @@
-import {getRefreshedApplicationState} from '@bold-commerce/checkout-frontend-library';
+import {getRefreshedApplicationState} from '@boldcommerce/checkout-frontend-library';
 import {OnClickActions} from '@paypal/paypal-js/types/components/buttons';
 import {mocked} from 'jest-mock';
 import {paypalOnClick} from 'src';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/order/getRefreshedApplicationState');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/order/getRefreshedApplicationState');
 const getRefreshedApplicationStateMock = mocked(getRefreshedApplicationState, true);
 const onClickActionsMock: OnClickActions = {resolve: jest.fn(), reject: jest.fn()};
 

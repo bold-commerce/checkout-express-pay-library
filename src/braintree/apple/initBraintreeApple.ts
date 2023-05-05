@@ -1,4 +1,4 @@
-import {IExpressPayBraintreeApple} from '@bold-commerce/checkout-frontend-library';
+import {IExpressPayBraintreeApple} from '@boldcommerce/checkout-frontend-library';
 import {
     getBraintreeJsUrls,
     loadJS,

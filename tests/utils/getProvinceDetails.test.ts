@@ -1,8 +1,8 @@
-import {getOrderInitialData, ICountryInformation, IOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getOrderInitialData, ICountryInformation, IOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 import {getProvinceDetails} from 'src/utils';
 import {mocked} from 'jest-mock';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 
 describe('testing getProvinceDetails function', () => {

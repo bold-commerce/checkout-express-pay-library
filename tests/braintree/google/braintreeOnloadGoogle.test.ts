@@ -9,13 +9,13 @@ import {
     setBraintreeGooglePayClient,
     setBraintreeGooglePayInstance
 } from 'src';
-import {getOrderInitialData, IExpressPayBraintreeGoogle} from '@bold-commerce/checkout-frontend-library';
-import {orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {getOrderInitialData, IExpressPayBraintreeGoogle} from '@boldcommerce/checkout-frontend-library';
+import {orderInitialDataMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getOrderInitialData');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
 jest.mock('src/braintree/manageBraintreeState');
 jest.mock('src/braintree/google/createBraintreeGoogle');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/');
 const getBraintreeGoogleCredentialsCheckedMock = mocked(getBraintreeGoogleCredentialsChecked, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const setBraintreeGooglePayClientMock = mocked(setBraintreeGooglePayClient, true);

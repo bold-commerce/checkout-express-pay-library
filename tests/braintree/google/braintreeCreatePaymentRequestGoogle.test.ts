@@ -8,17 +8,17 @@ import {
     ITotals
 } from 'src';
 import mocked = jest.mocked;
-import {getCurrency, getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 import {
     currencyMock,
     orderInitialDataMock
-} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import ShippingOptionParameters = google.payments.api.ShippingOptionParameters;
 
 jest.mock('src/braintree/manageBraintreeState');
 jest.mock('src/braintree/google/getBraintreeShippingOptionsGoogle');
 jest.mock('src/utils/getTotals');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/');
 const getBraintreeGooglePayInstanceCheckedMock = mocked(getBraintreeGooglePayInstanceChecked, true);
 const getBraintreeGoogleCredentialsCheckedMock = mocked(getBraintreeGoogleCredentialsChecked, true);
 const getCurrencyMock = mocked(getCurrency, true);

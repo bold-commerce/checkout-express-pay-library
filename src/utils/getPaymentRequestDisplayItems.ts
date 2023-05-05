@@ -1,4 +1,4 @@
-import {getApplicationState} from '@bold-commerce/checkout-frontend-library';
+import {getApplicationState} from '@boldcommerce/checkout-frontend-library';
 import {getTotals} from 'src/utils/getTotals';
 
 export function getPaymentRequestDisplayItems(): Array<{ amount: number; label: string }> {

@@ -12,7 +12,7 @@ import {
     setBraintreeGooglePayClient,
     setBraintreeGooglePayInstance,
 } from 'src';
-import {getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 
 export async function braintreeOnLoadGoogle(): Promise<void> {
     if (!window.google) {

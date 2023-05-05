@@ -1,4 +1,4 @@
-import {getCurrency} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency} from '@boldcommerce/checkout-frontend-library';
 import {AmountWithBreakdown} from '@paypal/paypal-js/types/apis/orders';
 import {
     getPaypalDiscountTotal,

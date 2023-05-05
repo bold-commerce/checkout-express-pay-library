@@ -14,7 +14,7 @@ import {
     getShipping,
     getShippingLines,
     setTaxes,
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
 
 export async function paypalOnShippingChange(data: OnShippingChangeData, actions: OnShippingChangeActions): Promise<void|OrderResponseBody> {

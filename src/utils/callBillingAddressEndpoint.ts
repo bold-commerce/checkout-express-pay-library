@@ -6,7 +6,7 @@ import {
     ISetBillingAddressRequest,
     setBillingAddress,
     updateBillingAddress,
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {API_RETRY, isAddressValid, isObjectEmpty, isObjectEquals} from 'src';
 
 export async function callBillingAddressEndpoint(billingAddress: ISetBillingAddressRequest, validate = true): Promise<IApiReturnObject> {
