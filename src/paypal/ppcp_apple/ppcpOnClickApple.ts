@@ -4,6 +4,7 @@ import {
     setPPCPApplePaySession,
     ppcpOnValidateMerchantApple,
     getPPCPApplePayConfigChecked,
+    ppcpOnPaymentAuthorizedApple,
     ppcpOnShippingContactSelectedApple,
     ppcpOnShippingMethodSelectedApple,
 } from 'src';
@@ -41,7 +42,7 @@ export function ppcpOnClickApple(ev: MouseEvent): void {
     applePaySession.onvalidatemerchant = ppcpOnValidateMerchantApple;
     applePaySession.onshippingcontactselected = ppcpOnShippingContactSelectedApple;
     applePaySession.onshippingmethodselected = ppcpOnShippingMethodSelectedApple;
-    // applePaySession.onpaymentauthorized = () => {/*TODO implement ppcpOnPaymentAuthorized*/};
+    applePaySession.onpaymentauthorized = ppcpOnPaymentAuthorizedApple;
     applePaySession.begin();
 
     setPPCPApplePaySession(applePaySession);

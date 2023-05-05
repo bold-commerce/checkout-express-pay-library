@@ -101,6 +101,12 @@ export interface IBraintreeConstants {
     GOOGLEPAY_VERSION_NUMBER_MINOR: number;
 }
 
+export interface IApplePayConstants {
+    APPLEPAY_ERROR_CODE_SHIPPING_CONTACT: ApplePayErrorCode;
+    APPLEPAY_ERROR_CODE_BILLING_CONTACT: ApplePayErrorCode;
+    APPLEPAY_ERROR_CODE_UNKNOWN: ApplePayErrorCode;
+}
+
 export interface IBraintreeUrls {
     appleJsURL: string;
     clientJsURL: string;

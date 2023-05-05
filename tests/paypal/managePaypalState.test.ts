@@ -1,6 +1,7 @@
 import {
     getPaypalGatewayPublicId,
     getPaypalNameSpace,
+    getPPCPAppleCredentialsChecked,
     getPPCPApplePayConfig,
     getPPCPApplePayConfigChecked,
     getPPCPApplePayInstance,
@@ -107,7 +108,7 @@ describe('testing  managePaypalState functions', () => {
 
     });
 
-    describe('testing  paypalState.ppcpAppleCredentials sets', () => {
+    describe('testing  paypalState.ppcpAppleCredentials sets and gets', () => {
         const ppcpCredentialsMock: IExpressPayPaypalCommercePlatform = {
             type: alternatePaymentMethodType.PPCP_APPLE,
             is_test: true,
@@ -117,17 +118,22 @@ describe('testing  managePaypalState functions', () => {
             merchant_id: 'someMerchantId',
         };
 
-        test('testing call setPaypalGatewayPublicId with mock', async () => {
+        test('testing call setPPCPAppleCredentials with mock', async () => {
             paypalState.ppcpAppleCredentials = null;
             expect(paypalState.ppcpAppleCredentials).toBe(null);
             setPPCPAppleCredentials(ppcpCredentialsMock);
             expect(paypalState.ppcpAppleCredentials).toBe(ppcpCredentialsMock);
         });
 
-        test('testing call setPaypalGatewayPublicId with null', async () => {
+        test('testing call setPPCPAppleCredentials with null', async () => {
             paypalState.ppcpAppleCredentials = null;
             setPPCPAppleCredentials(null);
             expect(paypalState.ppcpAppleCredentials).toBe(null);
+        });
+
+        test('testing call getPPCPAppleCredentialsChecked with mock', async () => {
+            paypalState.ppcpAppleCredentials = ppcpCredentialsMock;
+            expect(getPPCPAppleCredentialsChecked()).toBe(ppcpCredentialsMock);
         });
 
     });
@@ -239,6 +245,10 @@ describe('testing  managePaypalState functions', () => {
                 name: 'getPPCPApplePayConfigChecked with null',
                 key: 'ppcpApplePayConfig',
                 call: getPPCPApplePayConfigChecked
+            },{
+                name: 'getPPCPAppleCredentialsChecked with null',
+                key: 'ppcpAppleCredentials',
+                call: getPPCPAppleCredentialsChecked
             },
         ];
         test.each(gettersCheckedData)('$name', async ({key, call}) => {

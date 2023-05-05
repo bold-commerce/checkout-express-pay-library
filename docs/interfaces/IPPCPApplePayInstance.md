@@ -22,16 +22,13 @@ ___
 
 ### confirmOrder
 
-▸ **confirmOrder**(`orderId`, `token`, `billingContact?`, `shippingContact?`): `Promise`<`unknown`\>
+▸ **confirmOrder**(`confirmOrderParam`): `Promise`<`unknown`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `orderId` | `string` |
-| `token` | `ApplePayPaymentToken` |
-| `billingContact?` | `ApplePayPaymentContact` |
-| `shippingContact?` | `ApplePayPaymentContact` |
+| `confirmOrderParam` | [`IPPCPApplePayInstanceConfirmOrderParam`](IPPCPApplePayInstanceConfirmOrderParam.md) |
 
 #### Returns
 
@@ -41,14 +38,13 @@ ___
 
 ### validateMerchant
 
-▸ **validateMerchant**(`validationUrl`, `displayName?`): `Promise`<[`IPPCPApplePayValidateMerchantResponse`](IPPCPApplePayValidateMerchantResponse.md)\>
+▸ **validateMerchant**(`validateMerchantParam`): `Promise`<[`IPPCPApplePayValidateMerchantResponse`](IPPCPApplePayValidateMerchantResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `validationUrl` | `string` |
-| `displayName?` | `string` |
+| `validateMerchantParam` | [`IPPCPApplePayInstanceValidateMerchantParam`](IPPCPApplePayInstanceValidateMerchantParam.md) |
 
 #### Returns
 
