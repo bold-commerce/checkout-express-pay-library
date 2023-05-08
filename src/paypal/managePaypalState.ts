@@ -1,4 +1,4 @@
-import {IExpressPayPaypalCommercePlatform} from '@bold-commerce/checkout-frontend-library';
+import {IExpressPayPaypalCommercePlatform} from '@boldcommerce/checkout-frontend-library';
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {
     PaypalNullStateKeyError,

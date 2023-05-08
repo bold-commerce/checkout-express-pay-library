@@ -1,4 +1,4 @@
-import {getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 import {isObjectEmpty} from 'src';
 
 export function getPhoneNumber(phone = ''): string {

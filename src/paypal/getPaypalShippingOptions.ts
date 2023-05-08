@@ -1,4 +1,4 @@
-import {getCurrency, getShipping} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getShipping} from '@boldcommerce/checkout-frontend-library';
 import {ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 import {getValueByCurrency, paypalConstants} from 'src';
 

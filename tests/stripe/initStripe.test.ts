@@ -13,11 +13,11 @@ import {
     alternatePaymentMethodType,
     getCurrency,
     getOrderInitialData,
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
-import {currencyMock, orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {currencyMock, orderInitialDataMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
 jest.mock('src/stripe/checkStripeAddress');
 jest.mock('src/stripe/changeStripeShippingLines');
 jest.mock('src/actions/enableDisableSection');

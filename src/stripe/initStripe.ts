@@ -2,7 +2,7 @@ import {
     getCurrency,
     getOrderInitialData,
     IExpressPayStripe
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {
     addStripePayment,
     changeStripeShippingLines,

@@ -1,5 +1,5 @@
 import {PayPalScriptOptions} from '@paypal/paypal-js/types/script-options';
-import {getCurrency} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency} from '@boldcommerce/checkout-frontend-library';
 
 export function getPaypalScriptOptions(clientId: string, debug: boolean, merchantId?: string, components?: string): PayPalScriptOptions {
     const {iso_code: currency} = getCurrency();

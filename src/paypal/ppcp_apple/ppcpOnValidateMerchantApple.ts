@@ -1,4 +1,4 @@
-import {getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 import {displayError} from 'src/actions';
 import {ApplePayValidateMerchantError} from 'src/types';
 import {getPPCPApplePayInstanceChecked, getPPCPApplePaySessionChecked} from 'src/paypal';

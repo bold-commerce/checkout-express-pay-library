@@ -5,12 +5,12 @@ import {
     getApplicationState,
     ICustomer,
     IApplicationState,
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
 import {callGuestCustomerEndpoint} from 'src';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/customer');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/customer');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
 const addGuestCustomerMock = mocked(addGuestCustomer, true);
 const putGuestCustomerMock = mocked(putGuestCustomer, true);
 const getApplicationStateMock = mocked(getApplicationState, true);

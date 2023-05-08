@@ -1,4 +1,4 @@
-import {applicationStateMock, orderInitialDataMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {applicationStateMock, orderInitialDataMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {
     addPayment,
     baseReturnObject,
@@ -6,7 +6,7 @@ import {
     processOrder,
     setBillingAddress,
     updateShippingAddress
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {
     formatStripeBillingAddress,
     formatStripeShippingAddress,
@@ -22,11 +22,11 @@ import {mocked} from 'jest-mock';
 
 jest.mock('src/stripe/formatStripeShippingAddress');
 jest.mock('src/stripe/formatStripeBillingAddress');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/address');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/customer');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/payment');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/order');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/address');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/customer');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/payment');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/order');
 jest.mock('src/utils/callGuestCustomerEndpoint');
 jest.mock('src/utils/getTotals');
 

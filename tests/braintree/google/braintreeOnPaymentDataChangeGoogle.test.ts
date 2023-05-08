@@ -17,13 +17,13 @@ import {
     setTaxes,
     IApiReturnObject,
     IShipping
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {
     addressesMock,
     applicationStateMock,
     currencyMock,
     shippingMock
-} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import IntermediatePaymentData = google.payments.api.IntermediatePaymentData;
 import IntermediateAddress = google.payments.api.IntermediateAddress;
 
@@ -31,12 +31,12 @@ jest.mock('src/braintree/google/formatBraintreeShippingAddressGoogle');
 jest.mock('src/braintree/google/getBraintreeShippingOptionsGoogle');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
 jest.mock('src/utils/callShippingAddressEndpoint');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShipping');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getApplicationState');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes/setTaxes');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping/getShippingLines');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping/changeShippingLine');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/getShippingLines');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/changeShippingLine');
 const getBraintreeShippingOptionsGoogleMock = mocked(getBraintreeShippingOptionsGoogle, true);
 const formatBraintreeShippingAddressGoogleMock = mocked(formatBraintreeShippingAddressGoogle, true);
 const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);

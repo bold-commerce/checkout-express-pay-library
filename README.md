@@ -34,7 +34,7 @@ Checkout Frontend Library is NOT yet published in the NPM Registry.
 
 To install is this library, follow the instructions in the Checkout Frontend  Repository readme, linked below. You must link this library as a package in your application.
 
-> [Checkout Frontend Library Repository](https://github.com/bold-commerce/checkout-frontend-library) - Package name @bold-commerce/checkout-frontend-library
+> [Checkout Frontend Library Repository](https://github.com/bold-commerce/checkout-frontend-library) - Package name @boldcommerce/checkout-frontend-library
 > 
 > [NPM LINK OPTION: documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)
 > 
@@ -59,7 +59,7 @@ Before initializing the Checkout Express Pay Library, you **MUST** initialize th
 Initialize the library with order data and environment variables. The library needs to be initialized with required data before using any other functionality. The following TypeScript snippet shows an example of how to initialize this library.
 
 ```typescript
-import {IApiReturnObject, initialize} from '@bold-commerce/checkout-frontend-library';
+import {IApiReturnObject, initialize} from '@boldcommerce/checkout-frontend-library';
 
  const environment = {type: 'production'};
  const response: IApiReturnObject = await initialize(initData, shopIdentifier, environment);
@@ -128,7 +128,7 @@ For a full list of all actions the library will emit, see the [actions](#actions
 The following TypeScript example shows how you can handle the actions.
 
 ```typescript
-import {initialize, actionTypes} from '@bold-commerce/checkout-express-pay-library';
+import {initialize, actionTypes} from '@boldcommerce/checkout-express-pay-library';
 
 const handleExpressPayActions = async (type, payload) => {
     switch (type) {
@@ -155,7 +155,7 @@ initialize({onAction: handleExpressPayActions});
 The library also exports a style sheet with some default styling for the express payment section of the checkout. Your application can import this default css file for styling using the following statement:
 
 ```
-@import '~@bold-commerce/checkout-express-pay-library/lib/style.css';
+@import '~@boldcommerce/checkout-express-pay-library/lib/style.css';
 ```
 
 > In Template Example: [Checkout Experience Templates - app.css](https://github.com/bold-commerce/checkout-experience-templates/blob/5703757ccef3cc1832be0adaed9983dd40dd3ccc/public/app.css#L54)

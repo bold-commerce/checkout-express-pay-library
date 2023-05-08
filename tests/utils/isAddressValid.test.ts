@@ -4,11 +4,11 @@ import {
     ICountryInformation,
     IProvince,
     validateAddress
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {getCountryAndProvince, getPhoneNumber, isAddressValid} from 'src/utils';
 import {API_RETRY} from 'src';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/address/validateAddress');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/address/validateAddress');
 jest.mock('src/utils/getCountryAndProvince');
 jest.mock('src/utils/getPhoneNumber');
 const getCountryAndProvinceMock = mocked(getCountryAndProvince, true);

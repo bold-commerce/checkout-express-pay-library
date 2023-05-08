@@ -2,7 +2,7 @@ import {getTotals, getValueByCurrency} from 'src/utils';
 import {
     getCurrency,
     getOrderInitialData
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {
     getBraintreeGoogleCredentialsChecked,
     getBraintreeGooglePayInstanceChecked,

@@ -11,19 +11,19 @@ import {
     setBraintreeApplePaySession
 } from 'src';
 import {mocked} from 'jest-mock';
-import {getApplicationState, getCurrency, getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getApplicationState, getCurrency, getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 import {
     applicationStateMock,
     currencyMock,
     orderInitialDataMock
-} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import ApplePayPaymentRequest = ApplePayJS.ApplePayPaymentRequest;
 
 jest.mock('src/braintree/manageBraintreeState');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getApplicationState');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getOrderInitialData');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
 const getBraintreeApplePayInstanceCheckedMock = mocked(getBraintreeApplePayInstanceChecked, true);
 const getCurrencyMock = mocked(getCurrency, true);
 const getApplicationStateMock = mocked(getApplicationState, true);

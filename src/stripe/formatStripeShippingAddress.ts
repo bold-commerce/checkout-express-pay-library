@@ -1,4 +1,4 @@
-import {IAddress} from '@bold-commerce/checkout-frontend-library';
+import {IAddress} from '@boldcommerce/checkout-frontend-library';
 import {getCountryName, getFirstAndLastName, getProvinceDetails, IStripeAddress} from 'src';
 
 export function formatStripeShippingAddress(address: IStripeAddress, phone = ''): IAddress {

@@ -2,7 +2,7 @@ import {
     getOrderInitialData,
     ICountryInformation,
     IProvince,
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {isSimilarStrings} from 'src/utils/isSimilarStrings';
 
 export function getCountryAndProvince(countryKey: string, provinceKey: string): {country?: ICountryInformation, province?: IProvince} {

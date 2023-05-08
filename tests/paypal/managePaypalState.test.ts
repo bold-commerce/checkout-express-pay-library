@@ -21,7 +21,7 @@ import {
     setPPCPApplePaySession,
 } from 'src';
 import {PayPalNamespace} from '@paypal/paypal-js';
-import {alternatePaymentMethodType, IExpressPayPaypalCommercePlatform} from '@bold-commerce/checkout-frontend-library';
+import {alternatePaymentMethodType, IExpressPayPaypalCommercePlatform} from '@boldcommerce/checkout-frontend-library';
 
 const paypalMock: PayPalNamespace = {version: 'test'};
 const ppcpApplePayInstanceMock: IPPCPApplePayInstance = {config: jest.fn(), validateMerchant: jest.fn(), confirmOrder: jest.fn()};

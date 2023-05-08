@@ -6,7 +6,7 @@ import {
     IExpressPayBraintreeGoogle,
     IExpressPayPaypal,
     IExpressPayPaypalCommercePlatform,
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
 import {
     initialize,
@@ -18,7 +18,7 @@ import {
     setOnAction,
 } from 'src';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
 jest.mock('src/initialize/manageExpressPayContext');
 jest.mock('src/stripe/initStripe');
 jest.mock('src/paypal/initPaypal');

@@ -7,11 +7,11 @@ import {
     IAddress,
     setBillingAddress,
     updateBillingAddress
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getBillingAddress');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/address/setBillingAddress');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/address/updateBillingAddress');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getBillingAddress');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/address/setBillingAddress');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/address/updateBillingAddress');
 jest.mock('src/utils/isAddressValid');
 const getBillingAddressMock = mocked(getBillingAddress, true);
 const setBillingAddressMock = mocked(setBillingAddress, true);

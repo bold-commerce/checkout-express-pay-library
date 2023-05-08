@@ -10,10 +10,10 @@ import {mocked} from 'jest-mock';
 import {
     baseReturnObject,
     changeShippingLine
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
 jest.mock('src/utils/getTotals');
 const getTotalsMock = mocked(getTotals, true);

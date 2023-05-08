@@ -1,11 +1,11 @@
-import {getCurrency, getLineItems} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getLineItems} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
-import {currencyMock, lineItemMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {currencyMock, lineItemMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {AmountWithCurrencyCode} from '@paypal/paypal-js';
 import {getPaypalItemsTotal, getValueByCurrency} from 'src';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getLineItems');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getLineItems');
 jest.mock('src/utils/getValueByCurrency');
 const getCurrencyMock = mocked(getCurrency, true);
 const getLineItemsMock = mocked(getLineItems, true);

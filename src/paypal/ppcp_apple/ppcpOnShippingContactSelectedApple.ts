@@ -13,7 +13,7 @@ import {
     getShipping,
     getShippingLines,
     setTaxes
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 
 export async function ppcpOnShippingContactSelectedApple(event: ApplePayShippingContactSelectedEvent): Promise<void> {
     const {iso_code: currencyCode} = getCurrency();

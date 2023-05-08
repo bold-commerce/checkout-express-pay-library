@@ -1,4 +1,4 @@
-import {IAddress} from '@bold-commerce/checkout-frontend-library';
+import {IAddress} from '@boldcommerce/checkout-frontend-library';
 import {getCountryName, getProvinceDetails, getFirstAndLastName, IStripeCard} from 'src';
 
 export function formatStripeBillingAddress(card: IStripeCard, payerName = '', payerPhone = '' ): IAddress {

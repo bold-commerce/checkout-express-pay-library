@@ -1,4 +1,4 @@
-import {alternatePaymentMethodType, IExpressPayPaypal,} from '@bold-commerce/checkout-frontend-library';
+import {alternatePaymentMethodType, IExpressPayPaypal,} from '@boldcommerce/checkout-frontend-library';
 import {
     getPaypalScriptOptions,
     hasPaypalNameSpace,

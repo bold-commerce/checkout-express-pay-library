@@ -1,4 +1,4 @@
-import {getCurrency, getShipping} from '@bold-commerce/checkout-frontend-library';
+import {getCurrency, getShipping} from '@boldcommerce/checkout-frontend-library';
 import {AmountWithCurrencyCode} from '@paypal/paypal-js';
 import {getValueByCurrency} from 'src';
 

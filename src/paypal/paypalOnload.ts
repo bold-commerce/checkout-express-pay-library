@@ -1,4 +1,4 @@
-import {IExpressPayPaypal} from '@bold-commerce/checkout-frontend-library';
+import {IExpressPayPaypal} from '@boldcommerce/checkout-frontend-library';
 import {
     getPaypalNameSpace,
     paypalCreateOrder,

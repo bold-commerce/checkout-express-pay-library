@@ -1,10 +1,10 @@
-import {getPublicOrderId} from '@bold-commerce/checkout-frontend-library';
+import {getPublicOrderId} from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
 import {AmountWithBreakdown, AmountWithCurrencyCode} from '@paypal/paypal-js';
 import {getPaypalAmountWithBreakdown, getPaypalOrder, getPaypalPurchaseItems} from 'src';
 import {CreateOrderRequestBody, PurchaseItem} from '@paypal/paypal-js/types/apis/orders';
 
-jest.mock('@bold-commerce/checkout-frontend-library/lib/auth/getPublicOrderId');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/auth/getPublicOrderId');
 jest.mock('src/paypal/getPaypalAmountWithBreakdown');
 jest.mock('src/paypal/getPaypalPurchaseItems');
 const getPublicOrderIdMock = mocked(getPublicOrderId, true);

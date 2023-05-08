@@ -13,18 +13,18 @@ import {
     getShipping,
     getShippingLines,
     setTaxes
-} from '@bold-commerce/checkout-frontend-library';
+} from '@boldcommerce/checkout-frontend-library';
 import ApplePayShippingMethodSelectedEvent = ApplePayJS.ApplePayShippingMethodSelectedEvent;
-import {applicationStateMock, currencyMock, shippingMock} from '@bold-commerce/checkout-frontend-library/lib/variables/mocks';
+import {applicationStateMock, currencyMock, shippingMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 
 jest.mock('src/paypal/managePaypalState');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getShipping');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/state/getApplicationState');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/taxes/setTaxes');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping/getShippingLines');
-jest.mock('@bold-commerce/checkout-frontend-library/lib/shipping/changeShippingLine');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/getShippingLines');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/changeShippingLine');
 const getPPCPApplePaySessionCheckedMock = mocked(getPPCPApplePaySessionChecked, true);
 const getPaymentRequestDisplayItemsMock = mocked(getPaymentRequestDisplayItems, true);
 const changeShippingLineMock = mocked(changeShippingLine, true);

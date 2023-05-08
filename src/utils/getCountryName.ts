@@ -1,4 +1,4 @@
-import {getOrderInitialData} from '@bold-commerce/checkout-frontend-library';
+import {getOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 
 export function getCountryName(iso_code: string): string {
     const {country_info} = getOrderInitialData();
