@@ -2,7 +2,7 @@ import {IAddress} from '@boldcommerce/checkout-frontend-library';
 import {getCountryName, getProvinceDetails} from 'src';
 import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;
 
-export function formatBraintreeShippingAddressApple(address: ApplePayPaymentContact): IAddress {
+export function formatApplePayContactToCheckoutAddress(address: ApplePayPaymentContact): IAddress {
     const {givenName, familyName, phoneNumber, postalCode, locality, addressLines} = address;
     const countryIso = address.countryCode ?? '';
     const region = address.administrativeArea ?? '';

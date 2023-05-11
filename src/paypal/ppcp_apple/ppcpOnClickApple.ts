@@ -3,7 +3,10 @@ import {
     paypalConstants,
     setPPCPApplePaySession,
     ppcpOnValidateMerchantApple,
-    getPPCPApplePayConfigChecked
+    getPPCPApplePayConfigChecked,
+    ppcpOnPaymentAuthorizedApple,
+    ppcpOnShippingContactSelectedApple,
+    ppcpOnShippingMethodSelectedApple,
 } from 'src';
 import {getPaymentRequestDisplayItems, getTotals, getValueByCurrency} from 'src/utils';
 import ApplePayContactField = ApplePayJS.ApplePayContactField;
@@ -35,10 +38,11 @@ export function ppcpOnClickApple(ev: MouseEvent): void {
     };
 
     const applePaySession: ApplePaySession = new ApplePaySession(paypalConstants.APPLEPAY_VERSION_NUMBER, paymentRequest);
+    applePaySession.oncancel = () => applePaySession.abort();
     applePaySession.onvalidatemerchant = ppcpOnValidateMerchantApple;
-    // applePaySession.onshippingcontactselected = () => {/*TODO implement ppcpOnShippingContactSelected*/};
-    // applePaySession.onshippingmethodselected = () => {/*TODO implement ppcpOnShippingMethodSelected*/};
-    // applePaySession.onpaymentauthorized = () => {/*TODO implement ppcpOnPaymentAuthorized*/};
+    applePaySession.onshippingcontactselected = ppcpOnShippingContactSelectedApple;
+    applePaySession.onshippingmethodselected = ppcpOnShippingMethodSelectedApple;
+    applePaySession.onpaymentauthorized = ppcpOnPaymentAuthorizedApple;
     applePaySession.begin();
 
     setPPCPApplePaySession(applePaySession);

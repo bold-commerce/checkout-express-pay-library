@@ -1,10 +1,10 @@
 import {mocked} from 'jest-mock';
 import {
     API_RETRY,
-    braintreeOnShippingContactSelectedApple,
+    ppcpOnShippingContactSelectedApple,
     callShippingAddressEndpoint,
     formatApplePayContactToCheckoutAddress,
-    getBraintreeApplePaySessionChecked,
+    getPPCPApplePaySessionChecked,
     getPaymentRequestDisplayItems
 } from 'src';
 import {
@@ -24,7 +24,7 @@ import {
 import ApplePayShippingContactSelectedEvent = ApplePayJS.ApplePayShippingContactSelectedEvent;
 import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;
 
-jest.mock('src/braintree/manageBraintreeState');
+jest.mock('src/paypal/managePaypalState');
 jest.mock('src/utils/callShippingAddressEndpoint');
 jest.mock('src/utils/formatApplePayContactToCheckoutAddress');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
@@ -33,7 +33,7 @@ jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/getShippingLines');
-const getBraintreeApplePaySessionCheckedMock = mocked(getBraintreeApplePaySessionChecked, true);
+const getPPCPApplePaySessionCheckedMock = mocked(getPPCPApplePaySessionChecked, true);
 const formatApplePayContactToCheckoutAddressMock = mocked(formatApplePayContactToCheckoutAddress, true);
 const getPaymentRequestDisplayItemsMock = mocked(getPaymentRequestDisplayItems, true);
 const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
@@ -43,7 +43,7 @@ const getApplicationStateMock = mocked(getApplicationState, true);
 const setTaxesMock = mocked(setTaxes, true);
 const getShippingLinesMock = mocked(getShippingLines, true);
 
-describe('testing braintreeOnShippingContactSelectedApple function',() => {
+describe('testing ppcpOnShippingContactSelectedApple function',() => {
     const successReturn = {...baseReturnObject, success: true};
     const displayItemMock = [{label: 'Test Description', amount: 100}];
     const displayItemMappedMock = [{label: 'Test Description', amount: '1.00'}];
@@ -69,7 +69,7 @@ describe('testing braintreeOnShippingContactSelectedApple function',() => {
 
     beforeEach(() => {
         jest.resetAllMocks();
-        getBraintreeApplePaySessionCheckedMock.mockReturnValue(applePaySessionObj);
+        getPPCPApplePaySessionCheckedMock.mockReturnValue(applePaySessionObj);
         getCurrencyMock.mockReturnValue(currencyMock);
         getShippingMock.mockReturnValue(shippingMock);
         getApplicationStateMock.mockReturnValue(applicationStateMock);
@@ -87,9 +87,9 @@ describe('testing braintreeOnShippingContactSelectedApple function',() => {
             newTotal: {amount: '100.00', label: 'Total'}
         };
 
-        await braintreeOnShippingContactSelectedApple(eventMock).then(() => {
+        await ppcpOnShippingContactSelectedApple(eventMock).then(() => {
             expect(getCurrencyMock).toBeCalledTimes(1);
-            expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
+            expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
@@ -150,9 +150,9 @@ describe('testing braintreeOnShippingContactSelectedApple function',() => {
             newTotal: {amount: '100.00', label: 'Total'}
         };
 
-        await braintreeOnShippingContactSelectedApple(eventMock).then(() => {
+        await ppcpOnShippingContactSelectedApple(eventMock).then(() => {
             expect(getCurrencyMock).toBeCalledTimes(1);
-            expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
+            expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);

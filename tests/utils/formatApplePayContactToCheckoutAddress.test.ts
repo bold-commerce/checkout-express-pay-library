@@ -1,13 +1,14 @@
 import {mocked} from 'jest-mock';
-import {getCountryName, getProvinceDetails, formatBraintreeShippingAddressApple} from 'src';
+import {getCountryName, getProvinceDetails, formatApplePayContactToCheckoutAddress} from 'src';
 import {IAddress} from '@boldcommerce/checkout-frontend-library';
 import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;
 
-jest.mock('src/utils');
+jest.mock('src/utils/getProvinceDetails');
+jest.mock('src/utils/getCountryName');
 const getProvinceDetailsMock = mocked(getProvinceDetails, true);
 const getCountryNameMock = mocked(getCountryName, true);
 
-describe('testing formatBraintreeShippingAddressApple function', () => {
+describe('testing formatApplePayContactToCheckoutAddress function', () => {
 
     beforeEach(() => {
         jest.resetAllMocks();
@@ -42,7 +43,7 @@ describe('testing formatBraintreeShippingAddressApple function', () => {
             'phone_number': '111-111-1111'
         };
 
-        const result = formatBraintreeShippingAddressApple(appleAddressMock);
+        const result = formatApplePayContactToCheckoutAddress(appleAddressMock);
 
         expect(result).toStrictEqual(expectedResult);
     });
@@ -67,7 +68,7 @@ describe('testing formatBraintreeShippingAddressApple function', () => {
             'phone_number': ''
         };
 
-        const result = formatBraintreeShippingAddressApple(appleAddressMock);
+        const result = formatApplePayContactToCheckoutAddress(appleAddressMock);
 
         expect(result).toStrictEqual(expectedResult);
     });

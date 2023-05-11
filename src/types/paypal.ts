@@ -12,15 +12,17 @@ export interface IPPCPApplePayInstanceValidateMerchantParam {
     displayName: string;
 }
 
+export interface IPPCPApplePayInstanceConfirmOrderParam {
+    orderId: string;
+    token: ApplePayPaymentToken;
+    billingContact?: ApplePayPaymentContact;
+    shippingContact?: ApplePayPaymentContact;
+}
+
 export interface IPPCPApplePayInstance {
     config: () => Promise<IPPCPAppleConfig>;
     validateMerchant: (validateMerchantParam: IPPCPApplePayInstanceValidateMerchantParam) => Promise<IPPCPApplePayValidateMerchantResponse>;
-    confirmOrder: (
-        orderId: string,
-        token: ApplePayPaymentToken,
-        billingContact?: ApplePayPaymentContact,
-        shippingContact?: ApplePayPaymentContact
-    ) => Promise<unknown>;
+    confirmOrder: (confirmOrderParam: IPPCPApplePayInstanceConfirmOrderParam) => Promise<unknown>;
 }
 
 export interface IPPCPApplePayValidateMerchantResponse {

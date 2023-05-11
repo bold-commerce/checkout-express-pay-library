@@ -1,4 +1,4 @@
-# @bold-commerce/checkout-express-pay-library
+# @boldcommerce/checkout-express-pay-library
 
 ## Table of contents
 
@@ -8,10 +8,12 @@
 - [ApplePayValidateMerchantError](classes/ApplePayValidateMerchantError.md)
 - [BraintreeNullStateKeyError](classes/BraintreeNullStateKeyError.md)
 - [GooglePayLoadingError](classes/GooglePayLoadingError.md)
+- [PaypalNullStateKeyError](classes/PaypalNullStateKeyError.md)
 
 ### Interfaces
 
 - [IActionTypes](interfaces/IActionTypes.md)
+- [IApplePayConstants](interfaces/IApplePayConstants.md)
 - [IBraintreeApplePayCreateRequest](interfaces/IBraintreeApplePayCreateRequest.md)
 - [IBraintreeApplePayInstance](interfaces/IBraintreeApplePayInstance.md)
 - [IBraintreeApplePayPaymentAuthorizedRequest](interfaces/IBraintreeApplePayPaymentAuthorizedRequest.md)
@@ -32,6 +34,8 @@
 - [IInitializeProps](interfaces/IInitializeProps.md)
 - [IPPCPAppleConfig](interfaces/IPPCPAppleConfig.md)
 - [IPPCPApplePayInstance](interfaces/IPPCPApplePayInstance.md)
+- [IPPCPApplePayInstanceConfirmOrderParam](interfaces/IPPCPApplePayInstanceConfirmOrderParam.md)
+- [IPPCPApplePayInstanceValidateMerchantParam](interfaces/IPPCPApplePayInstanceValidateMerchantParam.md)
 - [IPPCPApplePayValidateMerchantResponse](interfaces/IPPCPApplePayValidateMerchantResponse.md)
 - [IPaypalConstants](interfaces/IPaypalConstants.md)
 - [IPaypalNamespaceApple](interfaces/IPaypalNamespaceApple.md)

@@ -1,5 +1,6 @@
 import {
     IActionTypes,
+    IApplePayConstants,
     IBraintreeConstants,
     IBraintreeState,
     IExpressPayContext,
@@ -84,4 +85,10 @@ export const braintreeConstants: IBraintreeConstants = {
     GOOGLEPAY_TRIGGER_INITIALIZE: 'INITIALIZE',
     GOOGLEPAY_VERSION_NUMBER: 2,
     GOOGLEPAY_VERSION_NUMBER_MINOR: 0,
+};
+
+export const applePayConstants: IApplePayConstants = {
+    APPLEPAY_ERROR_CODE_SHIPPING_CONTACT: 'shippingContactInvalid',
+    APPLEPAY_ERROR_CODE_BILLING_CONTACT: 'billingContactInvalid',
+    APPLEPAY_ERROR_CODE_UNKNOWN: 'unknown',
 };

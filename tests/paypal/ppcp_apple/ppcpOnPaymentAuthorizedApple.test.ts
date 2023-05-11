@@ -1,15 +1,15 @@
 import {
     API_RETRY,
-    braintreeConstants,
-    braintreeOnPaymentAuthorizedApple,
+    applePayConstants,
+    ppcpOnPaymentAuthorizedApple,
     callBillingAddressEndpoint,
     callGuestCustomerEndpoint,
     callShippingAddressEndpoint,
     formatApplePayContactToCheckoutAddress,
-    getBraintreeAppleCredentialsChecked,
-    getBraintreeApplePayInstanceChecked,
-    getBraintreeApplePaySessionChecked,
-    IBraintreeApplePayInstance,
+    getPPCPAppleCredentialsChecked,
+    getPPCPApplePayInstanceChecked,
+    getPPCPApplePaySessionChecked,
+    IPPCPApplePayInstance,
     orderProcessing,
 } from 'src';
 import {mocked} from 'jest-mock';
@@ -18,7 +18,9 @@ import {
     baseReturnObject,
     getApplicationState,
     getCurrency,
-    IExpressPayBraintreeApple,
+    IAddPaymentRequest,
+    IApiReturnObject,
+    IExpressPayPaypalCommercePlatform,
     IFetchError,
     setTaxes
 } from '@boldcommerce/checkout-frontend-library';
@@ -31,7 +33,7 @@ import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;
 import ApplePayPaymentAuthorizedEvent = ApplePayJS.ApplePayPaymentAuthorizedEvent;
 
 jest.mock('src/actions/orderProcessing');
-jest.mock('src/braintree/manageBraintreeState');
+jest.mock('src/paypal/managePaypalState');
 jest.mock('src/utils/callGuestCustomerEndpoint');
 jest.mock('src/utils/callShippingAddressEndpoint');
 jest.mock('src/utils/callBillingAddressEndpoint');
@@ -41,9 +43,9 @@ jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 const orderProcessingMock = mocked(orderProcessing, true);
-const getBraintreeApplePayInstanceCheckedMock = mocked(getBraintreeApplePayInstanceChecked, true);
-const getBraintreeApplePaySessionCheckedMock = mocked(getBraintreeApplePaySessionChecked, true);
-const getBraintreeAppleCredentialsCheckedMock = mocked(getBraintreeAppleCredentialsChecked, true);
+const getPPCPApplePayInstanceCheckedMock = mocked(getPPCPApplePayInstanceChecked, true);
+const getPPCPApplePaySessionCheckedMock = mocked(getPPCPApplePaySessionChecked, true);
+const getPPCPAppleCredentialsCheckedMock = mocked(getPPCPAppleCredentialsChecked, true);
 const formatApplePayContactToCheckoutAddressMock = mocked(formatApplePayContactToCheckoutAddress, true);
 const callGuestCustomerEndpointMock = mocked(callGuestCustomerEndpoint, true);
 const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
@@ -53,9 +55,9 @@ const getCurrencyMock = mocked(getCurrency, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
 const setTaxesMock = mocked(setTaxes, true);
 
-describe('testing braintreeOnPaymentAuthorizedApple function', () => {
-    const nonce = 'test_nonce';
-    const credentials = {public_id: 'test_gw_public_id'} as IExpressPayBraintreeApple;
+describe('testing ppcpOnPaymentAuthorizedApple function', () => {
+    const paymentToken = 'tokenized_by_ppcp_apple_pay';
+    const credentials = {public_id: 'test_gw_public_id'} as IExpressPayPaypalCommercePlatform;
     const addressContact: ApplePayPaymentContact = {
         givenName: 'John',
         familyName: 'Doe',
@@ -75,38 +77,53 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
     };
     const event = {
         payment: {
-            token: 'test_token',
+            token: {
+                paymentMethod: {
+                    network: 'someNetwork',
+                    displayName: 'someNetwork 1111'
+                }
+            },
             shippingContact: addressContact,
-            billingContact: diffAddressContact
+            billingContact: diffAddressContact,
         }
     } as unknown as ApplePayPaymentAuthorizedEvent;
     const successReturn = {...baseReturnObject, success: true};
+    const successPaymentReturn = {
+        ...baseReturnObject,
+        success: true,
+        response: {
+            data: {
+                payment: {
+                    token: 'PaypalOrderId'
+                }
+            }
+        }
+    } as IApiReturnObject;
     const applePaySessionMock = {STATUS_SUCCESS: 1, STATUS_FAILURE: 2};
-    const createPaymentRequest = jest.fn();
-    const performValidation = jest.fn();
-    const tokenize = jest.fn();
+    const config = jest.fn();
+    const validateMerchant = jest.fn();
+    const confirmOrder = jest.fn();
     const applePaySessionBegin = jest.fn();
     const applePaySessionCompletePayment = jest.fn();
     const applePaySessionObj = {
         begin: applePaySessionBegin,
         completePayment: applePaySessionCompletePayment
     } as unknown as ApplePaySession;
-    const appleInstance: IBraintreeApplePayInstance = {createPaymentRequest, performValidation, tokenize};
+    const appleInstance: IPPCPApplePayInstance = {config, validateMerchant, confirmOrder};
 
     beforeEach(() => {
         jest.resetAllMocks();
-        getBraintreeApplePayInstanceCheckedMock.mockReturnValue(appleInstance);
-        getBraintreeApplePaySessionCheckedMock.mockReturnValue(applePaySessionObj);
+        getPPCPApplePayInstanceCheckedMock.mockReturnValue(appleInstance);
+        getPPCPApplePaySessionCheckedMock.mockReturnValue(applePaySessionObj);
         formatApplePayContactToCheckoutAddressMock.mockReturnValue(addressesMock.shipping);
         callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(successReturn));
         callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
         callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
         setTaxesMock.mockReturnValue(Promise.resolve(successReturn));
-        tokenize.mockReturnValue({nonce});
-        getBraintreeAppleCredentialsCheckedMock.mockReturnValueOnce(credentials);
+        getPPCPAppleCredentialsCheckedMock.mockReturnValueOnce(credentials);
         getCurrencyMock.mockReturnValue(currencyMock);
         getApplicationStateMock.mockReturnValue(applicationStateMock);
-        addPaymentMock.mockReturnValue(Promise.resolve(successReturn));
+        addPaymentMock.mockReturnValue(Promise.resolve(successPaymentReturn));
         global.window.ApplePaySession = applePaySessionMock;
     });
 
@@ -157,16 +174,22 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             .mockReturnValueOnce(shipping)
             .mockReturnValueOnce(billing);
         const expectedPayment = {
-            token: nonce,
+            token: paymentToken,
             gateway_public_id: credentials.public_id,
             currency: currencyMock.iso_code,
-            amount: applicationStateMock.order_total
-        };
+            amount: applicationStateMock.order_total,
+            extra_payment_data: {
+                brand: eventParam.payment.token.paymentMethod.network,
+                last_digits: '1111',
+                paymentSource: 'apple_pay',
+                language: 'en-US'
+            }
+        } as IAddPaymentRequest;
 
-        await braintreeOnPaymentAuthorizedApple(eventParam as ApplePayPaymentAuthorizedEvent);
+        await ppcpOnPaymentAuthorizedApple(eventParam as ApplePayPaymentAuthorizedEvent);
 
-        expect(getBraintreeApplePayInstanceCheckedMock).toBeCalledTimes(1);
-        expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
+        expect(getPPCPApplePayInstanceCheckedMock).toBeCalledTimes(1);
+        expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
         expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(2);
         expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(eventParam.payment.shippingContact);
         expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(eventParam.payment.billingContact);
@@ -178,13 +201,18 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
         expect(callBillingAddressEndpointMock).toBeCalledWith(billing, notSame);
         expect(setTaxesMock).toBeCalledTimes(1);
         expect(setTaxesMock).toBeCalledWith(API_RETRY);
-        expect(tokenize).toBeCalledTimes(1);
-        expect(tokenize).toBeCalledWith({token: eventParam.payment.token});
-        expect(getBraintreeAppleCredentialsCheckedMock).toBeCalledTimes(1);
+        expect(getPPCPAppleCredentialsCheckedMock).toBeCalledTimes(1);
         expect(getCurrencyMock).toBeCalledTimes(1);
         expect(getApplicationStateMock).toBeCalledTimes(1);
         expect(addPaymentMock).toBeCalledTimes(1);
         expect(addPaymentMock).toBeCalledWith(expectedPayment, API_RETRY);
+        expect(confirmOrder).toBeCalledTimes(1);
+        expect(confirmOrder).toBeCalledWith({
+            orderId: 'PaypalOrderId',
+            token: eventParam.payment.token,
+            shippingContact: eventParam.payment.shippingContact,
+            billingContact: eventParam.payment.billingContact
+        });
         expect(applePaySessionCompletePayment).toBeCalledTimes(1);
         expect(applePaySessionCompletePayment).toBeCalledWith(applePaySessionMock.STATUS_SUCCESS);
         expect(orderProcessingMock).toBeCalledTimes(1);
@@ -208,7 +236,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: successReturn,
             taxesResp: successReturn,
             paymentResp: successReturn,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT, message: errorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT, message: errorMsg}
         },
         {
             n: 'called failed customer response without error',
@@ -217,7 +245,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: successReturn,
             taxesResp: successReturn,
             paymentResp: successReturn,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT, message: customerErrorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT, message: customerErrorMsg}
         },
         {
             n: 'called failed shipping response with error',
@@ -226,7 +254,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: successReturn,
             taxesResp: successReturn,
             paymentResp: successReturn,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT, message: errorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT, message: errorMsg}
         },
         {
             n: 'called failed shipping response without error',
@@ -235,7 +263,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: successReturn,
             taxesResp: successReturn,
             paymentResp: successReturn,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT, message: shippingErrorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT, message: shippingErrorMsg}
         },
         {
             n: 'called failed billing response with error',
@@ -244,7 +272,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: failureReturnWithError,
             taxesResp: successReturn,
             paymentResp: successReturn,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_BILLING_CONTACT, message: errorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_BILLING_CONTACT, message: errorMsg}
         },
         {
             n: 'called failed billing response without error',
@@ -253,7 +281,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: failureReturnNoError,
             taxesResp: successReturn,
             paymentResp: successReturn,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_BILLING_CONTACT, message: billingErrorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_BILLING_CONTACT, message: billingErrorMsg}
         },
         {
             n: 'called failed taxes response with error',
@@ -262,7 +290,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: successReturn,
             taxesResp: failureReturnWithError,
             paymentResp: successReturn,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message: errorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message: errorMsg}
         },
         {
             n: 'called failed taxes response without error',
@@ -271,7 +299,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: successReturn,
             taxesResp: failureReturnNoError,
             paymentResp: successReturn,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message: taxesErrorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message: taxesErrorMsg}
         },
         {
             n: 'called failed payment response with error',
@@ -280,7 +308,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: successReturn,
             taxesResp: successReturn,
             paymentResp: failureReturnWithError,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message: errorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message: errorMsg}
         },
         {
             n: 'called failed payment response without error',
@@ -289,7 +317,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             billingResp: successReturn,
             taxesResp: successReturn,
             paymentResp: failureReturnNoError,
-            error: {code: braintreeConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message: paymentErrorMsg}
+            error: {code: applePayConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message: paymentErrorMsg}
         },
     ];
 
@@ -304,7 +332,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             errors: [error]
         };
 
-        await braintreeOnPaymentAuthorizedApple(event);
+        await ppcpOnPaymentAuthorizedApple(event);
         expect(orderProcessingMock).toBeCalledTimes(0);
         expect(applePaySessionCompletePayment).toBeCalledTimes(1);
         expect(applePaySessionCompletePayment).toHaveBeenCalledWith(completePaymentParam);
@@ -318,17 +346,17 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
     ];
 
     test.each(errorData)('$n', async ({error, message}) => {
-        tokenize.mockImplementationOnce(() => {
+        confirmOrder.mockImplementationOnce(() => {
             throw error;
         });
         const completePaymentParam = {
             status: applePaySessionMock.STATUS_FAILURE,
-            errors: [{code: braintreeConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message}]
+            errors: [{code: applePayConstants.APPLEPAY_ERROR_CODE_UNKNOWN, message}]
         };
 
-        await braintreeOnPaymentAuthorizedApple(event);
-        expect(getBraintreeAppleCredentialsCheckedMock).toBeCalledTimes(0);
+        await ppcpOnPaymentAuthorizedApple(event);
         expect(applePaySessionCompletePayment).toBeCalledTimes(1);
         expect(applePaySessionCompletePayment).toHaveBeenCalledWith(completePaymentParam);
+        expect(orderProcessingMock).toBeCalledTimes(0);
     });
 });
