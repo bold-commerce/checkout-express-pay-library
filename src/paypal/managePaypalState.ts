@@ -81,3 +81,10 @@ export function getPaypalGatewayPublicId(): string {
 export function setPPCPAppleCredentials(credentials: IExpressPayPaypalCommercePlatform | null): void {
     paypalState.ppcpAppleCredentials = credentials;
 }
+
+export function getPPCPAppleCredentialsChecked(): IExpressPayPaypalCommercePlatform {
+    if (!paypalState.ppcpAppleCredentials) {
+        throw new PaypalNullStateKeyError('Precondition violated: ppcpAppleCredentials is null');
+    }
+    return paypalState.ppcpAppleCredentials;
+}

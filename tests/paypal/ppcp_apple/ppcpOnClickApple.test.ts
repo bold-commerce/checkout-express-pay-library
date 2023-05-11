@@ -3,7 +3,6 @@ import {getCurrency, getOrderInitialData, IOrderInitialData} from '@boldcommerce
 import {currencyMock, orderInitialDataMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {
     ppcpOnClickApple,
-    ppcpOnShippingContactSelectedApple,
     getPaymentRequestDisplayItems,
     getPPCPApplePayConfigChecked,
     getTotals,
@@ -11,8 +10,10 @@ import {
     ITotals,
     setPPCPApplePaySession,
     paypalConstants,
-    ppcpOnValidateMerchantApple,
-    ppcpOnShippingMethodSelectedApple
+    ppcpOnPaymentAuthorizedApple,
+    ppcpOnShippingContactSelectedApple,
+    ppcpOnShippingMethodSelectedApple,
+    ppcpOnValidateMerchantApple
 } from 'src';
 import ApplePayPaymentRequest = ApplePayJS.ApplePayPaymentRequest;
 import ApplePayContactField = ApplePayJS.ApplePayContactField;
@@ -105,7 +106,7 @@ describe('testing ppcpOnClickApple function', () => {
         expect(applePaySessionObj.onvalidatemerchant).toBe(ppcpOnValidateMerchantApple);
         expect(applePaySessionObj.onshippingcontactselected).toBe(ppcpOnShippingContactSelectedApple);
         expect(applePaySessionObj.onshippingmethodselected).toBe(ppcpOnShippingMethodSelectedApple);
-        // expect(applePaySessionObj.onpaymentauthorized).toBe(() => {/*TODO implement ppcpOnPaymentAuthorized*/});
+        expect(applePaySessionObj.onpaymentauthorized).toBe(ppcpOnPaymentAuthorizedApple);
         expect(applePaySessionBegin).toBeCalledTimes(1);
         expect(setPPCPApplePaySessionMock).toBeCalledTimes(1);
         expect(setPPCPApplePaySessionMock).toBeCalledWith(applePaySessionObj);
@@ -134,7 +135,7 @@ describe('testing ppcpOnClickApple function', () => {
         expect(applePaySessionObj.onvalidatemerchant).toBe(ppcpOnValidateMerchantApple);
         expect(applePaySessionObj.onshippingcontactselected).toBe(ppcpOnShippingContactSelectedApple);
         expect(applePaySessionObj.onshippingmethodselected).toBe(ppcpOnShippingMethodSelectedApple);
-        // expect(applePaySessionObj.onpaymentauthorized).toBe(() => {/*TODO implement ppcpOnPaymentAuthorized*/});
+        expect(applePaySessionObj.onpaymentauthorized).toBe(ppcpOnPaymentAuthorizedApple);
         expect(applePaySessionBegin).toBeCalledTimes(1);
         expect(applePaySessionAbort).toBeCalledTimes(0);
         expect(setPPCPApplePaySessionMock).toBeCalledTimes(1);
@@ -167,7 +168,7 @@ describe('testing ppcpOnClickApple function', () => {
         expect(applePaySessionObj.onvalidatemerchant).toBe(ppcpOnValidateMerchantApple);
         expect(applePaySessionObj.onshippingcontactselected).toBe(ppcpOnShippingContactSelectedApple);
         expect(applePaySessionObj.onshippingmethodselected).toBe(ppcpOnShippingMethodSelectedApple);
-        // expect(applePaySessionObj.onpaymentauthorized).toBe(() => {/*TODO implement ppcpOnPaymentAuthorized*/});
+        expect(applePaySessionObj.onpaymentauthorized).toBe(ppcpOnPaymentAuthorizedApple);
         expect(applePaySessionBegin).toBeCalledTimes(1);
         expect(applePaySessionAbort).toBeCalledTimes(0);
         expect(setPPCPApplePaySessionMock).toBeCalledTimes(1);
