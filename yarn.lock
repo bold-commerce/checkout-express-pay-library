@@ -291,10 +291,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@boldcommerce/checkout-frontend-library@0.45.0":
-  version "0.45.0"
-  resolved "https://registry.yarnpkg.com/@boldcommerce/checkout-frontend-library/-/checkout-frontend-library-0.45.0.tgz#17fa9b1418e88fbbc45644322b3071482f2b7179"
-  integrity sha512-+Ojn4bDABFMYM27zR6ZCrV6BhstaCNmvMvA4+XJrBywsPNBYgmoUI2hI/MGAJQAQ3K1XtLOE8uv+X567ZWIVXA==
+"@boldcommerce/checkout-frontend-library@0.47.0":
+  version "0.47.0"
+  resolved "https://registry.yarnpkg.com/@boldcommerce/checkout-frontend-library/-/checkout-frontend-library-0.47.0.tgz#392bb52fcff4bc1a16f36b76ae30d469da73dd0d"
+  integrity sha512-xhxXd8t9HxBF1ekDxR4qL/Iomg0ARi869Ez0LzfIvXmxJPTuK3WKkJerJEgk6BzKNIkHiS63KOPxSRDB30P23g==
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
