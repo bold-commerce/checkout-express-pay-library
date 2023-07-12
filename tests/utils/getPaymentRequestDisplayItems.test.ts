@@ -40,7 +40,7 @@ describe('testing getPaymentRequestDisplayItems function', () => {
 
     test('testing the getPaymentRequestDisplayItems function without fees and shipping', () => {
         const localAppState = {...appState};
-        localAppState.fees = undefined;
+        localAppState.fees = [];
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         localAppState.shipping.selected_shipping = undefined;
