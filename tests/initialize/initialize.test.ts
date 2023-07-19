@@ -53,7 +53,8 @@ describe('testing initialize function', () => {
         },
         alternative_payment_methods: [],
         external_payment_gateways:  [],
-        life_fields: [],
+        life_elements: [],
+        flow_settings: {},
     };
     const braintreePayment: IExpressPayBraintree = {
         type: alternatePaymentMethodType.BRAINTREE_GOOGLE,
