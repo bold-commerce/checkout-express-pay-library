@@ -106,6 +106,77 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
         });
     });
 
+    test('call successfully with address has empty fields',async () => {
+        formatApplePayContactToCheckoutAddressMock.mockReturnValue(
+            {
+                'first_name':  '',
+                'last_name':  '',
+                'address_line_1':   '',
+                'address_line_2': '',
+                'country': '',
+                'city':  '',
+                'province': '',
+                'country_code': '',
+                'province_code': '',
+                'postal_code':  '',
+                'business_name': '',
+                'phone_number':  ''
+            }
+        );
+        const expectedCompleteParam = {
+            newLineItems: displayItemMappedMock,
+            newShippingMethods: shippingMethodsMock,
+            newTotal: {amount: '100.00', label: 'Total'}
+        };
+
+        const addressContactWithEmptyFields: ApplePayPaymentContact = {
+            givenName: '',
+            familyName: '',
+            phoneNumber: '1231231234',
+            postalCode: 'R3Y0L6',
+            locality: 'Winnipeg',
+            addressLines: ['', 'Line 2'],
+            emailAddress: 'test@test.com',
+            countryCode: 'CA',
+            administrativeArea: 'MB'
+        };
+        const eventMockNew = {
+            shippingContact: addressContactWithEmptyFields
+        } as ApplePayShippingContactSelectedEvent;
+
+        const expectedShipping = {
+            address_line_1: 'addressLine1',
+            address_line_2: '',
+            business_name: '',
+            city: '',
+            country: '',
+            country_code: '',
+            first_name: 'fistName',
+            last_name: 'lastName',
+            phone_number: '',
+            postal_code: '',
+            province: '',
+            province_code: '',
+        };
+        await ppcpOnShippingContactSelectedApple(eventMockNew).then(() => {
+            expect(getCurrencyMock).toBeCalledTimes(1);
+            expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
+            expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
+            expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContactWithEmptyFields);
+            expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
+            expect(callShippingAddressEndpointMock).toBeCalledWith(expectedShipping, true);
+            expect(getShippingLinesMock).toBeCalledTimes(1);
+            expect(getShippingLinesMock).toBeCalledWith(API_RETRY);
+            expect(setTaxesMock).toBeCalledTimes(1);
+            expect(setTaxesMock).toBeCalledWith(API_RETRY);
+            expect(getApplicationStateMock).toBeCalledTimes(1);
+            expect(getPaymentRequestDisplayItemsMock).toBeCalledTimes(1);
+            expect(getShippingMock).toBeCalledTimes(1);
+            expect(applePaySessionCompleteShippingContactSelection).toBeCalledTimes(1);
+            expect(applePaySessionCompleteShippingContactSelection).toBeCalledWith(expectedCompleteParam);
+        });
+    });
+
     const failureResponse = {...baseReturnObject, success: false};
     const failureData = [
         {
