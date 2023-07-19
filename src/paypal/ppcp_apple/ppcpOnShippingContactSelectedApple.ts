@@ -19,6 +19,10 @@ export async function ppcpOnShippingContactSelectedApple(event: ApplePayShipping
     const {iso_code: currencyCode} = getCurrency();
     const applePaySession = getPPCPApplePaySessionChecked();
     const address = formatApplePayContactToCheckoutAddress(event.shippingContact);
+    address.first_name = address.first_name.trim() || 'fistName';
+    address.last_name = address.last_name.trim() || 'lastName';
+    address.address_line_1 = address.address_line_1.trim() || 'addressLine1';
+
 
     const fail = () => {
         const {totalAmountDue} = getTotals();
