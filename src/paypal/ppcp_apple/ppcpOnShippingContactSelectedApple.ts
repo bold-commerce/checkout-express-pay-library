@@ -22,7 +22,7 @@ export async function ppcpOnShippingContactSelectedApple(event: ApplePayShipping
     address.first_name = address.first_name.trim() || 'fistName';
     address.last_name = address.last_name.trim() || 'lastName';
     address.address_line_1 = address.address_line_1.trim() || 'addressLine1';
-
+    address.phone_number = address.phone_number.trim() || '0000000000';
 
     const fail = () => {
         const {totalAmountDue} = getTotals();

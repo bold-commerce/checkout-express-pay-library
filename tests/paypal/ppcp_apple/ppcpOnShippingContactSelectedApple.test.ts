@@ -132,7 +132,7 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
         const addressContactWithEmptyFields: ApplePayPaymentContact = {
             givenName: '',
             familyName: '',
-            phoneNumber: '1231231234',
+            phoneNumber: '',
             postalCode: 'R3Y0L6',
             locality: 'Winnipeg',
             addressLines: ['', 'Line 2'],
@@ -153,7 +153,7 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
             country_code: '',
             first_name: 'fistName',
             last_name: 'lastName',
-            phone_number: '',
+            phone_number: '0000000000',
             postal_code: '',
             province: '',
             province_code: '',
