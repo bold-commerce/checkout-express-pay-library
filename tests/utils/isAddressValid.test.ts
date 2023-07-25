@@ -52,6 +52,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'shipping',
             validateAddressParamsExpected: {arg1: 'first', arg2: 'last', arg3: 'test_address_line_1', arg4:'test_address_line_2', arg5:'test_city', arg6: 'm1m1m1', arg7: province.name, arg8: province.iso_code, arg9: country.name, arg10: country.iso_code},
             expectedResp: true
@@ -67,6 +68,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'shipping',
             validateAddressParamsExpected: {arg1: 'first', arg2: 'last', arg3: 'test_address_line_1', arg4:'test_address_line_2', arg5:'test_city', arg6: 'm1m1m1', arg7: province.name, arg8: province.iso_code, arg9: country.name, arg10: country.iso_code},
             expectedResp: false
@@ -82,6 +84,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'shipping',
             validateAddressParamsExpected: {arg1: 'first', arg2: 'last', arg3: 'test_address_line_1', arg4:'test_address_line_2', arg5:'test_city', arg6: 'm1m1m1', arg7: '', arg8: '', arg9: country.name, arg10: country.iso_code},
             expectedResp: true
@@ -97,6 +100,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'shipping',
             validateAddressParamsExpected: {arg1: 'first', arg2: 'last', arg3: 'test_address_line_1', arg4:'test_address_line_2', arg5:'test_city', arg6: 'm1m1m1', arg7: '', arg8: '', arg9: country.name, arg10: country.iso_code},
             expectedResp: false
@@ -104,13 +108,13 @@ describe('testing getCountryName function', () => {
     ];
 
     test.each(dataWithApi)('Testing isAddressValid dataset when API call happens', async (
-        {getCountryProvinceResp, firstName, lastName, addressLine1, addressLine2, city, postalCode, countryKey, provinceKey, type, validateAddressParamsExpected, expectedResp}
+        {getCountryProvinceResp, firstName, lastName, addressLine1, addressLine2, city, postalCode, countryKey, provinceKey, phoneNumber, type, validateAddressParamsExpected, expectedResp}
     ) => {
         const {arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10} = validateAddressParamsExpected;
         validateAddressMock.mockReturnValueOnce(Promise.resolve({...baseReturnObject, success: expectedResp}));
         getCountryAndProvinceMock.mockReturnValueOnce(getCountryProvinceResp);
 
-        const result = await isAddressValid(firstName, lastName, addressLine1, addressLine2, city, postalCode, countryKey, provinceKey, type as 'shipping'|'billing');
+        const result = await isAddressValid(firstName, lastName, addressLine1, addressLine2, city, postalCode, countryKey, provinceKey, phoneNumber, type as 'shipping'|'billing');
 
         expect(result).toBe(expectedResp);
         expect(getCountryAndProvinceMock).toHaveBeenCalledTimes(1);
@@ -131,6 +135,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'shipping',
         },
         {
@@ -144,6 +149,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'shipping',
         },
         {
@@ -157,6 +163,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'billing',
         },
         {
@@ -170,6 +177,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'shipping',
         },
         {
@@ -183,6 +191,7 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'shipping',
         },
         {
@@ -196,16 +205,17 @@ describe('testing getCountryName function', () => {
             countryKey: 'test_country_iso_code',
             provinceKey: 'test_province_iso_code',
             postalCode: 'm1m1m1',
+            phoneNumber: '0000000000',
             type: 'billing',
         },
     ];
 
     test.each(dataWithoutApi)('Testing isAddressValid dataset when false before API', async (
-        {getCountryProvinceResp, firstName, lastName, addressLine1, addressLine2, city, postalCode, countryKey, provinceKey, type}
+        {getCountryProvinceResp, firstName, lastName, addressLine1, addressLine2, city, postalCode, countryKey, provinceKey, phoneNumber, type}
     ) => {
         getCountryAndProvinceMock.mockReturnValueOnce(getCountryProvinceResp);
 
-        const result = await isAddressValid(firstName, lastName, addressLine1, addressLine2, city, postalCode, countryKey, provinceKey, type as 'shipping'|'billing');
+        const result = await isAddressValid(firstName, lastName, addressLine1, addressLine2, city, postalCode, countryKey, provinceKey, phoneNumber, type as 'shipping'|'billing');
 
         expect(result).toBe(false);
         expect(getCountryAndProvinceMock).toHaveBeenCalledTimes(1);
