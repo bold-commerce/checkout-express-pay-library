@@ -103,6 +103,7 @@ describe('testing callBillingAddressEndpoint function', () => {
                 filledAddress1.postal_code,
                 filledAddress1.country_code,
                 filledAddress1.province_code,
+                filledAddress1.phone_number,
                 'billing');
         expect(setBillingAddressMock).toHaveBeenCalledTimes(1);
         expect(setBillingAddressMock).toHaveBeenCalledWith(filledAddress1, API_RETRY);
@@ -148,6 +149,7 @@ describe('testing callBillingAddressEndpoint function', () => {
                 filledAddress2.postal_code,
                 filledAddress2.country_code,
                 filledAddress2.province_code,
+                filledAddress2.phone_number,
                 'billing');
         expect(setBillingAddressMock).toHaveBeenCalledTimes(0);
         expect(updateBillingAddressMock).toHaveBeenCalledTimes(1);
@@ -175,7 +177,7 @@ describe('testing callBillingAddressEndpoint function', () => {
         expect(result).toStrictEqual(expectedReturn);
         expect(getBillingAddressMock).toHaveBeenCalledTimes(1);
         expect(isAddressValidMock).toHaveBeenCalledTimes(1);
-        expect(isAddressValidMock).toHaveBeenCalledWith('', '', '', '', '', '', '', '', 'billing');
+        expect(isAddressValidMock).toHaveBeenCalledWith('', '', '', '', '', '', '', '', '1111111111','billing');
         expect(setBillingAddressMock).toHaveBeenCalledTimes(0);
         expect(updateBillingAddressMock).toHaveBeenCalledTimes(0);
     });
@@ -205,6 +207,43 @@ describe('testing callBillingAddressEndpoint function', () => {
         expect(setBillingAddressMock).toHaveBeenCalledTimes(0);
         expect(updateBillingAddressMock).toHaveBeenCalledTimes(1);
         expect(updateBillingAddressMock).toHaveBeenCalledWith(filledAddress2, API_RETRY);
+    });
+
+    test('validate not provided phone number, all success', async () => {
+        const filledAddress3: IAddress = {
+            address_line_1: 'Test line 1',
+            address_line_2: 'Test line 2',
+            business_name: '',
+            city: 'Test city',
+            country: 'Test Country',
+            country_code: 'test_country_code',
+            first_name: 'John',
+            last_name: 'Doe',
+            phone_number: '',
+            postal_code: 'M1M1M1',
+            province: 'Test Province',
+            province_code: 'test_province_code'
+        };
+        const result = await callBillingAddressEndpoint(filledAddress3);
+
+        expect(result).toStrictEqual(successReturn);
+        expect(getBillingAddressMock).toHaveBeenCalledTimes(1);
+        expect(isAddressValidMock).toHaveBeenCalledTimes(1);
+        expect(isAddressValidMock)
+            .toHaveBeenCalledWith(
+                filledAddress1.first_name,
+                filledAddress1.last_name,
+                filledAddress1.address_line_1,
+                filledAddress1.address_line_2,
+                filledAddress1.city,
+                filledAddress1.postal_code,
+                filledAddress1.country_code,
+                filledAddress1.province_code,
+                '',
+                'billing');
+        expect(setBillingAddressMock).toHaveBeenCalledTimes(1);
+        expect(setBillingAddressMock).toHaveBeenCalledWith(filledAddress3, API_RETRY);
+        expect(updateBillingAddressMock).toHaveBeenCalledTimes(0);
     });
 
 });

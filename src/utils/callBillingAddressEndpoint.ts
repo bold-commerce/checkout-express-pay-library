@@ -26,6 +26,7 @@ export async function callBillingAddressEndpoint(billingAddress: ISetBillingAddr
             billingAddress.postal_code || '',
             billingAddress.country_code || '',
             billingAddress.province_code || '',
+            billingAddress.phone_number || '',
             'billing');
     }
 
