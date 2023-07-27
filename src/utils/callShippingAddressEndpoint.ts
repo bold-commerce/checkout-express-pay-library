@@ -26,6 +26,7 @@ export async function callShippingAddressEndpoint(shippingAddress: ISetShippingA
             shippingAddress.postal_code || '',
             shippingAddress.country_code || '',
             shippingAddress.province_code || '',
+            shippingAddress.phone_number || '',
             'shipping');
     }
 

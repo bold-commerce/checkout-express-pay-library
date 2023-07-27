@@ -103,9 +103,47 @@ describe('testing callShippingAddressEndpoint function', () => {
                 filledAddress1.postal_code,
                 filledAddress1.country_code,
                 filledAddress1.province_code,
+                filledAddress1.phone_number,
                 'shipping');
         expect(setShippingAddressMock).toHaveBeenCalledTimes(1);
         expect(setShippingAddressMock).toHaveBeenCalledWith(filledAddress1, API_RETRY);
+        expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
+    });
+
+    test('validate not provided phone number, all success', async () => {
+        const filledAddress3: IAddress = {
+            address_line_1: 'Test line 1',
+            address_line_2: 'Test line 2',
+            business_name: '',
+            city: 'Test city',
+            country: 'Test Country',
+            country_code: 'test_country_code',
+            first_name: 'John',
+            last_name: 'Doe',
+            phone_number: '',
+            postal_code: 'M1M1M1',
+            province: 'Test Province',
+            province_code: 'test_province_code'
+        };
+        const result = await callShippingAddressEndpoint(filledAddress3);
+
+        expect(result).toStrictEqual(successReturn);
+        expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
+        expect(isAddressValidMock).toHaveBeenCalledTimes(1);
+        expect(isAddressValidMock)
+            .toHaveBeenCalledWith(
+                filledAddress1.first_name,
+                filledAddress1.last_name,
+                filledAddress1.address_line_1,
+                filledAddress1.address_line_2,
+                filledAddress1.city,
+                filledAddress1.postal_code,
+                filledAddress1.country_code,
+                filledAddress1.province_code,
+                '',
+                'shipping');
+        expect(setShippingAddressMock).toHaveBeenCalledTimes(1);
+        expect(setShippingAddressMock).toHaveBeenCalledWith(filledAddress3, API_RETRY);
         expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
     });
 
@@ -148,6 +186,7 @@ describe('testing callShippingAddressEndpoint function', () => {
                 filledAddress2.postal_code,
                 filledAddress2.country_code,
                 filledAddress2.province_code,
+                filledAddress2.phone_number,
                 'shipping');
         expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
         expect(updateShippingAddressMock).toHaveBeenCalledTimes(1);
@@ -175,7 +214,7 @@ describe('testing callShippingAddressEndpoint function', () => {
         expect(result).toStrictEqual(expectedReturn);
         expect(getShippingAddressMock).toHaveBeenCalledTimes(1);
         expect(isAddressValidMock).toHaveBeenCalledTimes(1);
-        expect(isAddressValidMock).toHaveBeenCalledWith('', '', '', '', '', '', '', '', 'shipping');
+        expect(isAddressValidMock).toHaveBeenCalledWith('', '', '', '', '', '', '', '', '1111111111', 'shipping');
         expect(setShippingAddressMock).toHaveBeenCalledTimes(0);
         expect(updateShippingAddressMock).toHaveBeenCalledTimes(0);
     });
