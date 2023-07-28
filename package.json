@@ -16,7 +16,8 @@
     "build": "yarn clean && ttsc && yarn copy-files",
     "clean": "rm -rf ./lib/*.css",
     "copy-files": "cp ./src/*.css ./lib/",
-    "docs": "npx typedoc --plugin typedoc-plugin-markdown --disableSources --hideBreadcrumbs --out docs"
+    "docs": "npx typedoc --plugin typedoc-plugin-markdown --disableSources --hideBreadcrumbs --out docs",
+    "bump-fe": "./scripts/bump-fe.sh"
   },
   "repository": {
     "type": "git",
