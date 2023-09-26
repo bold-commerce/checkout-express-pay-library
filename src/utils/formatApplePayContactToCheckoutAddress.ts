@@ -1,8 +1,8 @@
 import {IAddress} from '@boldcommerce/checkout-frontend-library';
-import {getCountryName, getProvinceDetails} from 'src';
+import {getCountryName, getProvinceDetails, getPhoneNumber} from 'src/utils';
 import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;
 
-export function formatApplePayContactToCheckoutAddress(address: ApplePayPaymentContact): IAddress {
+export function formatApplePayContactToCheckoutAddress(address: ApplePayPaymentContact, phoneNumberOverwrite = false): IAddress {
     const {givenName, familyName, phoneNumber, postalCode, locality, addressLines} = address;
     const countryIso = address.countryCode ?? '';
     const region = address.administrativeArea ?? '';
@@ -21,6 +21,6 @@ export function formatApplePayContactToCheckoutAddress(address: ApplePayPaymentC
         'province_code': provinceCode,
         'postal_code': postalCode ?? '',
         'business_name': '',
-        'phone_number': phoneNumber ?? ''
+        'phone_number': phoneNumber || (phoneNumberOverwrite ? getPhoneNumber(phoneNumber) : '')
     };
 }

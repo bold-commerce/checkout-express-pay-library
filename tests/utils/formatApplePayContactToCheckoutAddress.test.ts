@@ -1,12 +1,14 @@
 import {mocked} from 'jest-mock';
-import {getCountryName, getProvinceDetails, formatApplePayContactToCheckoutAddress} from 'src';
+import {getCountryName, getProvinceDetails, formatApplePayContactToCheckoutAddress, getPhoneNumber} from 'src';
 import {IAddress} from '@boldcommerce/checkout-frontend-library';
 import ApplePayPaymentContact = ApplePayJS.ApplePayPaymentContact;
 
 jest.mock('src/utils/getProvinceDetails');
 jest.mock('src/utils/getCountryName');
+jest.mock('src/utils/getPhoneNumber');
 const getProvinceDetailsMock = mocked(getProvinceDetails, true);
 const getCountryNameMock = mocked(getCountryName, true);
+const getPhoneNumberMock =mocked(getPhoneNumber, true);
 
 describe('testing formatApplePayContactToCheckoutAddress function', () => {
 
@@ -47,6 +49,42 @@ describe('testing formatApplePayContactToCheckoutAddress function', () => {
 
         expect(result).toStrictEqual(expectedResult);
     });
+
+    test('verify with phone overwrite', () => {
+        getProvinceDetailsMock.mockReturnValueOnce({code: 'MB', name: 'Manitoba'});
+        getCountryNameMock.mockReturnValueOnce('Canada');
+        getPhoneNumberMock.mockReturnValueOnce('1111111111');
+        const appleAddressMock: ApplePayPaymentContact = {
+            givenName: 'John',
+            familyName: 'Steve',
+            phoneNumber: '',
+            postalCode: 'R3M1A1',
+            locality: 'Winnipeg',
+            addressLines: ['50 Fultz', 'blvd'],
+            countryCode: 'CA',
+            administrativeArea: 'Manitoba'
+        };
+
+        const expectedResult: IAddress = {
+            'first_name': 'John',
+            'last_name': 'Steve',
+            'address_line_1': '50 Fultz',
+            'address_line_2': 'blvd',
+            'country': 'Canada',
+            'city': 'Winnipeg',
+            'province': 'Manitoba' ,
+            'country_code': 'CA',
+            'province_code': 'MB',
+            'postal_code': 'R3M1A1',
+            'business_name': '',
+            'phone_number': '1111111111'
+        };
+
+        const result = formatApplePayContactToCheckoutAddress(appleAddressMock, true);
+
+        expect(result).toStrictEqual(expectedResult);
+    });
+
 
     test('verify with empty address', () => {
         getProvinceDetailsMock.mockReturnValueOnce({code: '', name: ''});
