@@ -91,7 +91,7 @@ describe('testing braintreeOnShippingContactSelectedApple function',() => {
             expect(getCurrencyMock).toBeCalledTimes(1);
             expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
-            expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
+            expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact, true);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
             expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, true);
             expect(getShippingLinesMock).toBeCalledTimes(1);
@@ -154,7 +154,7 @@ describe('testing braintreeOnShippingContactSelectedApple function',() => {
             expect(getCurrencyMock).toBeCalledTimes(1);
             expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
-            expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
+            expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact, true);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
             expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, true);
             expect(getShippingLinesMock).toBeCalledTimes(shippingLineTimes);

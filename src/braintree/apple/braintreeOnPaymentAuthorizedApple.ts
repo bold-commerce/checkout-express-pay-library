@@ -28,6 +28,10 @@ export async function braintreeOnPaymentAuthorizedApple(event: ApplePayPaymentAu
     const {token, shippingContact, billingContact} = event.payment;
     const {givenName, familyName, emailAddress} = shippingContact ?? {} as ApplePayPaymentContact;
 
+    if (billingContact && !billingContact.phoneNumber && shippingContact?.phoneNumber) {
+        billingContact.phoneNumber = shippingContact.phoneNumber;
+    }
+
     const shippingAddress = formatApplePayContactToCheckoutAddress(shippingContact as ApplePayPaymentContact);
     const billingAddress = formatApplePayContactToCheckoutAddress(billingContact as ApplePayPaymentContact);
     const isSameAddress = isObjectEquals(shippingAddress, billingAddress);

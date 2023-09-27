@@ -1,6 +1,6 @@
 {
   "name": "@boldcommerce/checkout-express-pay-library",
-  "version": "0.23.4",
+  "version": "0.23.5",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

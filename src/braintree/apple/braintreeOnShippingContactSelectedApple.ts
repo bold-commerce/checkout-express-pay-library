@@ -19,7 +19,7 @@ export async function braintreeOnShippingContactSelectedApple(event: ApplePayShi
     const {iso_code: currencyCode} = getCurrency();
     const applePaySession = getBraintreeApplePaySessionChecked();
     const shippingAddress = event.shippingContact;
-    const address = formatApplePayContactToCheckoutAddress(shippingAddress);
+    const address = formatApplePayContactToCheckoutAddress(shippingAddress, true);
 
     const fail = () => {
         const {totalAmountDue} = getTotals();

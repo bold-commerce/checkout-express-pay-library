@@ -73,6 +73,10 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
         phoneNumber: '3453453456',
         addressLines: ['456 Any St', 'Line 2']
     };
+    const noPhoneAddressContact = {
+        ...addressContact,
+        phoneNumber: '',
+    };
     const event = {
         payment: {
             token: 'test_token',
@@ -140,6 +144,36 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             emailAddress: '',
             notSame: true,
             eventParam: {...event, payment: {...event.payment, shippingContact: undefined}}
+        },
+        {
+            n: 'called successfully without shippingContact and missing billingContact phone number',
+            shipping: addressesMock.shipping,
+            billing: addressesMock.billing,
+            givenName: '',
+            familyName: '',
+            emailAddress: '',
+            notSame: true,
+            eventParam: {...event, payment: {...event.payment, billingContact: noPhoneAddressContact, shippingContact: undefined}}
+        },
+        {
+            n: 'called successfully without billingContact',
+            shipping: addressesMock.shipping,
+            billing: addressesMock.billing,
+            givenName: addressContact.givenName,
+            familyName: addressContact.familyName,
+            emailAddress: addressContact.emailAddress,
+            notSame: true,
+            eventParam: {...event, payment: {...event.payment, billingContact: undefined}}
+        },
+        {
+            n: 'called successfully without billing phone number',
+            shipping: addressesMock.shipping,
+            billing: {...addressesMock.shipping, phone_number:''},
+            givenName: addressContact.givenName,
+            familyName: addressContact.familyName,
+            emailAddress: addressContact.emailAddress,
+            notSame: true,
+            eventParam: {...event, payment: {...event.payment, billingContact: noPhoneAddressContact}}
         },
     ];
 
