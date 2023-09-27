@@ -146,6 +146,26 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             eventParam: {...event, payment: {...event.payment, shippingContact: undefined}}
         },
         {
+            n: 'called successfully without shippingContact and missing billingContact phone number',
+            shipping: addressesMock.shipping,
+            billing: addressesMock.billing,
+            givenName: '',
+            familyName: '',
+            emailAddress: '',
+            notSame: true,
+            eventParam: {...event, payment: {...event.payment, billingContact: noPhoneAddressContact, shippingContact: undefined}}
+        },
+        {
+            n: 'called successfully without billingContact',
+            shipping: addressesMock.shipping,
+            billing: addressesMock.billing,
+            givenName: addressContact.givenName,
+            familyName: addressContact.familyName,
+            emailAddress: addressContact.emailAddress,
+            notSame: true,
+            eventParam: {...event, payment: {...event.payment, billingContact: undefined}}
+        },
+        {
             n: 'called successfully without billing phone number',
             shipping: addressesMock.shipping,
             billing: {...addressesMock.shipping, phone_number:''},

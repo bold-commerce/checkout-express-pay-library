@@ -28,7 +28,7 @@ export async function braintreeOnPaymentAuthorizedApple(event: ApplePayPaymentAu
     const {token, shippingContact, billingContact} = event.payment;
     const {givenName, familyName, emailAddress} = shippingContact ?? {} as ApplePayPaymentContact;
 
-    if (billingContact && !billingContact?.phoneNumber && shippingContact?.phoneNumber) {
+    if (billingContact && !billingContact.phoneNumber && shippingContact?.phoneNumber) {
         billingContact.phoneNumber = shippingContact.phoneNumber;
     }
 
