@@ -20,6 +20,7 @@ export interface IShowPaymentMethods {
     braintreeApple: boolean;
     braintreeGoogle: boolean;
     ppcpApple: boolean;
+    paypalCommercePlatform: boolean;
 }
 
 export interface IShowPaymentMethodTypes {

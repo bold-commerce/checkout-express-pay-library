@@ -16,6 +16,7 @@ export const showPaymentMethods: IShowPaymentMethods = {
     braintreeGoogle: false,
     braintreeApple: false,
     ppcpApple: false,
+    paypalCommercePlatform: false
 };
 
 export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
