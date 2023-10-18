@@ -1,8 +1,8 @@
 import {IAddress} from '@boldcommerce/checkout-frontend-library';
-import {getCountryName, getFirstAndLastName, getProvinceDetails} from 'src';
+import {getCountryName, getFirstAndLastName, getPhoneNumber, getProvinceDetails} from 'src';
 import Address = google.payments.api.Address;
 
-export function formatBraintreeShippingAddressGoogle(address: Address | undefined): IAddress {
+export function formatBraintreeShippingAddressGoogle(address: Address | undefined, phoneNumberOverwrite = false): IAddress {
     const {administrativeArea, countryCode, postalCode, locality, name, address1, address2, phoneNumber} = address ?? {};
     const {firstName, lastName} = getFirstAndLastName(name);
     const countryIso = countryCode ?? '';
@@ -22,6 +22,6 @@ export function formatBraintreeShippingAddressGoogle(address: Address | undefine
         'province_code': provinceCode,
         'postal_code': postalCode ?? '',
         'business_name': '',
-        'phone_number': phoneNumber ?? ''
+        'phone_number': phoneNumber || (phoneNumberOverwrite ? getPhoneNumber(phoneNumber) : '')
     };
 }
