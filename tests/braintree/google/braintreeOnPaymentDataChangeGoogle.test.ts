@@ -129,7 +129,7 @@ describe('testing braintreeOnPaymentDataChangeGoogle function',() => {
 
         expect(result).toStrictEqual(expectedResult);
         expect(formatBraintreeShippingAddressGoogleMock).toBeCalledTimes(1);
-        expect(formatBraintreeShippingAddressGoogleMock).toBeCalledWith(addressContact);
+        expect(formatBraintreeShippingAddressGoogleMock).toBeCalledWith(addressContact, true);
         expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
         expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, true);
         expect(getShippingLinesMock).toBeCalledTimes(2);
@@ -164,7 +164,7 @@ describe('testing braintreeOnPaymentDataChangeGoogle function',() => {
 
         expect(result).toStrictEqual(expectedResult);
         expect(formatBraintreeShippingAddressGoogleMock).toBeCalledTimes(1);
-        expect(formatBraintreeShippingAddressGoogleMock).toBeCalledWith(addressContact);
+        expect(formatBraintreeShippingAddressGoogleMock).toBeCalledWith(addressContact, true);
         expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
         expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, true);
         expect(getShippingLinesMock).toBeCalledTimes(0);
