@@ -25,6 +25,7 @@ export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
     BRAINTREE_GOOGLE: 'braintreeGoogle',
     BRAINTREE_APPLE: 'braintreeApple',
     PPCP_APPLE: 'ppcpApple',
+    PPCP: 'paypalCommercePlatform',
 };
 
 export const expressPayContext: IExpressPayContext = {

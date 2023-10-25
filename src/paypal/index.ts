@@ -11,6 +11,7 @@ export * from './getPaypalShippingOptions';
 export * from './getPaypalShippingTotal';
 export * from './getPaypalTaxTotal';
 export * from './initPaypal';
+export * from './initPpcp';
 export * from './managePaypalState';
 export * from './paypalCreateOrder';
 export * from './paypalOnApprove';

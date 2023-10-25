@@ -29,6 +29,7 @@ export interface IShowPaymentMethodTypes {
     BRAINTREE_GOOGLE: string;
     BRAINTREE_APPLE: string;
     PPCP_APPLE: string;
+    PPCP: string
 }
 
 export type IOnAction = (actionType: string, payload?: Record<string, unknown>) => void;
@@ -65,8 +66,6 @@ export interface IPaypalPatchOperation {
     path: string;
     value: AmountWithBreakdown | Array<ShippingInfoOption>
 }
-
-export type IPaypalPatch = (operations: Array<IPaypalPatchOperation>) => Promise<OrderResponseBody>;
 
 export interface IBraintreeState {
     braintree: IBraintreeClient | null;

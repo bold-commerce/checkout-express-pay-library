@@ -1,41 +1,81 @@
-import {IExpressPayPaypalCommercePlatform} from '@boldcommerce/checkout-frontend-library';
+import {IExpressPayPaypalCommercePlatformButton} from '@boldcommerce/checkout-frontend-library';
 import {
     enableDisableSection,
     getPaypalNameSpace,
-    paypalCreateOrder,
     paypalOnClick,
     paypalOnShippingChange,
+    ppcpOnApprove, showPaymentMethodTypes
 } from 'src';
 import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
-import {ppcpOnApprove} from 'src/paypal/ppcp_buttons/ppcpOnApprove';
+import {ppcpOrderCreate} from 'src/paypal/ppcp_buttons/ppcpOrderCreate';
 
-export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatform) {
+export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButton) {
 
     const paypal = getPaypalNameSpace();
 
+    let enableSection = false;
+
+    // creating a paypal payment div inside express payment container
+    const paypalDiv = document.createElement('div');
+    const paypalDivId = 'ppcp-express-payment';
+    paypalDiv.id = paypalDivId;
+    paypalDiv.className = `${paypalDivId} express-payment`;
+    const container = document.getElementById('express-payment-container');
+    container?.appendChild(paypalDiv);
+
     if (paypal?.Buttons) {
-        const button = paypal.Buttons({
-            createOrder: paypalCreateOrder,
+        const paypalButton = paypal.Buttons({
+            fundingSource: 'paypal',
+            createOrder: ppcpOrderCreate,
             onClick: paypalOnClick,
             onShippingChange: paypalOnShippingChange as (data: OnShippingChangeData, actions: OnShippingChangeActions) => Promise<void>,
             onApprove: ppcpOnApprove,
             style: {
-                //...payment.button_style,
-                height: 39
+                ...payment.style,
+                height: 39,
             },
         });
 
-        // creating a paypal payment div inside express payment container
-        const paypalDiv = document.createElement('div');
-        const paypalDivId = 'paypal-express-payment';
-        paypalDiv.id = paypalDivId;
-        paypalDiv.className = `${paypalDivId} express-payment`;
-        const container = document.getElementById('express-payment-container');
-        container?.appendChild(paypalDiv);
+        const payLaterButton = paypal.Buttons({
+            fundingSource: 'paylater',
+            createOrder: ppcpOrderCreate,
+            onClick: paypalOnClick,
+            onShippingChange: paypalOnShippingChange as (data: OnShippingChangeData, actions: OnShippingChangeActions) => Promise<void>,
+            onApprove: ppcpOnApprove,
+            style: {
+                ...payment.style,
+                height: 39,
+            },
+        });
 
-        if (container && button.isEligible()) {
-            await button.render(`#${paypalDivId}`);
-            enableDisableSection('paypalCommercePlatform', true);
+        const venmoButton = paypal.Buttons({
+            fundingSource: 'venmo',
+            createOrder: ppcpOrderCreate,
+            onClick: paypalOnClick,
+            onApprove: ppcpOnApprove,
+            style: {
+                ...payment.style,
+                height: 39,
+                color: 'blue', // paypal bug. venmo doesnt work with any other color
+            },
+        });
+
+        if (container && paypalButton.isEligible()) {
+            await paypalButton.render(`#${paypalDivId}`);
+            enableSection = true;
+        }
+
+        if (container && payLaterButton.isEligible()) {
+            await payLaterButton.render(`#${paypalDivId}`);
+            enableSection = true;
+        }
+        if (container && venmoButton.isEligible()){
+            await venmoButton.render(`#${paypalDivId}`);
+            enableSection = true;
+        }
+
+        if(enableSection) {
+            enableDisableSection(showPaymentMethodTypes.PPCP, true);
         } else {
             paypalDiv.style.display = 'none';
         }
