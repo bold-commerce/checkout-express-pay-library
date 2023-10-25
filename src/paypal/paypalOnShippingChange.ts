@@ -20,7 +20,6 @@ export async function paypalOnShippingChange(data: OnShippingChangeData, actions
     const {shipping_address: address, selected_shipping_option: selectedOption} = data;
     const {reject, order: {patch: patch}} = actions;
     const {MAX_STRING_LENGTH: maxStringSize} = paypalConstants;
-    //const patch = unCastedPatch as IPaypalPatch;
 
     if (address) {
         const formattedAddress = formatPaypalToApiAddress(address, undefined, undefined , getPhoneNumber());

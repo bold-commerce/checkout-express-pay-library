@@ -64,7 +64,7 @@ export interface IPaypalConstants {
 export interface IPaypalPatchOperation {
     op: 'replace' | 'add';
     path: string;
-    value: AmountWithBreakdown | Array<ShippingInfoOption>
+    value: AmountWithBreakdown | Array<ShippingInfoOption> | Record<string, unknown>
 }
 
 export interface IBraintreeState {

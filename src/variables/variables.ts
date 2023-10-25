@@ -94,3 +94,20 @@ export const applePayConstants: IApplePayConstants = {
     APPLEPAY_ERROR_CODE_BILLING_CONTACT: 'billingContactInvalid',
     APPLEPAY_ERROR_CODE_UNKNOWN: 'unknown',
 };
+
+
+export const ppcpPayLaterCountryCurrency: Record<string, string> = {
+    'AU': 'AUD',
+    'DE': 'EUR',
+    'ES': 'EUR',
+    'FR': 'EUR',
+    'IT': 'EUR',
+    'UK': 'GBP',
+    'US': 'USD',
+};
+
+export const ppcpTypeToFunding : Record<string, string> = {
+    'paypal': 'paypal',
+    'venmo': 'venmo',
+    'paylater': 'credit'
+};

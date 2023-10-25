@@ -1,6 +1,8 @@
 import {
     hasPaypalNameSpace,
     ppcpOnLoad,
+    ppcpPayLaterCountryCurrency,
+    ppcpTypeToFunding,
     setPaypalGatewayPublicId,
     setPaypalNameSpace
 } from 'src';
@@ -8,22 +10,6 @@ import {PayPalScriptOptions} from '@paypal/paypal-js/types/script-options';
 import {loadScript} from '@paypal/paypal-js';
 import {getCurrency,IExpressPayPaypalCommercePlatformButton} from '@boldcommerce/checkout-frontend-library';
 
-
-export const payLaterCountryCurrency: Record<string, string> = {
-    'AU': 'AUD',
-    'DE': 'EUR',
-    'ES': 'EUR',
-    'FR': 'EUR',
-    'IT': 'EUR',
-    'UK': 'GBP',
-    'US': 'USD',
-};
-
-const typeToFunding : Record<string, string> = {
-    'paypal': 'paypal',
-    'venmo': 'venmo',
-    'paylater': 'credit'
-};
 
 export async function initPpcpButtons(payment: IExpressPayPaypalCommercePlatformButton) {
 
@@ -33,8 +19,8 @@ export async function initPpcpButtons(payment: IExpressPayPaypalCommercePlatform
     setPaypalGatewayPublicId(payment.public_id);
     let buyerCountry = '';
 
-    const countryEligibleForPaylater = Boolean(payLaterCountryCurrency[merchantCountry]);
-    const payLaterEligibleCountryMatchesCurrency = payLaterCountryCurrency[merchantCountry] === currency;
+    const countryEligibleForPaylater = Boolean(ppcpPayLaterCountryCurrency[merchantCountry]);
+    const payLaterEligibleCountryMatchesCurrency = ppcpPayLaterCountryCurrency[merchantCountry] === currency;
     if (countryEligibleForPaylater && payLaterEligibleCountryMatchesCurrency) {
         buyerCountry = merchantCountry;
         if (payment.payment_types.paylaterMessages) {
@@ -43,8 +29,8 @@ export async function initPpcpButtons(payment: IExpressPayPaypalCommercePlatform
     }
 
     const disableFunding = ['card'];
-    for (const type in typeToFunding) {
-        const fundingType = typeToFunding[type];
+    for (const type in ppcpTypeToFunding) {
+        const fundingType = ppcpTypeToFunding[type];
         if (payment.payment_types[type] === false) {
             disableFunding.push(fundingType);
         }
