@@ -60,18 +60,21 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
             },
         });
 
-        if (container && paypalButton.isEligible()) {
-            await paypalButton.render(`#${paypalDivId}`);
-            enableSection = true;
-        }
+        if(container) {
+            if (paypalButton.isEligible()) {
+                await paypalButton.render(`#${paypalDivId}`);
+                enableSection = true;
+            }
 
-        if (container && payLaterButton.isEligible()) {
-            await payLaterButton.render(`#${paypalDivId}`);
-            enableSection = true;
-        }
-        if (container && venmoButton.isEligible()){
-            await venmoButton.render(`#${paypalDivId}`);
-            enableSection = true;
+            if (payLaterButton.isEligible()) {
+                await payLaterButton.render(`#${paypalDivId}`);
+                enableSection = true;
+            }
+
+            if (venmoButton.isEligible()) {
+                await venmoButton.render(`#${paypalDivId}`);
+                enableSection = true;
+            }
         }
 
         if(enableSection) {
