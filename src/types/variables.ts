@@ -4,7 +4,7 @@ import {
     IExpressPayPaypalCommercePlatform
 } from '@boldcommerce/checkout-frontend-library';
 import {PayPalNamespace} from '@paypal/paypal-js';
-import {AmountWithBreakdown, OrderResponseBody, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
+import {AmountWithBreakdown, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 import {IBraintreeApplePayInstance, IBraintreeClient, IBraintreeGooglePayInstance} from 'src/types/braintree';
 import {IPaypalNamespaceApple, IPPCPAppleConfig, IPPCPApplePayInstance} from 'src/types/paypal';
 import GooglePaymentsClient = google.payments.api.PaymentsClient;
@@ -20,6 +20,7 @@ export interface IShowPaymentMethods {
     braintreeApple: boolean;
     braintreeGoogle: boolean;
     ppcpApple: boolean;
+    paypalCommercePlatform: boolean;
 }
 
 export interface IShowPaymentMethodTypes {
@@ -28,6 +29,7 @@ export interface IShowPaymentMethodTypes {
     BRAINTREE_GOOGLE: string;
     BRAINTREE_APPLE: string;
     PPCP_APPLE: string;
+    PPCP: string
 }
 
 export type IOnAction = (actionType: string, payload?: Record<string, unknown>) => void;
@@ -62,10 +64,8 @@ export interface IPaypalConstants {
 export interface IPaypalPatchOperation {
     op: 'replace' | 'add';
     path: string;
-    value: AmountWithBreakdown | Array<ShippingInfoOption>
+    value: AmountWithBreakdown | Array<ShippingInfoOption> | Record<string, unknown>
 }
-
-export type IPaypalPatch = (operations: Array<IPaypalPatchOperation>) => Promise<OrderResponseBody>;
 
 export interface IBraintreeState {
     braintree: IBraintreeClient | null;

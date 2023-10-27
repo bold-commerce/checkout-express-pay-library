@@ -16,6 +16,7 @@ export const showPaymentMethods: IShowPaymentMethods = {
     braintreeGoogle: false,
     braintreeApple: false,
     ppcpApple: false,
+    paypalCommercePlatform: false
 };
 
 export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
@@ -24,6 +25,7 @@ export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
     BRAINTREE_GOOGLE: 'braintreeGoogle',
     BRAINTREE_APPLE: 'braintreeApple',
     PPCP_APPLE: 'ppcpApple',
+    PPCP: 'paypalCommercePlatform',
 };
 
 export const expressPayContext: IExpressPayContext = {
@@ -91,4 +93,21 @@ export const applePayConstants: IApplePayConstants = {
     APPLEPAY_ERROR_CODE_SHIPPING_CONTACT: 'shippingContactInvalid',
     APPLEPAY_ERROR_CODE_BILLING_CONTACT: 'billingContactInvalid',
     APPLEPAY_ERROR_CODE_UNKNOWN: 'unknown',
+};
+
+
+export const ppcpPayLaterCountryCurrency: Record<string, string> = {
+    'AU': 'AUD',
+    'DE': 'EUR',
+    'ES': 'EUR',
+    'FR': 'EUR',
+    'IT': 'EUR',
+    'UK': 'GBP',
+    'US': 'USD',
+};
+
+export const ppcpTypeToFunding : Record<string, string> = {
+    'paypal': 'paypal',
+    'venmo': 'venmo',
+    'paylater': 'credit'
 };

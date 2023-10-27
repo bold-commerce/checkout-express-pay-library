@@ -41,14 +41,14 @@ describe('testing initPPCPApple function', () => {
     };
     const paypalNameSpaceMock: PayPalNamespace = {version: 'test_mock_version'};
     const paypalScriptOptions: PayPalScriptOptions = {
-        'client-id': ppcpPayment.partner_id,
+        'clientId': ppcpPayment.partner_id,
         'debug': ppcpPayment.is_test,
         'currency': 'USD',
-        'disable-funding': 'credit,card,venmo,sepa,bancontact,eps,giropay,ideal,mybank,p24,sofort',
+        'disableFunding': 'credit,card,venmo,sepa,bancontact,eps,giropay,ideal,mybank,p24,sofort',
         'vault': 'true',
         'intent': 'authorize',
-        'integration-date': '2020-03-10',
-        'merchant-id': ppcpPayment.merchant_id,
+        'integrationDate': '2020-03-10',
+        'merchantId': ppcpPayment.merchant_id,
         'components': 'applepay',
     };
 
