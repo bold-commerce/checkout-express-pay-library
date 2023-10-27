@@ -1,7 +1,6 @@
 import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
 import {
     getPaypalPatchOperations,
-    IPaypalPatch,
     API_RETRY,
     formatPaypalToApiAddress,
     isSimilarStrings,
@@ -19,9 +18,8 @@ import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
 
 export async function paypalOnShippingChange(data: OnShippingChangeData, actions: OnShippingChangeActions): Promise<void|OrderResponseBody> {
     const {shipping_address: address, selected_shipping_option: selectedOption} = data;
-    const {reject, order: {patch: unCastedPatch}} = actions;
+    const {reject, order: {patch: patch}} = actions;
     const {MAX_STRING_LENGTH: maxStringSize} = paypalConstants;
-    const patch = unCastedPatch as IPaypalPatch;
 
     if (address) {
         const formattedAddress = formatPaypalToApiAddress(address, undefined, undefined , getPhoneNumber());
@@ -50,6 +48,8 @@ export async function paypalOnShippingChange(data: OnShippingChangeData, actions
 
     if (taxResponse.success) {
         const patchOperations = getPaypalPatchOperations(!!selectedOption);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return await patch(patchOperations);
     }
 

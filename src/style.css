@@ -3,6 +3,10 @@
     width: 200px;
 }
 
+.ppcp-express-payment{
+    width: auto;
+}
+
 @supports (-webkit-appearance: -apple-pay-button) {
     .braintree-apple-pay-button, .ppcp-apple-pay-button {
         display: inline-block;
@@ -48,4 +52,5 @@
         background-color: white;
         border: .5px solid black;
     }
+
 }

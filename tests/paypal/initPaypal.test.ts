@@ -32,13 +32,13 @@ describe('testing initPaypal function', () => {
     const paypalNameSpaceMock: PayPalNamespace = {version: 'test_mock_version'};
     const loadScriptReturn = Promise.resolve(paypalNameSpaceMock);
     const paypalScriptOptions: PayPalScriptOptions = {
-        'client-id': paypalPayment.client_id,
+        'clientId': paypalPayment.client_id,
         'debug': paypalPayment.is_test,
         'currency': 'USD',
-        'disable-funding': 'credit,card,venmo,sepa,bancontact,eps,giropay,ideal,mybank,p24,sofort',
+        'disableFunding': 'credit,card,venmo,sepa,bancontact,eps,giropay,ideal,mybank,p24,sofort',
         'vault': 'true',
         'intent': 'authorize',
-        'integration-date': '2020-03-10'
+        'integrationDate': '2020-03-10'
     };
 
     beforeEach(() => {

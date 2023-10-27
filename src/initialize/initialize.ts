@@ -13,8 +13,8 @@ import {
     initBraintreeGoogle,
     initStripe,
     initPaypal,
-    initPPCPApple,
     setOnAction,
+    initPPCPApple,
 } from 'src';
 
 export function initialize(props: IInitializeProps): void{
