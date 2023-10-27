@@ -4,7 +4,7 @@ import {
     IExpressPayPaypalCommercePlatform
 } from '@boldcommerce/checkout-frontend-library';
 import {PayPalNamespace} from '@paypal/paypal-js';
-import {AmountWithBreakdown, OrderResponseBody, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
+import {AmountWithBreakdown, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 import {IBraintreeApplePayInstance, IBraintreeClient, IBraintreeGooglePayInstance} from 'src/types/braintree';
 import {IPaypalNamespaceApple, IPPCPAppleConfig, IPPCPApplePayInstance} from 'src/types/paypal';
 import GooglePaymentsClient = google.payments.api.PaymentsClient;

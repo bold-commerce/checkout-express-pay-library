@@ -1,9 +1,7 @@
 import {OnApproveActions, OnApproveData} from '@paypal/paypal-js/types/components/buttons';
 import {
     API_RETRY,
-    callBillingAddressEndpoint,
-    callGuestCustomerEndpoint,
-    callShippingAddressEndpoint, displayError,
+    displayError,
     formatPaypalToApiAddress,
     getFirstAndLastName,
     getPaypalGatewayPublicId, getPhoneNumber,
@@ -12,12 +10,15 @@ import {
 } from 'src';
 import {mocked} from 'jest-mock';
 import {
-    addPayment, apiTypeKeys,
-    baseReturnObject, buildAddressBatchRequest, buildCustomerBatchRequest,
+    addPayment,
+    apiTypeKeys,
+    baseReturnObject,
+    buildAddressBatchRequest,
+    buildCustomerBatchRequest,
     getApplicationState,
-    getCurrency, IAddGuestCustomerRequest,
-    IAddress, ICustomer,
-    setTaxes
+    getCurrency,
+    IAddGuestCustomerRequest,
+    IAddress,
 } from '@boldcommerce/checkout-frontend-library';
 import {applicationStateMock, currencyMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
@@ -125,7 +126,7 @@ const customer: IAddGuestCustomerRequest ={
     last_name: janeNames.lastName,
     email: 'test_email@test.test',
     accepts_marketing: true,
-}
+};
 
 const payer = {
     payer_id: 'test_payer_id',

@@ -11,7 +11,7 @@ import {loadScript} from '@paypal/paypal-js';
 import {getCurrency,IExpressPayPaypalCommercePlatformButton} from '@boldcommerce/checkout-frontend-library';
 
 
-export async function initPpcpButtons(payment: IExpressPayPaypalCommercePlatformButton) {
+export async function initPpcpButtons(payment: IExpressPayPaypalCommercePlatformButton): Promise<void> {
 
     let components = 'buttons,applepay';
     const {iso_code: currency} = getCurrency();

@@ -9,7 +9,7 @@ import {
 import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
 import {ppcpOrderCreate} from 'src/paypal/ppcp_buttons/ppcpOrderCreate';
 
-export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButton) {
+export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButton): Promise<void> {
 
     const paypal = getPaypalNameSpace();
 

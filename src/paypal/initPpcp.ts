@@ -12,8 +12,7 @@ import {
     showPaymentMethodTypes
 } from 'src';
 
-
-export async function initPpcp(callback?: IOnAction) {
+export async function initPpcp(callback?: IOnAction): Promise<void> {
 
     if (callback) {
         setOnAction(callback);
