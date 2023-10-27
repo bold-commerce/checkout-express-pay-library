@@ -6,46 +6,51 @@ import {
     callShippingAddressEndpoint, displayError,
     formatPaypalToApiAddress,
     getFirstAndLastName,
-    getPaypalGatewayPublicId,
+    getPaypalGatewayPublicId, getPhoneNumber,
     orderProcessing,
     ppcpOnApprove
 } from 'src';
 import {mocked} from 'jest-mock';
 import {
-    addPayment,
-    baseReturnObject,
+    addPayment, apiTypeKeys,
+    baseReturnObject, buildAddressBatchRequest, buildCustomerBatchRequest,
     getApplicationState,
-    getCurrency,
-    IAddress,
+    getCurrency, IAddGuestCustomerRequest,
+    IAddress, ICustomer,
     setTaxes
 } from '@boldcommerce/checkout-frontend-library';
 import {applicationStateMock, currencyMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
+import {batchRequest} from '@boldcommerce/checkout-frontend-library/lib/batch/batchRequest';
 
 jest.mock('@boldcommerce/checkout-frontend-library/lib/payment/addPayment');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/utils/buildAddressBatchRequest');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/utils/buildCustomerBatchRequest');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/batch/batchRequest');
 jest.mock('src/actions/orderProcessing');
 jest.mock('src/actions/displayError');
 jest.mock('src/paypal/formatPaypalToApiAddress');
 jest.mock('src/paypal/managePaypalState');
 jest.mock('src/utils/getFirstAndLastName');
+jest.mock('src/utils/getPhoneNumber');
 jest.mock('src/utils/callBillingAddressEndpoint');
 jest.mock('src/utils/callGuestCustomerEndpoint');
 jest.mock('src/utils/callShippingAddressEndpoint');
 const addPaymentMock = mocked(addPayment, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getCurrencyMock = mocked(getCurrency, true);
-const setTaxesMock = mocked(setTaxes, true);
 const orderProcessingMock = mocked(orderProcessing, true);
 const displayErrorMock = mocked(displayError, true);
 const getFirstAndLastNameMock = mocked(getFirstAndLastName, true);
+const getPhoneNumberMock = mocked(getPhoneNumber, true);
 const getPaypalGatewayPublicIdMock = mocked(getPaypalGatewayPublicId, true);
 const formatPaypalToApiAddressMock = mocked(formatPaypalToApiAddress, true);
-const callBillingAddressEndpointMock = mocked(callBillingAddressEndpoint, true);
-const callGuestCustomerEndpointMock = mocked(callGuestCustomerEndpoint, true);
-const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
+const buildAddressBatchRequestMock = mocked(buildAddressBatchRequest, true);
+const buildCustomerBatchRequestMock = mocked(buildCustomerBatchRequest, true);
+const batchRequestMock = mocked(batchRequest, true);
 
 const onApproveActionsMock = {
     redirect: jest.fn(),
@@ -114,6 +119,14 @@ const paypalFilled2Address = {
     admin_area_1: 'another_test_province_code',
     admin_area_2: 'another_test_city'
 };
+
+const customer: IAddGuestCustomerRequest ={
+    first_name: janeNames.firstName,
+    last_name: janeNames.lastName,
+    email: 'test_email@test.test',
+    accepts_marketing: true,
+}
+
 const payer = {
     payer_id: 'test_payer_id',
     name: {given_name: janeNames.firstName, surname: janeNames.lastName},
@@ -158,37 +171,44 @@ describe('testing  ppcpOnApprove function', () => {
         getCurrencyMock.mockReturnValue(currencyMock);
         addPaymentMock.mockReturnValue(Promise.resolve(successReturn));
         getApplicationStateMock.mockReturnValue(applicationStateMock);
-        setTaxesMock.mockReturnValue(Promise.resolve(successReturn));
+        batchRequestMock.mockReturnValue(Promise.resolve(successReturn));
         getFirstAndLastNameMock.mockReturnValue(johnNames);
         getPaypalGatewayPublicIdMock.mockReturnValue('abc123');
         formatPaypalToApiAddressMock
             .mockReturnValueOnce(filled1Address)
             .mockReturnValueOnce(filled2Address);
-        callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
+        //callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
+        //callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(successReturn));
+        //callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
+
         onApproveActionsMock.order.get.mockReturnValue(Promise.resolve(paypalOrderResponseMock));
     });
 
     test('billing empty and success', async () => {
+
+        buildAddressBatchRequestMock
+            .mockReturnValueOnce({apiType: apiTypeKeys.setShippingAddress, payload: filled1Address})
+            .mockReturnValueOnce({apiType: apiTypeKeys.setBillingAddress, payload: filled1Address});
+
+        buildCustomerBatchRequestMock.mockReturnValueOnce(
+            {apiType: apiTypeKeys.updateCustomer, payload: customer}
+        );
+
+        getPhoneNumberMock.mockReturnValueOnce('0000000000');
+
         await ppcpOnApprove(onApproveDataMock, onApproveActionsMock);
 
         expect(getCurrencyMock).toHaveBeenCalledTimes(1);
         expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(1);
         expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(1);
         expect(getFirstAndLastNameMock).toHaveBeenCalledWith(purchaseUnits[0].shipping?.name?.full_name);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledWith(payer.name.given_name, payer.name.surname, payer.email_address);
+        expect(buildCustomerBatchRequestMock).toHaveBeenCalledTimes(1);
+        expect(buildCustomerBatchRequestMock).toHaveBeenCalledWith(payer.name.given_name, payer.name.surname, payer.email_address);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, janeNames.firstName, janeNames.lastName, payer.phone.phone_number.national_number);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, false);
-        expect(setTaxesMock).toHaveBeenCalledTimes(1);
-        expect(setTaxesMock).toHaveBeenCalledWith(API_RETRY);
-        expect(getApplicationStateMock).toHaveBeenCalledTimes(1);
+        expect(buildAddressBatchRequestMock).toHaveBeenCalledTimes(2);
+        expect(batchRequestMock).toHaveBeenCalledTimes(1);
         expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
         expect(addPaymentMock).toHaveBeenCalledTimes(1);
         expect(addPaymentMock).toHaveBeenCalledWith(paymentRequest, API_RETRY);
@@ -201,23 +221,17 @@ describe('testing  ppcpOnApprove function', () => {
         const paypalOrder = {...paypalOrderResponseMock, payer: newPayer};
         onApproveActionsMock.order.get.mockReturnValueOnce(Promise.resolve(paypalOrder));
 
+        getPhoneNumberMock.mockReturnValueOnce('0000000000');
+
         await ppcpOnApprove(onApproveDataMock, onApproveActionsMock);
 
         expect(getCurrencyMock).toHaveBeenCalledTimes(1);
         expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(1);
         expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(1);
         expect(getFirstAndLastNameMock).toHaveBeenCalledWith(purchaseUnits[0].shipping?.name?.full_name);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledWith(johnNames.firstName, johnNames.lastName, payer.email_address);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
-        expect(setTaxesMock).toHaveBeenCalledTimes(1);
-        expect(setTaxesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getApplicationStateMock).toHaveBeenCalledTimes(1);
         expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
         expect(addPaymentMock).toHaveBeenCalledTimes(1);
@@ -229,6 +243,7 @@ describe('testing  ppcpOnApprove function', () => {
         const newPayer = {...payer, address: paypalFilled2Address};
         const paypalOrder = {...paypalOrderResponseMock, payer: newPayer};
         onApproveActionsMock.order.get.mockReturnValueOnce(Promise.resolve(paypalOrder));
+        getPhoneNumberMock.mockReturnValueOnce('0000000000');
 
         await ppcpOnApprove(onApproveDataMock, onApproveActionsMock);
 
@@ -236,17 +251,9 @@ describe('testing  ppcpOnApprove function', () => {
         expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(1);
         expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(1);
         expect(getFirstAndLastNameMock).toHaveBeenCalledWith(purchaseUnits[0].shipping?.name?.full_name);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledWith(payer.name.given_name, payer.name.surname, payer.email_address);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled2Address, janeNames.firstName, janeNames.lastName, payer.phone.phone_number.national_number);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, true);
-        expect(setTaxesMock).toHaveBeenCalledTimes(1);
-        expect(setTaxesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getApplicationStateMock).toHaveBeenCalledTimes(1);
         expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
         expect(addPaymentMock).toHaveBeenCalledTimes(1);
@@ -260,6 +267,7 @@ describe('testing  ppcpOnApprove function', () => {
         const newPurchaseUnits = [{shipping: newShipping}];
         const paypalOrder = {...paypalOrderResponseMock, payer: newPayer, purchase_units: newPurchaseUnits};
         onApproveActionsMock.order.get.mockReturnValueOnce(Promise.resolve(paypalOrder));
+        getPhoneNumberMock.mockReturnValueOnce('');
 
         await ppcpOnApprove(onApproveDataMock, onApproveActionsMock);
 
@@ -267,17 +275,9 @@ describe('testing  ppcpOnApprove function', () => {
         expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(1);
         expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(1);
         expect(getFirstAndLastNameMock).toHaveBeenCalledWith(undefined);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledWith('', '', '');
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, '', '', '');
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, '', '', '');
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, false);
-        expect(setTaxesMock).toHaveBeenCalledTimes(1);
-        expect(setTaxesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getApplicationStateMock).toHaveBeenCalledTimes(1);
         expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
         expect(addPaymentMock).toHaveBeenCalledTimes(1);
@@ -293,12 +293,10 @@ describe('testing  ppcpOnApprove function', () => {
         expect(getCurrencyMock).toHaveBeenCalledTimes(1);
         expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(0);
         expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(0);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(0);
+        expect(buildAddressBatchRequestMock).toHaveBeenCalledTimes(0);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(0);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(0);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(0);
-        expect(setTaxesMock).toHaveBeenCalledTimes(0);
-        expect(getApplicationStateMock).toHaveBeenCalledTimes(0);
+        expect(buildCustomerBatchRequestMock).toHaveBeenCalledTimes(0);
+        expect(batchRequestMock).toHaveBeenCalledTimes(0);
         expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(0);
         expect(addPaymentMock).toHaveBeenCalledTimes(0);
         expect(orderProcessingMock).toHaveBeenCalledTimes(0);
@@ -317,26 +315,17 @@ describe('testing  ppcpOnApprove error cases', () => {
         formatPaypalToApiAddressMock
             .mockReturnValueOnce(filled1Address)
             .mockReturnValueOnce(filled2Address);
-        callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
         onApproveActionsMock.order.get.mockReturnValue(Promise.resolve(paypalOrderResponseMock));
     });
 
     const data = [
-        {name: 'error in customer endpoint', customer: failureReturn, shipping: failureReturn, billing: failureReturn, taxes: failureReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'error in shipping endpoint', customer: successReturn, shipping: failureReturn, billing: failureReturn, taxes: failureReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'error in billing endpoint', customer: successReturn, shipping: successReturn, billing: failureReturn, taxes: failureReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'error in taxes endpoint', customer: successReturn, shipping: successReturn, billing: successReturn, taxes: failureReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'error in payment endpoint', customer: successReturn, shipping: successReturn, billing: successReturn, taxes: successReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'success in all endpoint', customer: successReturn, shipping: successReturn, billing: successReturn, taxes: successReturn, payment: successReturn, displayErrorCount: 0 },
+        {name: 'error in batch endpoint',  batch: failureReturn, payment: failureReturn, displayErrorCount: 1 },
+        {name: 'error in payment endpoint', batch: successReturn, payment: failureReturn, displayErrorCount: 1 },
+        {name: 'success in all endpoint', batch: successReturn, payment: successReturn, displayErrorCount: 0 },
     ];
 
-    test.each(data)('$name', async ({customer, shipping, billing, taxes, payment, displayErrorCount}) => {
-        callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(customer));
-        callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(shipping));
-        callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(billing));
-        setTaxesMock.mockReturnValue(Promise.resolve(taxes));
+    test.each(data)('$name', async ({batch, payment, displayErrorCount}) => {
+        batchRequestMock.mockReturnValue(Promise.resolve(batch));
         addPaymentMock.mockReturnValue(Promise.resolve(payment));
 
         await ppcpOnApprove(onApproveDataMock, onApproveActionsMock);

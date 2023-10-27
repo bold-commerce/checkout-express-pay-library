@@ -5,7 +5,7 @@ import {displayError, ppcpOrderCreate} from 'src';
 
 jest.mock('@boldcommerce/checkout-frontend-library/lib/payment/createPaymentGatewayOrder');
 jest.mock('src/actions/displayError');
-const initPaymentMock = mocked(createPaymentGatewayOrder, true);
+const createPaymentGatewayOrderMock = mocked(createPaymentGatewayOrder, true);
 const displayErrorMock = mocked(displayError, true);
 
 describe('testing  ppcpOrderCreate function', () => {
@@ -16,7 +16,7 @@ describe('testing  ppcpOrderCreate function', () => {
 
     test('testing with successful call', async () => {
         const response: ICreatePaymentGatewayOrderResponse = {
-            data: {
+            payment_data: {
                 id: 'test-order'
             },
             application_state: applicationStateMock
@@ -24,10 +24,8 @@ describe('testing  ppcpOrderCreate function', () => {
 
         const paymentReturn = {...baseReturnObject};
         paymentReturn.success = true;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        paymentReturn.response = response;
-        initPaymentMock.mockReturnValue(Promise.resolve(paymentReturn));
+        paymentReturn.response = {data: response};
+        createPaymentGatewayOrderMock.mockReturnValue(Promise.resolve(paymentReturn));
 
         const result = await ppcpOrderCreate();
         expect(result).toBe('test-order');
@@ -37,7 +35,7 @@ describe('testing  ppcpOrderCreate function', () => {
     test('testing with unsuccessful call', async () => {
         const paymentReturn = {...baseReturnObject};
         paymentReturn.success = false;
-        initPaymentMock.mockReturnValue(Promise.resolve(paymentReturn));
+        createPaymentGatewayOrderMock.mockReturnValue(Promise.resolve(paymentReturn));
 
         const result = await ppcpOrderCreate();
         expect(displayErrorMock).toHaveBeenCalledTimes(1);
