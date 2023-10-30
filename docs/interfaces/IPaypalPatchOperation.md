@@ -24,4 +24,4 @@ ___
 
 ### value
 
-• **value**: `AmountWithBreakdown` \| `ShippingInfoOption`[]
+• **value**: `Record`<`string`, `unknown`\> \| `AmountWithBreakdown` \| `ShippingInfoOption`[]
