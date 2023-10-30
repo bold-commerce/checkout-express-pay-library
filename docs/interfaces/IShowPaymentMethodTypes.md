@@ -7,6 +7,7 @@
 - [BRAINTREE\_APPLE](IShowPaymentMethodTypes.md#braintree_apple)
 - [BRAINTREE\_GOOGLE](IShowPaymentMethodTypes.md#braintree_google)
 - [PAYPAL](IShowPaymentMethodTypes.md#paypal)
+- [PPCP](IShowPaymentMethodTypes.md#ppcp)
 - [PPCP\_APPLE](IShowPaymentMethodTypes.md#ppcp_apple)
 - [STRIPE](IShowPaymentMethodTypes.md#stripe)
 
@@ -27,6 +28,12 @@ ___
 ### PAYPAL
 
 • **PAYPAL**: `string`
+
+___
+
+### PPCP
+
+• **PPCP**: `string`
 
 ___
 
