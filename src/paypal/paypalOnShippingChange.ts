@@ -14,7 +14,7 @@ import {
     getShippingLines,
     setTaxes,
 } from '@boldcommerce/checkout-frontend-library';
-import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
+import {OrderResponseBody, UpdateOrderRequestBody} from '@paypal/paypal-js/types/apis/orders';
 
 export async function paypalOnShippingChange(data: OnShippingChangeData, actions: OnShippingChangeActions): Promise<void|OrderResponseBody> {
     const {shipping_address: address, selected_shipping_option: selectedOption} = data;
@@ -48,9 +48,7 @@ export async function paypalOnShippingChange(data: OnShippingChangeData, actions
 
     if (taxResponse.success) {
         const patchOperations = getPaypalPatchOperations(!!selectedOption);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return await patch(patchOperations);
+        return await patch(patchOperations as UpdateOrderRequestBody);
     }
 
     return reject();

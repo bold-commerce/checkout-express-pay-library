@@ -66,7 +66,6 @@
 - [IBraintreeGooglePayCreateCallback](modules.md#ibraintreegooglepaycreatecallback)
 - [IBraintreeRequiredContactField](modules.md#ibraintreerequiredcontactfield)
 - [IOnAction](modules.md#ionaction)
-- [IPaypalPatch](modules.md#ipaypalpatch)
 
 ### Variables
 
@@ -272,26 +271,6 @@ ___
 ##### Returns
 
 `void`
-
-___
-
-### IPaypalPatch
-
-Ƭ **IPaypalPatch**: (`operations`: [`IPaypalPatchOperation`](interfaces/IPaypalPatchOperation.md)[]) => `Promise`<`OrderResponseBody`\>
-
-#### Type declaration
-
-▸ (`operations`): `Promise`<`OrderResponseBody`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `operations` | [`IPaypalPatchOperation`](interfaces/IPaypalPatchOperation.md)[] |
-
-##### Returns
-
-`Promise`<`OrderResponseBody`\>
 
 ## Variables
 

@@ -7,6 +7,7 @@
 - [braintreeApple](IShowPaymentMethods.md#braintreeapple)
 - [braintreeGoogle](IShowPaymentMethods.md#braintreegoogle)
 - [paypal](IShowPaymentMethods.md#paypal)
+- [paypalCommercePlatform](IShowPaymentMethods.md#paypalcommerceplatform)
 - [ppcpApple](IShowPaymentMethods.md#ppcpapple)
 - [stripe](IShowPaymentMethods.md#stripe)
 
@@ -27,6 +28,12 @@ ___
 ### paypal
 
 • **paypal**: `boolean`
+
+___
+
+### paypalCommercePlatform
+
+• **paypalCommercePlatform**: `boolean`
 
 ___
 
