@@ -178,6 +178,7 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
             gateway_public_id: credentials.public_id,
             currency: currencyMock.iso_code,
             amount: applicationStateMock.order_total,
+            wallet_pay_type: 'applepay',
             extra_payment_data: {
                 brand: eventParam.payment.token.paymentMethod.network,
                 last_digits: '1111',

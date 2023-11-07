@@ -85,6 +85,7 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
             gateway_public_id: gatewayPublicId,
             currency: currencyCode,
             amount: totalAmountDue,
+            wallet_pay_type: 'applepay',
             extra_payment_data: {
                 brand: token.paymentMethod.network,
                 last_digits: displayNameLast,

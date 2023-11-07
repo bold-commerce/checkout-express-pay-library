@@ -28,6 +28,7 @@ export async function createBraintreeGoogle(): Promise<void> {
             braintreeDiv.className = 'braintree-google-express-payment express-payment';
 
             const button = googlePayClient.createButton({
+
                 onClick: braintreeOnClickGoogle,
                 buttonType: 'short',
                 buttonSizeMode: 'fill',
