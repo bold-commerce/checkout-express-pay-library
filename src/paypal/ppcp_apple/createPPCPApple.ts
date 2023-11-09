@@ -13,6 +13,7 @@ export function createPPCPApple(): void {
         const button = document.createElement('button');
         button.className = 'ppcp-apple-pay-button';
         button.id = 'ppcp-apple-pay-button';
+        button.type = 'button';
         button.addEventListener('click', ppcpOnClickApple);
         ppcpAppleDiv.appendChild(button);
 

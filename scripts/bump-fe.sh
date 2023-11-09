@@ -6,6 +6,11 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"/..
 
 version=$1
 
+if [ -z "$version" ]; then
+  echo "You must specify the version, i.e. './bump-fe.sh 0.51.2'"
+  exit 1
+fi
+
 git checkout develop
 git pull
 git checkout -b "bump-v${version}"

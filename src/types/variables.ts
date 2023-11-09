@@ -39,6 +39,7 @@ export interface IExpressPayContext {
 }
 
 export interface IActionTypes {
+    REFRESH_ORDER: string;
     ENABLE_DISABLE_SECTION: string;
     ORDER_COMPLETED: string;
     ORDER_PROCESSING: string;

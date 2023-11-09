@@ -6,7 +6,8 @@ import {
     IBraintreeClientInstance,
     setBraintreeApplePayInstance,
     ApplePayLoadingError,
-    getBraintreeAppleCredentialsChecked, IBraintreeClient,
+    getBraintreeAppleCredentialsChecked,
+    IBraintreeClient,
 } from 'src';
 
 export async function braintreeOnLoadApple(): Promise<void> {

@@ -120,6 +120,7 @@ Each of the actions occurs at a different point in the checkout process. For exa
 - `ORDER_PROCESSING` occurs when user finalizes the payment process and all validation succeeds.
 - `ENABLE_DISABLE_SECTION` occurs when the payment gateway is loaded using the credentials - `true` when at least 1 payment gateway loaded successfully and `false` when none have loaded.
 - `DISPLAY_ERROR` occurs when any error occurs from an API call that is not handled internally by the payment gateways.
+- `RERESH_ORDER` occurs when cancelling a wallet pay and the order state should be updated with the changes from the wallet pay.
 
 For a full list of all actions the library will emit, see the [actions](#actions) section below.
 

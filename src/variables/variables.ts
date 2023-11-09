@@ -33,6 +33,7 @@ export const expressPayContext: IExpressPayContext = {
 };
 
 export const actionTypes: IActionTypes = {
+    REFRESH_ORDER: 'REFRESH_ORDER',
     ENABLE_DISABLE_SECTION: 'ENABLE_DISABLE_SECTION',
     ORDER_COMPLETED: 'ORDER_COMPLETED',
     ORDER_PROCESSING: 'ORDER_PROCESSING',

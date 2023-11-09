@@ -13,6 +13,7 @@ export function createBraintreeApple(): void {
         const button = document.createElement('button');
         button.className = 'braintree-apple-pay-button';
         button.id = 'braintree-apple-pay-button';
+        button.type = 'button';
         button.addEventListener('click', braintreeOnClickApple);
         braintreeDiv.appendChild(button);
 

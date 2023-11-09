@@ -6,3 +6,4 @@ export * from './braintreeOnShippingMethodSelectedApple';
 export * from './braintreeOnValidateMerchantApple';
 export * from './createBraintreeApple';
 export * from './initBraintreeApple';
+export * from './braintreeOnCancelApple';

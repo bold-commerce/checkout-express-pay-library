@@ -11,7 +11,8 @@ import {
     braintreeOnShippingContactSelectedApple,
     braintreeOnShippingMethodSelectedApple,
     braintreeConstants,
-    getBraintreeApplePayInstanceChecked
+    getBraintreeApplePayInstanceChecked,
+    braintreeOnCancelApple
 } from 'src';
 
 export function braintreeOnClickApple(ev: MouseEvent): void {
@@ -41,6 +42,7 @@ export function braintreeOnClickApple(ev: MouseEvent): void {
     applePaySession.onshippingcontactselected = braintreeOnShippingContactSelectedApple;
     applePaySession.onshippingmethodselected = braintreeOnShippingMethodSelectedApple;
     applePaySession.onpaymentauthorized = braintreeOnPaymentAuthorizedApple;
+    applePaySession.oncancel = braintreeOnCancelApple;
     applePaySession.begin();
 
     setBraintreeApplePaySession(applePaySession);
