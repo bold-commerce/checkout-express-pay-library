@@ -60,8 +60,8 @@ describe('testing initPpcpButtons function', () => {
 
     test('testing call initPpcpButtons null paypal name space', async () => {
         loadScriptMock.mockReturnValueOnce(Promise.resolve(null));
-
-        await initPpcpButtons(paypalPayment);
+        const paypal = {...paypalPayment , is_dev: false};
+        await initPpcpButtons(paypal);
         expect(setPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
         expect(setPaypalGatewayPublicIdMock).toHaveBeenCalledWith(paypalPayment.public_id);
         expect(hasPaypalNameSpaceMock).toHaveBeenCalledTimes(1);

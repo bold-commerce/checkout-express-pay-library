@@ -72,7 +72,7 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
     const diffAddressContact = {
         ...addressContact,
         givenName: 'Jane',
-        phoneNumber: '3453453456',
+        phoneNumber: '',
         addressLines: ['456 Any St', 'Line 2']
     };
     const event = {

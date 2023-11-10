@@ -1,14 +1,14 @@
 import {mocked} from 'jest-mock';
 import {
     alternatePaymentMethodType,
-    getOrderInitialData,
+    getOrderInitialData, IExpressPayPaypalCommercePlatform,
     IExpressPayPaypalCommercePlatformButton
 } from '@boldcommerce/checkout-frontend-library';
 import {orderInitialDataMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {
     displayError,
     enableDisableSection,
-    initPpcp,
+    initPpcp, initPPCPApple,
     initPpcpButtons,
     setOnAction,
     showPaymentMethodTypes
@@ -19,17 +19,21 @@ jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData
 jest.mock('src/initialize/manageExpressPayContext');
 jest.mock('src/actions');
 jest.mock('src/paypal/ppcp_buttons');
+jest.mock('src/paypal/ppcp_apple/initPPCPApple');
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const setOnActionMock = mocked(setOnAction, true);
 const displayErrorMock = mocked(displayError, true);
 const enableDisableSectionMock = mocked(enableDisableSection, true);
 const initPpcpButtonsMock = mocked(initPpcpButtons, true);
+const initPPCPAppleMock = mocked(initPPCPApple, true);
 
 describe('testing initPpcp function', () => {
     const onActionMock = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
+        initPpcpButtonsMock.mockReturnValue(Promise.resolve());
+        initPPCPAppleMock.mockReturnValue(Promise.resolve());
     });
 
     test('initPpcp successfully without actions', async () => {
@@ -68,17 +72,28 @@ describe('testing initPpcp function', () => {
             public_id: 'somePublicId',
         };
 
+        const applePay: IExpressPayPaypalCommercePlatform = {
+            type:  alternatePaymentMethodType.PPCP_APPLE,
+            is_test: true,
+            public_id: 'somePublicId',
+            apple_pay_enabled: true,
+            merchant_id: 'someClientId',
+            partner_id: 'somePartnerId',
+        };
+
         const payments = {...orderInitialDataMock};
-        payments.alternative_payment_methods = [paypalPayment];
+        payments.alternative_payment_methods = [paypalPayment, applePay];
 
         getOrderInitialDataMock.mockReturnValueOnce(payments);
-        initPpcp(onActionMock);
+        await initPpcp(onActionMock);
 
         expect(setOnActionMock).toHaveBeenCalledTimes(1);
         expect(displayErrorMock).toHaveBeenCalledTimes(0);
         expect(enableDisableSectionMock).toHaveBeenCalledTimes(0);
         expect(initPpcpButtonsMock).toHaveBeenCalledTimes(1);
         expect(initPpcpButtonsMock).toHaveBeenCalledWith(paypalPayment);
+        expect(initPPCPAppleMock).toHaveBeenCalledTimes(1);
+        expect(initPPCPAppleMock).toHaveBeenCalledWith(applePay);
 
     });
 

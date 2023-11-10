@@ -28,7 +28,11 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
     const appleInstance = getPPCPApplePayInstanceChecked();
     const applePaySession = getPPCPApplePaySessionChecked();
     const {token, shippingContact, billingContact} = event.payment;
-    const {givenName, familyName, emailAddress} = shippingContact ?? {} as ApplePayPaymentContact;
+    const {givenName, familyName, emailAddress, phoneNumber} = shippingContact ?? {} as ApplePayPaymentContact;
+
+    if (billingContact && !billingContact.phoneNumber && phoneNumber) {
+        billingContact.phoneNumber = phoneNumber;
+    }
 
     const shippingAddress = formatApplePayContactToCheckoutAddress(shippingContact as ApplePayPaymentContact);
     const billingAddress = formatApplePayContactToCheckoutAddress(billingContact as ApplePayPaymentContact);

@@ -48,7 +48,6 @@ describe('testing ppcpOnload function', () => {
         onApprove: ppcpOnApprove,
         style: {
             ...paypalPayment.style,
-            height: 39
         }
     };
 
@@ -60,7 +59,6 @@ describe('testing ppcpOnload function', () => {
         onApprove: ppcpOnApprove,
         style: {
             ...paypalPayment.style,
-            height: 39
         }
     };
 
@@ -71,7 +69,6 @@ describe('testing ppcpOnload function', () => {
         onApprove: ppcpOnApprove,
         style: {
             ...paypalPayment.style,
-            height: 39,
             color: 'blue'
         }
     };

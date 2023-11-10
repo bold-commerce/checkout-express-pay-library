@@ -46,7 +46,8 @@ export async function initPpcpButtons(payment: IExpressPayPaypalCommercePlatform
             'commit': true,
             'intent': 'authorize',
             'merchantId': payment.merchant_id,
-            'components': components
+            'components': components,
+            'dataPartnerAttributionId': payment.is_dev? 'Bold_SP_PPCP_TEST' : 'Bold_SP_PPCP'
         };
 
         if (payment.is_dev) {

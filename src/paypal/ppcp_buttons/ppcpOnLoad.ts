@@ -4,7 +4,8 @@ import {
     getPaypalNameSpace,
     paypalOnClick,
     paypalOnShippingChange,
-    ppcpOnApprove, showPaymentMethodTypes
+    ppcpOnApprove,
+    showPaymentMethodTypes
 } from 'src';
 import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
 import {ppcpOrderCreate} from 'src/paypal/ppcp_buttons/ppcpOrderCreate';
@@ -19,7 +20,7 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
     const paypalDiv = document.createElement('div');
     const paypalDivId = 'ppcp-express-payment';
     paypalDiv.id = paypalDivId;
-    paypalDiv.className = `${paypalDivId} express-payment`;
+    paypalDiv.className = `${paypalDivId}`;
     const container = document.getElementById('express-payment-container');
     container?.appendChild(paypalDiv);
 
@@ -32,7 +33,6 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
             onApprove: ppcpOnApprove,
             style: {
                 ...payment.style,
-                height: 39,
             },
         });
 
@@ -44,7 +44,6 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
             onApprove: ppcpOnApprove,
             style: {
                 ...payment.style,
-                height: 39,
             },
         });
 
@@ -55,7 +54,6 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
             onApprove: ppcpOnApprove,
             style: {
                 ...payment.style,
-                height: 39,
                 color: 'blue', // paypal bug. venmo doesnt work with any other color
             },
         });
