@@ -54,6 +54,7 @@ export async function ppcpOnApprove(data: OnApproveData, actions: OnApproveActio
                 gateway_public_id: getPaypalGatewayPublicId(),
                 currency: currencyCode,
                 amount: totals.totalAmountDue,
+                wallet_pay_type: 'paypal',
                 extra_payment_data: {
                     orderId: data.orderID,
                     facilitatorAccessToken: data.facilitatorAccessToken,

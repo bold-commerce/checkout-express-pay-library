@@ -88,7 +88,8 @@ export async function paypalOnApprove(data: OnApproveData, actions: OnApproveAct
             nonce: `${id}:${payer.payer_id}`, // TODO: Temporarily required - It is not in the API documentation, but required for Paypal Express
             gateway_public_id: getPaypalGatewayPublicId(),
             currency: currencyCode,
-            amount: totals.totalAmountDue
+            amount: totals.totalAmountDue,
+            wallet_pay_type: 'paypal',
         } as IAddPaymentRequest;
         const paymentResult = await addPayment(payment, API_RETRY);
         if(!paymentResult.success){

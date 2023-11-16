@@ -82,7 +82,8 @@ export async function braintreeOnPaymentAuthorizedGoogle(paymentData: PaymentDat
         gateway_public_id: gatewayPublicId,
         currency: currencyCode,
         amount: totalAmountDue,
-        display_string: description
+        display_string: description,
+        wallet_pay_type: 'paywithgoogle',
     };
     const paymentResult = await addPayment(payment, API_RETRY);
     if (!paymentResult.success) {
