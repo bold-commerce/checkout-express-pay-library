@@ -39,6 +39,7 @@ jobs:
     - run: npm install --no-progress
     - run: npm run lint-ci
     - run: npm run test-ci
+    - run: npm run build
 
     - name: Get and set version number
       id: set_new_version
