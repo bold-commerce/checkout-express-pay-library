@@ -39,6 +39,8 @@ const processOrderMock = mocked(processOrder, true);
 const getTotalsMock = mocked(getTotals, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const callGuestCustomerEndpointMock = mocked(callGuestCustomerEndpoint, true);
+const canMakePaymentsMock = jest.fn();
+const applePaySession = {canMakePayments: canMakePaymentsMock};
 
 describe('testing stripe payment function', () => {
 
@@ -117,6 +119,7 @@ describe('testing stripe payment function', () => {
         formatStripeBillingAddressMock.mockReturnValue(appState.addresses.billing);
         getTotalsMock.mockReturnValue(totals);
         getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
+        window.ApplePaySession = applePaySession;
 
     });
 
@@ -126,6 +129,7 @@ describe('testing stripe payment function', () => {
         setBillingAddressMock.mockReturnValueOnce(Promise.resolve(setBilling));
         addPaymentMock.mockReturnValueOnce(Promise.resolve(addPayment));
         processOrderMock.mockReturnValueOnce(Promise.resolve(processOrder));
+        canMakePaymentsMock.mockReturnValueOnce(false);
 
         await addStripePayment(eventMock, 'test-id');
         expect(completeMock).toBeCalled();
@@ -141,6 +145,7 @@ describe('testing stripe payment function', () => {
         setBillingAddressMock.mockReturnValueOnce(Promise.resolve(successApi));
         addPaymentMock.mockReturnValueOnce(Promise.resolve(successApi));
         processOrderMock.mockReturnValueOnce(Promise.resolve(successApi));
+        canMakePaymentsMock.mockReturnValueOnce(true);
         await addStripePayment(localEventMock, 'test-id');
         expect(completeMock).toBeCalled();
         expect(completeMock).toHaveBeenCalledWith('success');

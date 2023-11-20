@@ -87,7 +87,8 @@ export async function braintreeOnPaymentAuthorizedApple(event: ApplePayPaymentAu
             token: nonce,
             gateway_public_id: gatewayPublicId,
             currency: currencyCode,
-            amount: totalAmountDue
+            amount: totalAmountDue,
+            wallet_pay_type: 'applepay',
         };
 
         const paymentResult = await addPayment(payment, API_RETRY);

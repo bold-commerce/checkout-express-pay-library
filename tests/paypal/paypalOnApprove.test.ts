@@ -140,6 +140,7 @@ const paypalOrderResponseMock: OrderResponseBody = {
 const paymentRequest = {
     token: 'test_id:test_payer_id',
     nonce: 'test_id:test_payer_id',
+    wallet_pay_type: 'paypal',
     gateway_public_id: 'abc123',
     currency: 'USD',
     amount: 10000,

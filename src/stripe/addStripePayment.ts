@@ -37,11 +37,13 @@ export async function addStripePayment(event: IStripePaymentEvent, stripeGateway
                     const billingAddress = formatStripeBillingAddress(card, event.payerName, event.payerPhone);
                     await setBillingAddress(billingAddress, API_RETRY).then(async (billingResult) => {
                         if (billingResult.success) {
+                            const walletPayType = window.ApplePaySession && ApplePaySession.canMakePayments() ? 'applepay' : 'paywithgoogle';
                             const payment: IAddPaymentRequest = {
                                 token: token.id,
                                 gateway_public_id: stripeGatewayId,
                                 currency: card.currency,
-                                amount: totalAmountDue
+                                amount: totalAmountDue,
+                                wallet_pay_type: walletPayType,
                             };
                             await addPayment(payment, API_RETRY).then(async (paymentResult) => {
                                 if (paymentResult.success) {

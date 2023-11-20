@@ -194,7 +194,8 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
             token: nonce,
             gateway_public_id: credentials.public_id,
             currency: currencyMock.iso_code,
-            amount: applicationStateMock.order_total
+            amount: applicationStateMock.order_total,
+            wallet_pay_type: 'applepay',
         };
 
         await braintreeOnPaymentAuthorizedApple(eventParam as ApplePayPaymentAuthorizedEvent);
