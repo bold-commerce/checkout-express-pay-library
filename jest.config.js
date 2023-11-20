@@ -22,6 +22,12 @@ module.exports = {
         'src/(.*)': '<rootDir>/src/$1',
         'src': '<rootDir>/src'
     },
+
+    'reporters': [
+        'default',
+        ['jest-junit', {outputDirectory: 'reports', outputName: 'report.xml'}],
+    ],
+
     'collectCoverageFrom': [
         '**/*.{js,jsx,ts,tsx}',
         '!**/node_modules/**',

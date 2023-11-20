@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint .",
     "lint-ci": "yarn lint",
-    "test-ci": "yarn cover-test --ci --bail --verbose --reporters=default --reporters=jest-junit --forceExit --watchAll=false --detectOpenHandles",
+    "test-ci": "yarn cover-test --ci --bail --verbose --forceExit --watchAll=false --detectOpenHandles",
     "lint-staged": "lint-staged",
     "cover-test": "jest --coverage --colors",
     "tsc": "tsc",
