@@ -11,7 +11,7 @@ if [ -z "$version" ]; then
   exit 1
 fi
 
-git checkout develop
+git checkout main
 git pull
 git checkout -b "bump-v${version}"
 
