@@ -1,4 +1,4 @@
-name: NPM Lint Test
+name: Linter and Tests
 run-name: Deploy by ${{ github.actor }}
 
 on:
@@ -14,7 +14,7 @@ on:
     
 jobs:
   yarn:
-    name: NPM Build
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -25,10 +25,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm install --no-progress
-      - run: npm run lint-ci
-      - run: npm run test-ci
+        run: yarn --frozen-lockfile --no-progress
+      - run: yarn lint-ci
+      - run: yarn test-ci
       
