@@ -56,7 +56,7 @@ export async function paypalOnApprove(data: OnApproveData, actions: OnApproveAct
         const formattedBillingAddress = formatPaypalToApiAddress(isBillingAddressFilled ? billingAddress : shippingAddress, billingNames.firstName, billingNames.lastName, phone);
 
         // check and update shipping address
-        const shippingAddressResponse = await callShippingAddressEndpoint(formattedShippingAddress, false);
+        const shippingAddressResponse = await callShippingAddressEndpoint(formattedShippingAddress, true);
         if(!shippingAddressResponse.success){
             displayError('There was an unknown error while validating your shipping address.', 'shipping', 'unknown_error');
             return;

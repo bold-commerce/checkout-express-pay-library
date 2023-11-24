@@ -48,7 +48,7 @@ export async function braintreeOnPaymentAuthorizedGoogle(paymentData: PaymentDat
             error
         };
     }
-    const shippingAddressResponse = await callShippingAddressEndpoint(formattedShippingAddress, false);
+    const shippingAddressResponse = await callShippingAddressEndpoint(formattedShippingAddress, true);
     if (!shippingAddressResponse.success) {
         error.reason = braintreeConstants.GOOGLEPAY_ERROR_REASON_SHIPPING;
         error.message = shippingAddressResponse.error?.message ?? 'There was an unknown error while validating your shipping address.';

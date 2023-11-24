@@ -131,7 +131,7 @@ describe('testing braintreeOnPaymentDataChangeGoogle function',() => {
         expect(formatBraintreeShippingAddressGoogleMock).toBeCalledTimes(1);
         expect(formatBraintreeShippingAddressGoogleMock).toBeCalledWith(addressContact, true);
         expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, true);
+        expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, false);
         expect(getShippingLinesMock).toBeCalledTimes(2);
         expect(getShippingLinesMock).toBeCalledWith(API_RETRY);
         expect(getShippingMock).toBeCalledTimes(1);
@@ -166,7 +166,7 @@ describe('testing braintreeOnPaymentDataChangeGoogle function',() => {
         expect(formatBraintreeShippingAddressGoogleMock).toBeCalledTimes(1);
         expect(formatBraintreeShippingAddressGoogleMock).toBeCalledWith(addressContact, true);
         expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, true);
+        expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, false);
         expect(getShippingLinesMock).toBeCalledTimes(0);
         expect(getShippingMock).toBeCalledTimes(0);
         expect(changeShippingLineMock).toBeCalledTimes(0);

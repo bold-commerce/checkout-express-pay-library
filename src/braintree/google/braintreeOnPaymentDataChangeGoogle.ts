@@ -25,7 +25,7 @@ export async function braintreeOnPaymentDataChangeGoogle(intermediatePaymentData
         case braintreeConstants.GOOGLEPAY_INTENT_SHIPPING_ADDRESS: {
             if (shippingAddress) {
                 const address = formatBraintreeShippingAddressGoogle(shippingAddress, true);
-                const shippingAddressResponse = await callShippingAddressEndpoint(address, true);
+                const shippingAddressResponse = await callShippingAddressEndpoint(address, false);
                 if (!shippingAddressResponse.success) {
                     paymentDataRequestUpdate.error = {
                         reason: braintreeConstants.GOOGLEPAY_ERROR_REASON_SHIPPING,

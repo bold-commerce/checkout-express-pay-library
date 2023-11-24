@@ -93,7 +93,7 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
-            expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, true);
+            expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, false);
             expect(getShippingLinesMock).toBeCalledTimes(1);
             expect(getShippingLinesMock).toBeCalledWith(API_RETRY);
             expect(setTaxesMock).toBeCalledTimes(1);
@@ -164,7 +164,7 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContactWithEmptyFields);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
-            expect(callShippingAddressEndpointMock).toBeCalledWith(expectedShipping, true);
+            expect(callShippingAddressEndpointMock).toBeCalledWith(expectedShipping, false);
             expect(getShippingLinesMock).toBeCalledTimes(1);
             expect(getShippingLinesMock).toBeCalledWith(API_RETRY);
             expect(setTaxesMock).toBeCalledTimes(1);
@@ -227,7 +227,7 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
-            expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, true);
+            expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, false);
             expect(getShippingLinesMock).toBeCalledTimes(shippingLineTimes);
             expect(setTaxesMock).toBeCalledTimes(setTaxesTimes);
             expect(getApplicationStateMock).toBeCalledTimes(1);
