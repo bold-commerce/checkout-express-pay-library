@@ -3,12 +3,11 @@ import {
     enableDisableSection,
     getPaypalNameSpace,
     paypalOnClick,
-    paypalOnShippingChange,
     ppcpOnApprove,
     showPaymentMethodTypes
 } from 'src';
-import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
 import {ppcpOrderCreate} from 'src/paypal/ppcp_buttons/ppcpOrderCreate';
+import {ppcpOnShippingChange} from 'src/paypal/ppcp_buttons/ppcpOnShippingChange';
 
 export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButton): Promise<void> {
 
@@ -29,7 +28,7 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
             fundingSource: 'paypal',
             createOrder: ppcpOrderCreate,
             onClick: paypalOnClick,
-            onShippingChange: paypalOnShippingChange as (data: OnShippingChangeData, actions: OnShippingChangeActions) => Promise<void>,
+            onShippingChange: ppcpOnShippingChange,
             onApprove: ppcpOnApprove,
             style: {
                 ...payment.style,
@@ -40,21 +39,10 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
             fundingSource: 'paylater',
             createOrder: ppcpOrderCreate,
             onClick: paypalOnClick,
-            onShippingChange: paypalOnShippingChange as (data: OnShippingChangeData, actions: OnShippingChangeActions) => Promise<void>,
+            onShippingChange: ppcpOnShippingChange,
             onApprove: ppcpOnApprove,
             style: {
                 ...payment.style,
-            },
-        });
-
-        const venmoButton = paypal.Buttons({
-            fundingSource: 'venmo',
-            createOrder: ppcpOrderCreate,
-            onClick: paypalOnClick,
-            onApprove: ppcpOnApprove,
-            style: {
-                ...payment.style,
-                color: 'blue', // paypal bug. venmo doesnt work with any other color
             },
         });
 
@@ -69,10 +57,6 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
                 enableSection = true;
             }
 
-            if (venmoButton.isEligible()) {
-                await venmoButton.render(`#${paypalDivId}`);
-                enableSection = true;
-            }
         }
 
         if(enableSection) {

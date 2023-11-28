@@ -5,7 +5,6 @@ import {
 import {
     ppcpOrderCreate,
     paypalOnClick,
-    paypalOnShippingChange,
     ppcpOnApprove,
     getPaypalNameSpace,
     enableDisableSection,
@@ -13,6 +12,7 @@ import {
 } from 'src';
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {mocked} from 'jest-mock';
+import {ppcpOnShippingChange} from 'src/paypal/ppcp_buttons/ppcpOnShippingChange';
 
 jest.mock('src/paypal/managePaypalState');
 jest.mock('src/actions/enableDisableSection');
@@ -44,7 +44,7 @@ describe('testing ppcpOnload function', () => {
         fundingSource: 'paypal',
         createOrder: ppcpOrderCreate,
         onClick: paypalOnClick,
-        onShippingChange: paypalOnShippingChange,
+        onShippingChange: ppcpOnShippingChange,
         onApprove: ppcpOnApprove,
         style: {
             ...paypalPayment.style,
@@ -55,21 +55,10 @@ describe('testing ppcpOnload function', () => {
         fundingSource: 'paylater',
         createOrder: ppcpOrderCreate,
         onClick: paypalOnClick,
-        onShippingChange: paypalOnShippingChange,
+        onShippingChange: ppcpOnShippingChange,
         onApprove: ppcpOnApprove,
         style: {
             ...paypalPayment.style,
-        }
-    };
-
-    const ppcpVenmoButtonsOptions = {
-        fundingSource: 'venmo',
-        createOrder: ppcpOrderCreate,
-        onClick: paypalOnClick,
-        onApprove: ppcpOnApprove,
-        style: {
-            ...paypalPayment.style,
-            color: 'blue'
         }
     };
 
@@ -95,14 +84,13 @@ describe('testing ppcpOnload function', () => {
         await ppcpOnLoad(paypalPayment);
 
         expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
-        expect(paypalButtonsMock).toHaveBeenCalledTimes(3);
+        expect(paypalButtonsMock).toHaveBeenCalledTimes(2);
         expect(paypalButtonsMock).toHaveBeenCalledWith(paypalButtonsOptions);
         expect(paypalButtonsMock).toHaveBeenCalledWith(payLaterButtonsOptions);
-        expect(paypalButtonsMock).toHaveBeenCalledWith(ppcpVenmoButtonsOptions);
         expect(document.getElementById('ppcp-express-payment')).not.toBeNull();
         expect(document.getElementById('ppcp-express-payment')?.style.display).toBe('');
-        expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(3);
-        expect(paypalButtonRenderMock).toHaveBeenCalledTimes(3);
+        expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(2);
+        expect(paypalButtonRenderMock).toHaveBeenCalledTimes(2);
         expect(paypalButtonRenderMock).toHaveBeenCalledWith('#ppcp-express-payment');
         expect(enableDisableSectionMock).toHaveBeenCalledTimes(1);
         expect(enableDisableSectionMock).toHaveBeenCalledWith(showPaymentMethodTypes.PPCP, true);
@@ -127,7 +115,7 @@ describe('testing ppcpOnload function', () => {
         await ppcpOnLoad(paypalPayment);
 
         expect(getPaypalNameSpaceMock).toHaveBeenCalledTimes(1);
-        expect(paypalButtonsMock).toHaveBeenCalledTimes(3);
+        expect(paypalButtonsMock).toHaveBeenCalledTimes(2);
         expect(paypalButtonsMock).toHaveBeenCalledWith(paypalButtonsOptions);
         expect(document.getElementById('paypal-express-payment')).toBeNull();
         expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(0);
