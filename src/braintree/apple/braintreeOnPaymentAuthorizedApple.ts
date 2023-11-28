@@ -51,7 +51,7 @@ export async function braintreeOnPaymentAuthorizedApple(event: ApplePayPaymentAu
         });
     }
 
-    const shippingAddressResponse = await callShippingAddressEndpoint(shippingAddress, false);
+    const shippingAddressResponse = await callShippingAddressEndpoint(shippingAddress, true);
     if (!shippingAddressResponse.success) {
         return fail({
             code: braintreeConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT,

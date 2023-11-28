@@ -25,7 +25,7 @@ export async function paypalOnShippingChange(data: OnShippingChangeData, actions
         const formattedAddress = formatPaypalToApiAddress(address, undefined, undefined , getPhoneNumber());
         const success = true;
 
-        const shippingAddressResponse = await callShippingAddressEndpoint(formattedAddress, true);
+        const shippingAddressResponse = await callShippingAddressEndpoint(formattedAddress, false);
         if (!shippingAddressResponse.success) {
             return reject();
         }

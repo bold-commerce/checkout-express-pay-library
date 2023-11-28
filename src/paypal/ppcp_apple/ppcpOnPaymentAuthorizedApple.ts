@@ -53,7 +53,7 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
         });
     }
 
-    const shippingAddressResponse = await callShippingAddressEndpoint(shippingAddress, false);
+    const shippingAddressResponse = await callShippingAddressEndpoint(shippingAddress, true);
     if (!shippingAddressResponse.success) {
         return fail({
             code: applePayConstants.APPLEPAY_ERROR_CODE_SHIPPING_CONTACT,

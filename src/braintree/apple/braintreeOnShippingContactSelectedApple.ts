@@ -29,7 +29,7 @@ export async function braintreeOnShippingContactSelectedApple(event: ApplePayShi
         });
     };
 
-    const response = await callShippingAddressEndpoint(address, true);
+    const response = await callShippingAddressEndpoint(address, false);
 
     if(response.success){
         const shippingLinesResponse = await getShippingLines(API_RETRY);

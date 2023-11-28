@@ -208,7 +208,7 @@ describe('testing braintreeOnPaymentAuthorizedApple function', () => {
         expect(callGuestCustomerEndpointMock).toBeCalledTimes(1);
         expect(callGuestCustomerEndpointMock).toBeCalledWith(givenName, familyName, emailAddress);
         expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toBeCalledWith(shipping, false);
+        expect(callShippingAddressEndpointMock).toBeCalledWith(shipping, true);
         expect(callBillingAddressEndpointMock).toBeCalledTimes(1);
         expect(callBillingAddressEndpointMock).toBeCalledWith(billing, notSame);
         expect(setTaxesMock).toBeCalledTimes(1);

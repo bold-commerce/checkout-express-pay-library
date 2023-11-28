@@ -117,7 +117,7 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, false);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -158,7 +158,7 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(result).toBe(undefined);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, false);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(0);
         expect(getShippingMock).toHaveBeenCalledTimes(0);
         expect(changeShippingLineMock).toHaveBeenCalledTimes(0);
@@ -175,7 +175,7 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, false);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -194,7 +194,7 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, false);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -217,7 +217,7 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, false);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -244,7 +244,7 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, false);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -269,7 +269,7 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, false);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);
@@ -295,7 +295,7 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(1);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, true);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(formattedAddress, false);
         expect(getShippingLinesMock).toHaveBeenCalledTimes(2);
         expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
         expect(getShippingMock).toHaveBeenCalledTimes(1);

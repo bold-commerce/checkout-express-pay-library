@@ -178,7 +178,7 @@ describe('testing  paypalOnApprove function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, janeNames.firstName, janeNames.lastName, payer.phone.phone_number.national_number);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, true);
         expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, false);
         expect(setTaxesMock).toHaveBeenCalledTimes(1);
@@ -208,7 +208,7 @@ describe('testing  paypalOnApprove function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, true);
         expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
         expect(setTaxesMock).toHaveBeenCalledTimes(1);
@@ -237,7 +237,7 @@ describe('testing  paypalOnApprove function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled2Address, janeNames.firstName, janeNames.lastName, payer.phone.phone_number.national_number);
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, true);
         expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, true);
         expect(setTaxesMock).toHaveBeenCalledTimes(1);
@@ -268,7 +268,7 @@ describe('testing  paypalOnApprove function', () => {
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, '', '', '');
         expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, '', '', '');
         expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, true);
         expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
         expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, false);
         expect(setTaxesMock).toHaveBeenCalledTimes(1);
