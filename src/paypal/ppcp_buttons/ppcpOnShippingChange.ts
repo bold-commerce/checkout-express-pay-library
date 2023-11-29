@@ -3,7 +3,7 @@ import {
     IWalletPayOnShippingRequest,
     walletPayOnShipping
 } from '@boldcommerce/checkout-frontend-library';
-import {API_RETRY, displayError,} from 'src';
+import {API_RETRY} from 'src';
 
 
 export async function ppcpOnShippingChange(data: OnShippingChangeData, actions: OnShippingChangeActions): Promise<void> {
@@ -20,7 +20,6 @@ export async function ppcpOnShippingChange(data: OnShippingChangeData, actions: 
 
     const res = await walletPayOnShipping(body, API_RETRY);
     if (!res.success) {
-        displayError('There was an unknown error while getting the shipping details.', 'payment_gateway', 'unknown_error');
         return actions.reject();
     }
 

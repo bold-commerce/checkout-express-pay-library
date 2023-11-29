@@ -5,14 +5,11 @@ import {
     walletPayOnShipping
 } from '@boldcommerce/checkout-frontend-library';
 import {applicationStateMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
-import {displayError} from 'src';
 import {ppcpOnShippingChange} from 'src/paypal/ppcp_buttons/ppcpOnShippingChange';
 import {OnShippingChangeActions, OnShippingChangeData} from '@paypal/paypal-js/types/components/buttons';
 
 jest.mock('@boldcommerce/checkout-frontend-library/lib/walletPay/walletPayOnShipping');
-jest.mock('src/actions/displayError');
 const walletPayOnShippingMock = mocked(walletPayOnShipping, true);
-const displayErrorMock = mocked(displayError, true);
 
 describe('testing  ppcpOnShippingChange function', () => {
 
@@ -52,7 +49,7 @@ describe('testing  ppcpOnShippingChange function', () => {
 
         await ppcpOnShippingChange(dataMock, actionMock);
         expect(walletPayOnShippingMock).toHaveBeenCalledTimes(1);
-        expect(displayErrorMock).toHaveBeenCalledTimes(0);
+        expect(actionMock.reject).toHaveBeenCalledTimes(0);
     });
 
 
@@ -62,8 +59,7 @@ describe('testing  ppcpOnShippingChange function', () => {
         walletPayOnShippingMock.mockReturnValue(Promise.resolve(paymentReturn));
 
         await ppcpOnShippingChange(dataMock, actionMock);
-        expect(displayErrorMock).toHaveBeenCalledTimes(1);
-        expect(displayErrorMock).toHaveBeenCalledWith('There was an unknown error while getting the shipping details.', 'payment_gateway', 'unknown_error');
+        expect(walletPayOnShippingMock).toHaveBeenCalledTimes(1);
         expect(actionMock.reject).toHaveBeenCalledTimes(1);
     });
 
