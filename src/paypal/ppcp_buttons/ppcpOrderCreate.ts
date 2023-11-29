@@ -1,14 +1,14 @@
 import {
-    createPaymentGatewayOrder,
     IApiSuccessResponse,
-    ICreatePaymentGatewayOrderRequest,
-    ICreatePaymentGatewayOrderResponse
+    IWalletPayCreateOrderRequest,
+    IWalletPayCreateOrderResponse,
+    walletPayCreateOrder
 } from '@boldcommerce/checkout-frontend-library';
 import {API_RETRY} from 'src/types';
 import {displayError} from 'src/actions';
 
 export async function ppcpOrderCreate(): Promise<string> {
-    const payment: ICreatePaymentGatewayOrderRequest = {
+    const payment: IWalletPayCreateOrderRequest = {
         gateway_type: 'paypal',
         payment_data: {
             locale: navigator.language,
@@ -16,10 +16,10 @@ export async function ppcpOrderCreate(): Promise<string> {
         }
     };
 
-    const paymentResult = await createPaymentGatewayOrder(payment, API_RETRY);
+    const paymentResult = await walletPayCreateOrder(payment, API_RETRY);
     if(paymentResult.success) {
         const {data} = paymentResult.response as IApiSuccessResponse;
-        const {payment_data} = data as ICreatePaymentGatewayOrderResponse;
+        const {payment_data} = data as IWalletPayCreateOrderResponse;
         const orderId = payment_data.id as string;
         return orderId;
     } else {

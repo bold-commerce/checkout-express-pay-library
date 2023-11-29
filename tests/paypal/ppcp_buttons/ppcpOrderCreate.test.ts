@@ -1,11 +1,15 @@
 import {mocked} from 'jest-mock';
-import {baseReturnObject, createPaymentGatewayOrder, ICreatePaymentGatewayOrderResponse} from '@boldcommerce/checkout-frontend-library';
+import {
+    baseReturnObject,
+    IWalletPayCreateOrderResponse,
+    walletPayCreateOrder
+} from '@boldcommerce/checkout-frontend-library';
 import {applicationStateMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {displayError, ppcpOrderCreate} from 'src';
 
-jest.mock('@boldcommerce/checkout-frontend-library/lib/payment/createPaymentGatewayOrder');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/walletPay/walletPayCreateOrder');
 jest.mock('src/actions/displayError');
-const createPaymentGatewayOrderMock = mocked(createPaymentGatewayOrder, true);
+const walletPayCreateOrderMock = mocked(walletPayCreateOrder, true);
 const displayErrorMock = mocked(displayError, true);
 
 describe('testing  ppcpOrderCreate function', () => {
@@ -15,7 +19,7 @@ describe('testing  ppcpOrderCreate function', () => {
     });
 
     test('testing with successful call', async () => {
-        const response: ICreatePaymentGatewayOrderResponse = {
+        const response: IWalletPayCreateOrderResponse = {
             payment_data: {
                 id: 'test-order'
             },
@@ -25,7 +29,7 @@ describe('testing  ppcpOrderCreate function', () => {
         const paymentReturn = {...baseReturnObject};
         paymentReturn.success = true;
         paymentReturn.response = {data: response};
-        createPaymentGatewayOrderMock.mockReturnValue(Promise.resolve(paymentReturn));
+        walletPayCreateOrderMock.mockReturnValue(Promise.resolve(paymentReturn));
 
         const result = await ppcpOrderCreate();
         expect(result).toBe('test-order');
@@ -35,7 +39,7 @@ describe('testing  ppcpOrderCreate function', () => {
     test('testing with unsuccessful call', async () => {
         const paymentReturn = {...baseReturnObject};
         paymentReturn.success = false;
-        createPaymentGatewayOrderMock.mockReturnValue(Promise.resolve(paymentReturn));
+        walletPayCreateOrderMock.mockReturnValue(Promise.resolve(paymentReturn));
 
         const result = await ppcpOrderCreate();
         expect(displayErrorMock).toHaveBeenCalledTimes(1);
