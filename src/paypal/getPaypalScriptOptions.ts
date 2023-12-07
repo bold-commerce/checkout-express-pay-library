@@ -13,5 +13,6 @@ export function getPaypalScriptOptions(clientId: string, debug: boolean, merchan
         'integrationDate': '2020-03-10',
         'merchantId': merchantId,
         'components': components,
+        'dataPartnerAttributionId': debug ? 'BoldCommerce_BT_TEST' : 'BoldCommerce_BT',
     };
 }

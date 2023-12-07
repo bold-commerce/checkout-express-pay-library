@@ -9,7 +9,7 @@ const getCurrencyMock = mocked(getCurrency, true);
 
 describe('testing getPaypalScriptOptions function', () => {
     const clientId = 'some-client-id';
-    const isDebug = false;
+    let isDebug = false;
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -27,9 +27,16 @@ describe('testing getPaypalScriptOptions function', () => {
             'integrationDate': '2020-03-10',
             'merchantId': undefined,
             'components': undefined,
+            'dataPartnerAttributionId': 'BoldCommerce_BT',
         };
 
-        const result = getPaypalScriptOptions(clientId, isDebug);
+        let result = getPaypalScriptOptions(clientId, isDebug);
+
+        expect(result).toStrictEqual(expectation);
+
+        expectation.dataPartnerAttributionId = 'BoldCommerce_BT_TEST';
+        isDebug = expectation.debug = true;
+        result = getPaypalScriptOptions(clientId, isDebug);
 
         expect(result).toStrictEqual(expectation);
     });
