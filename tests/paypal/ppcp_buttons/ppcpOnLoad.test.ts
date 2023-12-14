@@ -91,7 +91,8 @@ describe('testing ppcpOnload function', () => {
         expect(document.getElementById('ppcp-express-payment')?.style.display).toBe('');
         expect(paypalButtonIsEligibleMock).toHaveBeenCalledTimes(2);
         expect(paypalButtonRenderMock).toHaveBeenCalledTimes(2);
-        expect(paypalButtonRenderMock).toHaveBeenCalledWith('#ppcp-express-payment');
+        expect(paypalButtonRenderMock).toHaveBeenCalledWith('#ppcp-paypal-express-payment-button');
+        expect(paypalButtonRenderMock).toHaveBeenCalledWith('#ppcp-paylater-express-payment-button');
         expect(enableDisableSectionMock).toHaveBeenCalledTimes(1);
         expect(enableDisableSectionMock).toHaveBeenCalledWith(showPaymentMethodTypes.PPCP, true);
     });
