@@ -15,11 +15,23 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
 
     let enableSection = false;
 
+    const paypalButtonDiv = document.createElement('div');
+    const paypalButtonDivId = 'ppcp-paypal-express-payment-button';
+    paypalButtonDiv.id = paypalButtonDivId;
+    paypalButtonDiv.dataset.testid = paypalButtonDivId;
+
+    const payLaterButtonDiv = document.createElement('div');
+    const payLaterButtonDivId = 'ppcp-paylater-express-payment-button';
+    payLaterButtonDiv.id = payLaterButtonDivId;
+    payLaterButtonDiv.dataset.testid = payLaterButtonDivId;
+
     // creating a paypal payment div inside express payment container
     const paypalDiv = document.createElement('div');
     const paypalDivId = 'ppcp-express-payment';
     paypalDiv.id = paypalDivId;
     paypalDiv.className = `${paypalDivId}`;
+    paypalDiv.appendChild(paypalButtonDiv);
+    paypalDiv.appendChild(payLaterButtonDiv);
     const container = document.getElementById('express-payment-container');
     container?.appendChild(paypalDiv);
 
@@ -48,12 +60,12 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
 
         if(container) {
             if (paypalButton.isEligible()) {
-                await paypalButton.render(`#${paypalDivId}`);
+                await paypalButton.render(`#${paypalButtonDivId}`);
                 enableSection = true;
             }
 
             if (payLaterButton.isEligible()) {
-                await payLaterButton.render(`#${paypalDivId}`);
+                await payLaterButton.render(`#${payLaterButtonDivId}`);
                 enableSection = true;
             }
 

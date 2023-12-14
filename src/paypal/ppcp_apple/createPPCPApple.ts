@@ -9,11 +9,13 @@ export function createPPCPApple(): void {
         const ppcpAppleDiv = document.createElement('div');
         ppcpAppleDiv.id = 'ppcp-apple-express-payment';
         ppcpAppleDiv.className = 'ppcp-apple-express-payment';
+        ppcpAppleDiv.dataset.testid = 'ppcp-apple-express-payment';
 
         const button = document.createElement('button');
         button.className = 'ppcp-apple-pay-button';
         button.id = 'ppcp-apple-pay-button';
         button.type = 'button';
+        button.dataset.testid = 'ppcp-apple-pay-button';
         button.addEventListener('click', ppcpOnClickApple);
         ppcpAppleDiv.appendChild(button);
 
