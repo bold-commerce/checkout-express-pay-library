@@ -43,7 +43,7 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "peerDependencies": {
-    "@boldcommerce/checkout-frontend-library": "0.53.0"
+    "@boldcommerce/checkout-frontend-library": "0.53.1"
   },
   "files": [
     "lib/**/*"
