@@ -13,12 +13,16 @@ import {
     getCurrency,
     getShipping,
     getShippingLines,
-    setTaxes
+    setTaxes,
+    estimateTaxes,
+    estimateShippingLines,
+    getOrderInitialData
 } from '@boldcommerce/checkout-frontend-library';
 import {
     addressesMock,
     applicationStateMock,
     currencyMock,
+    orderInitialDataMock,
     shippingMock
 } from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import ApplePayShippingContactSelectedEvent = ApplePayJS.ApplePayShippingContactSelectedEvent;
@@ -31,8 +35,11 @@ jest.mock('src/utils/getPaymentRequestDisplayItems');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/estimateTaxes');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/getShippingLines');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/estimateShippingLines');
 const getPPCPApplePaySessionCheckedMock = mocked(getPPCPApplePaySessionChecked, true);
 const formatApplePayContactToCheckoutAddressMock = mocked(formatApplePayContactToCheckoutAddress, true);
 const getPaymentRequestDisplayItemsMock = mocked(getPaymentRequestDisplayItems, true);
@@ -41,7 +48,10 @@ const getCurrencyMock = mocked(getCurrency, true);
 const getShippingMock = mocked(getShipping, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
 const setTaxesMock = mocked(setTaxes, true);
+const estimateTaxesMock = mocked(estimateTaxes, true);
 const getShippingLinesMock = mocked(getShippingLines, true);
+const estimateShippingLinesMock = mocked(estimateShippingLines, true);
+const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 
 describe('testing ppcpOnShippingContactSelectedApple function',() => {
     const successReturn = {...baseReturnObject, success: true};
@@ -76,28 +86,60 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
         callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
         formatApplePayContactToCheckoutAddressMock.mockReturnValue(addressesMock.shipping);
         getShippingLinesMock.mockReturnValue(Promise.resolve(successReturn));
+        estimateShippingLinesMock.mockReturnValue(Promise.resolve(successReturn));
         setTaxesMock.mockReturnValue(Promise.resolve(successReturn));
+        estimateTaxesMock.mockReturnValue(Promise.resolve(successReturn));
         getPaymentRequestDisplayItemsMock.mockReturnValueOnce(displayItemMock);
     });
 
-    test('call successfully',async () => {
+    test('call successfully with RSA disabled',async () => {
         const expectedCompleteParam = {
             newLineItems: displayItemMappedMock,
             newShippingMethods: shippingMethodsMock,
             newTotal: {amount: '100.00', label: 'Total'}
         };
+        orderInitialDataMock.general_settings.checkout_process.rsa_enabled = false;
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
 
         await ppcpOnShippingContactSelectedApple(eventMock).then(() => {
             expect(getCurrencyMock).toBeCalledTimes(1);
             expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
+            expect(getOrderInitialDataMock).toBeCalledTimes(1);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
             expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, false);
             expect(getShippingLinesMock).toBeCalledTimes(1);
             expect(getShippingLinesMock).toBeCalledWith(API_RETRY);
             expect(setTaxesMock).toBeCalledTimes(1);
             expect(setTaxesMock).toBeCalledWith(API_RETRY);
+            expect(getApplicationStateMock).toBeCalledTimes(1);
+            expect(getPaymentRequestDisplayItemsMock).toBeCalledTimes(1);
+            expect(getShippingMock).toBeCalledTimes(1);
+            expect(applePaySessionCompleteShippingContactSelection).toBeCalledTimes(1);
+            expect(applePaySessionCompleteShippingContactSelection).toBeCalledWith(expectedCompleteParam);
+        });
+    });
+
+    test('call successfully with RSA enabled',async () => {
+        const expectedCompleteParam = {
+            newLineItems: displayItemMappedMock,
+            newShippingMethods: shippingMethodsMock,
+            newTotal: {amount: '100.00', label: 'Total'}
+        };
+        orderInitialDataMock.general_settings.checkout_process.rsa_enabled = true;
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
+
+        await ppcpOnShippingContactSelectedApple(eventMock).then(() => {
+            expect(getCurrencyMock).toBeCalledTimes(1);
+            expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
+            expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
+            expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
+            expect(getOrderInitialDataMock).toBeCalledTimes(1);
+            expect(estimateShippingLinesMock).toBeCalledTimes(1);
+            expect(estimateShippingLinesMock).toBeCalledWith(addressesMock.shipping, API_RETRY);
+            expect(estimateTaxesMock).toBeCalledTimes(1);
+            expect(estimateTaxesMock).toBeCalledWith(addressesMock.shipping, API_RETRY);
             expect(getApplicationStateMock).toBeCalledTimes(1);
             expect(getPaymentRequestDisplayItemsMock).toBeCalledTimes(1);
             expect(getShippingMock).toBeCalledTimes(1);
@@ -158,11 +200,16 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
             province: '',
             province_code: '',
         };
+
+        orderInitialDataMock.general_settings.checkout_process.rsa_enabled = false;
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
+
         await ppcpOnShippingContactSelectedApple(eventMockNew).then(() => {
             expect(getCurrencyMock).toBeCalledTimes(1);
             expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContactWithEmptyFields);
+            expect(getOrderInitialDataMock).toBeCalledTimes(1);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
             expect(callShippingAddressEndpointMock).toBeCalledWith(expectedShipping, false);
             expect(getShippingLinesMock).toBeCalledTimes(1);
@@ -221,11 +268,15 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
             newTotal: {amount: '100.00', label: 'Total'}
         };
 
+        orderInitialDataMock.general_settings.checkout_process.rsa_enabled = false;
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
+
         await ppcpOnShippingContactSelectedApple(eventMock).then(() => {
             expect(getCurrencyMock).toBeCalledTimes(1);
             expect(getPPCPApplePaySessionCheckedMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledTimes(1);
             expect(formatApplePayContactToCheckoutAddressMock).toBeCalledWith(addressContact);
+            expect(getOrderInitialDataMock).toBeCalledTimes(1);
             expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
             expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, false);
             expect(getShippingLinesMock).toBeCalledTimes(shippingLineTimes);
