@@ -12,17 +12,20 @@ import {
     getCurrency,
     getShipping,
     getShippingLines,
-    setTaxes
+    setTaxes,
+    estimateShippingLines,
+    estimateTaxes,
+    getOrderInitialData
 } from '@boldcommerce/checkout-frontend-library';
 
 export async function ppcpOnShippingContactSelectedApple(event: ApplePayShippingContactSelectedEvent): Promise<void> {
     const {iso_code: currencyCode} = getCurrency();
     const applePaySession = getPPCPApplePaySessionChecked();
     const address = formatApplePayContactToCheckoutAddress(event.shippingContact);
-    address.first_name = address.first_name.trim() || 'fistName';
-    address.last_name = address.last_name.trim() || 'lastName';
-    address.address_line_1 = address.address_line_1.trim() || 'addressLine1';
-    address.phone_number = address.phone_number.trim() || '0000000000';
+    const {general_settings} = getOrderInitialData();
+    const rsaEnabled = general_settings.checkout_process.rsa_enabled;
+
+    let shippingResponse = null;
 
     const fail = () => {
         const {totalAmountDue} = getTotals();
@@ -32,13 +35,29 @@ export async function ppcpOnShippingContactSelectedApple(event: ApplePayShipping
         });
     };
 
-    const response = await callShippingAddressEndpoint(address, false);
+    if(rsaEnabled) {
+        shippingResponse = await estimateShippingLines(address, API_RETRY);
+    } else {
+        address.first_name = address.first_name.trim() || 'fistName';
+        address.last_name = address.last_name.trim() || 'lastName';
+        address.address_line_1 = address.address_line_1.trim() || 'addressLine1';
+        address.phone_number = address.phone_number.trim() || '0000000000';
+        shippingResponse = await callShippingAddressEndpoint(address, false);
+    }
 
-    if(response.success){
-        const shippingLinesResponse = await getShippingLines(API_RETRY);
-        const taxResponse = await setTaxes(API_RETRY);
+    if(shippingResponse.success){
+        let taxResponse = null;
+        let shippingResponseSuccess = true;
 
-        if(shippingLinesResponse.success && taxResponse.success){
+        if (rsaEnabled) {
+            taxResponse = await estimateTaxes(address, API_RETRY);
+        } else {
+            const shippingLinesResponse = await getShippingLines(API_RETRY);
+            shippingResponseSuccess = shippingLinesResponse.success;
+            taxResponse = await setTaxes(API_RETRY);
+        }
+
+        if(taxResponse.success && shippingResponseSuccess){
             const {totalAmountDue} = getTotals();
             const displayItems = getPaymentRequestDisplayItems().map(
                 ({label, amount}) => ({
