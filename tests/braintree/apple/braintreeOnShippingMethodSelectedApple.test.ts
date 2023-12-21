@@ -8,14 +8,21 @@ import {
 import {
     baseReturnObject,
     changeShippingLine,
+    estimateTaxes,
     getApplicationState,
     getCurrency,
+    getOrderInitialData,
     getShipping,
-    getShippingLines,
+    getShippingLines, IOrderInitialData,
     setTaxes
 } from '@boldcommerce/checkout-frontend-library';
 import ApplePayShippingMethodSelectedEvent = ApplePayJS.ApplePayShippingMethodSelectedEvent;
-import {applicationStateMock, currencyMock, shippingMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
+import {
+    applicationStateMock,
+    currencyMock,
+    orderInitialDataMock,
+    shippingMock
+} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 
 jest.mock('src/braintree/manageBraintreeState');
 jest.mock('src/utils/getPaymentRequestDisplayItems');
@@ -25,6 +32,8 @@ jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState
 jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/getShippingLines');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/changeShippingLine');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/estimateTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
 const getBraintreeApplePaySessionCheckedMock = mocked(getBraintreeApplePaySessionChecked, true);
 const getPaymentRequestDisplayItemsMock = mocked(getPaymentRequestDisplayItems, true);
 const changeShippingLineMock = mocked(changeShippingLine, true);
@@ -33,6 +42,8 @@ const getShippingMock = mocked(getShipping, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
 const setTaxesMock = mocked(setTaxes, true);
 const getShippingLinesMock = mocked(getShippingLines, true);
+const getOrderInitialDataMock = mocked(getOrderInitialData, true);
+const estimateTaxesMock = mocked(estimateTaxes, true);
 
 describe('testing braintreeOnShippingMethodSelectedApple function',() => {
     const successReturn = {...baseReturnObject, success: true};
@@ -61,6 +72,8 @@ describe('testing braintreeOnShippingMethodSelectedApple function',() => {
         getShippingLinesMock.mockReturnValue(Promise.resolve(successReturn));
         setTaxesMock.mockReturnValue(Promise.resolve(successReturn));
         getPaymentRequestDisplayItemsMock.mockReturnValueOnce(displayItemMock);
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
+        estimateTaxesMock.mockReturnValue(Promise.resolve(successReturn));
     });
 
     test('call successfully',async () => {
@@ -79,6 +92,36 @@ describe('testing braintreeOnShippingMethodSelectedApple function',() => {
             expect(getShippingLinesMock).toBeCalledWith(API_RETRY);
             expect(setTaxesMock).toBeCalledTimes(1);
             expect(setTaxesMock).toBeCalledWith(API_RETRY);
+            expect(getApplicationStateMock).toBeCalledTimes(1);
+            expect(getPaymentRequestDisplayItemsMock).toBeCalledTimes(1);
+            expect(applePaySessionCompleteShippingMethodSelection).toBeCalledTimes(1);
+            expect(applePaySessionCompleteShippingMethodSelection).toBeCalledWith(expectedCompleteParam);
+
+        });
+    });
+
+    test('call successfully with rsa',async () => {
+        const expectedCompleteParam = {
+            newLineItems: displayItemMappedMock,
+            newTotal: {amount: '100.00', label: 'Total'}
+        };
+
+        const {general_settings: generalSettings} = orderInitialDataMock;
+        const {checkout_process: checkoutProcess} = generalSettings;
+        const newGeneralSettings = {...generalSettings, checkout_process: {...checkoutProcess, rsa_enabled: true}};
+        const initialData: IOrderInitialData = {...orderInitialDataMock, general_settings: newGeneralSettings};
+        getOrderInitialDataMock.mockReturnValue(initialData);
+
+        await braintreeOnShippingMethodSelectedApple(eventMock).then(() => {
+            expect(getCurrencyMock).toBeCalledTimes(1);
+            expect(getBraintreeApplePaySessionCheckedMock).toBeCalledTimes(1);
+            expect(getShippingMock).toBeCalledTimes(1);
+            expect(changeShippingLineMock).toBeCalledTimes(1);
+            expect(changeShippingLineMock).toBeCalledWith('test_select_shipping_line_id', API_RETRY);
+            expect(getShippingLinesMock).toBeCalledTimes(1);
+            expect(getShippingLinesMock).toBeCalledWith(API_RETRY);
+            expect(setTaxesMock).toBeCalledTimes(0);
+            expect(estimateTaxesMock).toBeCalledTimes(1);
             expect(getApplicationStateMock).toBeCalledTimes(1);
             expect(getPaymentRequestDisplayItemsMock).toBeCalledTimes(1);
             expect(applePaySessionCompleteShippingMethodSelection).toBeCalledTimes(1);

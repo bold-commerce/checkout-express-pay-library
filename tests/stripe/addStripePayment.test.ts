@@ -5,7 +5,7 @@ import {
     getOrderInitialData,
     processOrder,
     setBillingAddress,
-    updateShippingAddress
+    setTaxes,
 } from '@boldcommerce/checkout-frontend-library';
 import {
     formatStripeBillingAddress,
@@ -15,7 +15,8 @@ import {
     IStripePaymentEvent,
     callGuestCustomerEndpoint,
     getTotals,
-    ITotals
+    ITotals,
+    callShippingAddressEndpoint
 } from 'src';
 import {mocked} from 'jest-mock';
 
@@ -27,18 +28,20 @@ jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/customer');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/payment');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/order');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 jest.mock('src/utils/callGuestCustomerEndpoint');
 jest.mock('src/utils/getTotals');
-
+jest.mock('src/utils/callShippingAddressEndpoint');
 const formatStripeShippingAddressMock = mocked(formatStripeShippingAddress, true);
 const formatStripeBillingAddressMock = mocked(formatStripeBillingAddress, true);
-const updateShippingAddressMock = mocked(updateShippingAddress, true);
+const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
 const setBillingAddressMock = mocked(setBillingAddress, true);
 const addPaymentMock = mocked(addPayment, true);
 const processOrderMock = mocked(processOrder, true);
 const getTotalsMock = mocked(getTotals, true);
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const callGuestCustomerEndpointMock = mocked(callGuestCustomerEndpoint, true);
+const setTaxesMock = mocked(setTaxes, true);
 const canMakePaymentsMock = jest.fn();
 const applePaySession = {canMakePayments: canMakePaymentsMock};
 
@@ -53,11 +56,12 @@ describe('testing stripe payment function', () => {
     orderInitialData.general_settings.checkout_process.phone_number_required = true;
 
     const data = [
-        {name: 'success on all endpoints', guestCustomer: successApi, updateShipping: successApi, setBilling: successApi, addPayment: successApi, processOrder: successApi, expected: 'success' },
-        {name: 'failed guest customer', guestCustomer: failApi, updateShipping: successApi, setBilling: successApi, addPayment: successApi, processOrder: successApi, expected: 'fail' },
-        {name: 'failed update shipping', guestCustomer: successApi, updateShipping: failApi, setBilling: successApi, addPayment: successApi, processOrder: successApi, expected: 'fail' },
-        {name: 'failed update billing', guestCustomer: successApi, updateShipping: successApi, setBilling: failApi, addPayment: successApi, processOrder: successApi, expected: 'fail' },
-        {name: 'failed add payment', guestCustomer: successApi, updateShipping: successApi, setBilling: successApi, addPayment: failApi, processOrder: successApi, expected: 'fail' },
+        {name: 'success on all endpoints', guestCustomer: successApi, callShipping: successApi, setBilling: successApi, setTaxes: successApi, addPayment: successApi, processOrder: successApi, expected: 'success' },
+        {name: 'failed guest customer', guestCustomer: failApi, callShipping: successApi, setBilling: successApi, setTaxes: successApi,  addPayment: successApi, processOrder: successApi, expected: 'fail' },
+        {name: 'failed update shipping', guestCustomer: successApi, callShipping: failApi, setBilling: successApi, setTaxes: successApi,  addPayment: successApi, processOrder: successApi, expected: 'fail' },
+        {name: 'failed update billing', guestCustomer: successApi, callShipping: successApi, setBilling: failApi, setTaxes: successApi,  addPayment: successApi, processOrder: successApi, expected: 'fail' },
+        {name: 'failed add payment', guestCustomer: successApi, callShipping: successApi, setBilling: successApi, setTaxes: successApi,  addPayment: failApi, processOrder: successApi, expected: 'fail' },
+        {name: 'failed on set taxes', guestCustomer: successApi, callShipping: successApi, setBilling: successApi, setTaxes: failApi, addPayment: successApi, processOrder: successApi, expected: 'fail' },
     ];
 
     const cardMock: IStripeCard = {
@@ -123,10 +127,11 @@ describe('testing stripe payment function', () => {
 
     });
 
-    test.each(data)('$name', async ({guestCustomer, updateShipping, setBilling, addPayment, processOrder, expected}) => {
+    test.each(data)('$name', async ({guestCustomer, callShipping, setBilling, setTaxes, addPayment, processOrder, expected}) => {
         callGuestCustomerEndpointMock.mockReturnValueOnce(Promise.resolve(guestCustomer));
-        updateShippingAddressMock.mockReturnValueOnce(Promise.resolve(updateShipping));
+        callShippingAddressEndpointMock.mockReturnValueOnce(Promise.resolve(callShipping));
         setBillingAddressMock.mockReturnValueOnce(Promise.resolve(setBilling));
+        setTaxesMock.mockReturnValueOnce(Promise.resolve(setTaxes));
         addPaymentMock.mockReturnValueOnce(Promise.resolve(addPayment));
         processOrderMock.mockReturnValueOnce(Promise.resolve(processOrder));
         canMakePaymentsMock.mockReturnValueOnce(false);
@@ -141,8 +146,9 @@ describe('testing stripe payment function', () => {
         localEventMock.payerName = 'John steve';
         localEventMock.payerEmail = 'abc@gmail.com';
         callGuestCustomerEndpointMock.mockReturnValueOnce(Promise.resolve(successApi));
-        updateShippingAddressMock.mockReturnValueOnce(Promise.resolve(successApi));
+        callShippingAddressEndpointMock.mockReturnValueOnce(Promise.resolve(successApi));
         setBillingAddressMock.mockReturnValueOnce(Promise.resolve(successApi));
+        setTaxesMock.mockReturnValueOnce(Promise.resolve(successApi));
         addPaymentMock.mockReturnValueOnce(Promise.resolve(successApi));
         processOrderMock.mockReturnValueOnce(Promise.resolve(successApi));
         canMakePaymentsMock.mockReturnValueOnce(true);

@@ -16,12 +16,16 @@ import {
     getShippingLines,
     setTaxes,
     IApiReturnObject,
-    IShipping
+    IShipping,
+    getOrderInitialData,
+    estimateShippingLines,
+    estimateTaxes,
+    IOrderInitialData
 } from '@boldcommerce/checkout-frontend-library';
 import {
     addressesMock,
     applicationStateMock,
-    currencyMock,
+    currencyMock, orderInitialDataMock,
     shippingMock
 } from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import IntermediatePaymentData = google.payments.api.IntermediatePaymentData;
@@ -37,6 +41,9 @@ jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState
 jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/getShippingLines');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/changeShippingLine');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/estimateTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/estimateShippingLines');
 const getBraintreeShippingOptionsGoogleMock = mocked(getBraintreeShippingOptionsGoogle, true);
 const formatBraintreeShippingAddressGoogleMock = mocked(formatBraintreeShippingAddressGoogle, true);
 const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
@@ -46,6 +53,9 @@ const getApplicationStateMock = mocked(getApplicationState, true);
 const setTaxesMock = mocked(setTaxes, true);
 const getShippingLinesMock = mocked(getShippingLines, true);
 const changeShippingLineMock = mocked(changeShippingLine, true);
+const getOrderInitialDataMock = mocked(getOrderInitialData, true);
+const estimateShippingLinesMock = mocked(estimateShippingLines, true);
+const estimateTaxesMock = mocked(estimateTaxes, true);
 
 describe('testing braintreeOnPaymentDataChangeGoogle function',() => {
     const successReturn = {...baseReturnObject, success: true};
@@ -74,6 +84,9 @@ describe('testing braintreeOnPaymentDataChangeGoogle function',() => {
         getShippingLinesMock.mockReturnValue(Promise.resolve(successReturn));
         setTaxesMock.mockReturnValue(Promise.resolve(successReturn));
         getBraintreeShippingOptionsGoogleMock.mockReturnValueOnce(shippingOptionsGoogleMock);
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
+        estimateShippingLinesMock.mockReturnValue(Promise.resolve(successReturn));
+        estimateTaxesMock.mockReturnValue(Promise.resolve(successReturn));
     });
 
     test('call successfully default trigger',async () => {
@@ -98,25 +111,54 @@ describe('testing braintreeOnPaymentDataChangeGoogle function',() => {
             case: 'GOOGLEPAY_TRIGGER_INITIALIZE',
             callbackTrigger: braintreeConstants.GOOGLEPAY_TRIGGER_INITIALIZE,
             selected: shippingMock.selected_shipping,
-            option: shippingOptionData
+            option: shippingOptionData,
+            rsaEnabled: false,
         }, {
             case: 'GOOGLEPAY_INTENT_SHIPPING_OPTION',
             callbackTrigger: braintreeConstants.GOOGLEPAY_INTENT_SHIPPING_OPTION,
             selected: shippingMock.selected_shipping,
-            option: shippingOptionData
+            option: shippingOptionData,
+            rsaEnabled: false,
         }, {
             case: 'GOOGLEPAY_INTENT_SHIPPING_ADDRESS',
             callbackTrigger: braintreeConstants.GOOGLEPAY_INTENT_SHIPPING_ADDRESS,
             selected: shippingMock.selected_shipping,
-            option: shippingOptionData
+            option: shippingOptionData,
+            rsaEnabled: false,
         }, {
             case: 'No option, no selected option and GOOGLEPAY_INTENT_SHIPPING_ADDRESS',
             callbackTrigger: braintreeConstants.GOOGLEPAY_INTENT_SHIPPING_ADDRESS,
             selected: null,
-            option: null
+            option: null,
+            rsaEnabled: false,
+        },
+        {
+            case: 'GOOGLEPAY_TRIGGER_INITIALIZE and rsa',
+            callbackTrigger: braintreeConstants.GOOGLEPAY_TRIGGER_INITIALIZE,
+            selected: shippingMock.selected_shipping,
+            option: shippingOptionData,
+            rsaEnabled: true,
+        }, {
+            case: 'GOOGLEPAY_INTENT_SHIPPING_OPTION and rsa',
+            callbackTrigger: braintreeConstants.GOOGLEPAY_INTENT_SHIPPING_OPTION,
+            selected: shippingMock.selected_shipping,
+            option: shippingOptionData,
+            rsaEnabled: true,
+        }, {
+            case: 'GOOGLEPAY_INTENT_SHIPPING_ADDRESS and rsa',
+            callbackTrigger: braintreeConstants.GOOGLEPAY_INTENT_SHIPPING_ADDRESS,
+            selected: shippingMock.selected_shipping,
+            option: shippingOptionData,
+            rsaEnabled: true,
+        }, {
+            case: 'No option, no selected option and GOOGLEPAY_INTENT_SHIPPING_ADDRESS and rsa',
+            callbackTrigger: braintreeConstants.GOOGLEPAY_INTENT_SHIPPING_ADDRESS,
+            selected: null,
+            option: null,
+            rsaEnabled: true,
         },
     ];
-    test.each(triggerData)('call successfully $case trigger',async ({callbackTrigger,selected, option}) => {
+    test.each(triggerData)('call successfully $case trigger',async ({callbackTrigger,selected, option, rsaEnabled}) => {
         const newShippingMock = {...shippingMock, selected_shipping: selected} as IShipping;
         getShippingMock.mockReturnValueOnce(newShippingMock);
         const param = {...intermediatePaymentData, shippingOptionData: option, callbackTrigger: callbackTrigger} as unknown as IntermediatePaymentData;
@@ -125,20 +167,34 @@ describe('testing braintreeOnPaymentDataChangeGoogle function',() => {
             newTransactionInfo: {currencyCode: 'USD', totalPrice: '100.00', totalPriceStatus: 'ESTIMATED'}
         };
 
+        if (rsaEnabled) {
+            const {general_settings: generalSettings} = orderInitialDataMock;
+            const {checkout_process: checkoutProcess} = generalSettings;
+            const newGeneralSettings = {...generalSettings, checkout_process: {...checkoutProcess, rsa_enabled: true}};
+            const initialData: IOrderInitialData = {...orderInitialDataMock, general_settings: newGeneralSettings};
+            getOrderInitialDataMock.mockReturnValue(initialData);
+        }
+
         const result = await braintreeOnPaymentDataChangeGoogle(param);
 
         expect(result).toStrictEqual(expectedResult);
         expect(formatBraintreeShippingAddressGoogleMock).toBeCalledTimes(1);
         expect(formatBraintreeShippingAddressGoogleMock).toBeCalledWith(addressContact, true);
-        expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, false);
-        expect(getShippingLinesMock).toBeCalledTimes(2);
+        if (!rsaEnabled) {
+            expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
+            expect(callShippingAddressEndpointMock).toBeCalledWith(addressesMock.shipping, false);
+            expect(getShippingLinesMock).toBeCalledTimes(2);
+            expect(setTaxesMock).toBeCalledTimes(1);
+            expect(setTaxesMock).toBeCalledWith(API_RETRY);
+        } else {
+            expect(estimateShippingLinesMock).toBeCalledTimes(1);
+            expect(estimateTaxesMock).toBeCalledTimes(1);
+            expect(getShippingLinesMock).toBeCalledTimes(1);
+        }
         expect(getShippingLinesMock).toBeCalledWith(API_RETRY);
         expect(getShippingMock).toBeCalledTimes(1);
         expect(changeShippingLineMock).toBeCalledTimes(1);
         expect(changeShippingLineMock).toBeCalledWith('test_select_shipping_line_id', API_RETRY);
-        expect(setTaxesMock).toBeCalledTimes(1);
-        expect(setTaxesMock).toBeCalledWith(API_RETRY);
         expect(getCurrencyMock).toBeCalledTimes(1);
         expect(getApplicationStateMock).toBeCalledTimes(1);
         expect(getBraintreeShippingOptionsGoogleMock).toBeCalledTimes(1);
