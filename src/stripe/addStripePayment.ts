@@ -4,7 +4,7 @@ import {
     getOrderInitialData,
     IAddPaymentRequest,
     setBillingAddress,
-    updateShippingAddress
+    setTaxes,
 } from '@boldcommerce/checkout-frontend-library';
 import {
     formatStripeBillingAddress,
@@ -12,7 +12,8 @@ import {
     getFirstAndLastName,
     orderProcessing,
     formatStripeShippingAddress,
-    getTotals
+    getTotals,
+    callShippingAddressEndpoint
 } from 'src';
 
 export async function addStripePayment(event: IStripePaymentEvent, stripeGatewayId: string): Promise<void>  {
@@ -32,22 +33,26 @@ export async function addStripePayment(event: IStripePaymentEvent, stripeGateway
                 shippingPhoneNumber = event.payerPhone;
             }
             const address = formatStripeShippingAddress(shippingAddress, shippingPhoneNumber);
-            await updateShippingAddress(address, API_RETRY).then(async (shippingResult) => {
+            await callShippingAddressEndpoint(address, true).then(async (shippingResult) => {
                 if (shippingResult.success) {
                     const billingAddress = formatStripeBillingAddress(card, event.payerName, event.payerPhone);
                     await setBillingAddress(billingAddress, API_RETRY).then(async (billingResult) => {
                         if (billingResult.success) {
-                            const walletPayType = window.ApplePaySession && ApplePaySession.canMakePayments() ? 'applepay' : 'paywithgoogle';
-                            const payment: IAddPaymentRequest = {
-                                token: token.id,
-                                gateway_public_id: stripeGatewayId,
-                                currency: card.currency,
-                                amount: totalAmountDue,
-                                wallet_pay_type: walletPayType,
-                            };
-                            await addPayment(payment, API_RETRY).then(async (paymentResult) => {
-                                if (paymentResult.success) {
-                                    success = true;
+                            await setTaxes(API_RETRY).then(async (taxResult) => {
+                                if (taxResult.success) {
+                                    const walletPayType = window.ApplePaySession && ApplePaySession.canMakePayments() ? 'applepay' : 'paywithgoogle';
+                                    const payment: IAddPaymentRequest = {
+                                        token: token.id,
+                                        gateway_public_id: stripeGatewayId,
+                                        currency: card.currency,
+                                        amount: totalAmountDue,
+                                        wallet_pay_type: walletPayType,
+                                    };
+                                    await addPayment(payment, API_RETRY).then(async (paymentResult) => {
+                                        if (paymentResult.success) {
+                                            success = true;
+                                        }
+                                    });
                                 }
                             });
                         }

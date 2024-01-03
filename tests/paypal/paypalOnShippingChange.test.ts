@@ -11,13 +11,17 @@ import {mocked} from 'jest-mock';
 import {
     baseReturnObject,
     changeShippingLine,
+    estimateShippingLines,
+    estimateTaxes,
+    getOrderInitialData,
     getShipping,
     getShippingLines,
+    IOrderInitialData,
     ISetShippingAddressRequest,
     IShipping
 } from '@boldcommerce/checkout-frontend-library';
 import {setTaxes} from '@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes';
-import {shippingMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
+import {orderInitialDataMock, shippingMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {AmountWithBreakdown, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getShipping');
@@ -26,6 +30,9 @@ jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/changeShippingLi
 jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/address/setShippingAddress');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/address/updateShippingAddress');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getOrderInitialData');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/estimateTaxes');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/shipping/estimateShippingLines');
 jest.mock('src/paypal/formatPaypalToApiAddress');
 jest.mock('src/paypal/getPaypalPatchOperations');
 jest.mock('src/utils/callShippingAddressEndpoint');
@@ -36,6 +43,9 @@ const getShippingLinesMock = mocked(getShippingLines, true);
 const changeShippingLineMock = mocked(changeShippingLine, true);
 const setTaxesMock = mocked(setTaxes, true);
 const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
+const getOrderInitialDataMock = mocked(getOrderInitialData, true);
+const estimateShippingLinesMock = mocked(estimateShippingLines, true);
+const estimateTaxesMock = mocked(estimateTaxes, true);
 
 describe('testing  paypalOnShippingChange function', () => {
     const onShippingChangeActionsMock: OnShippingChangeActions = {
@@ -108,6 +118,9 @@ describe('testing  paypalOnShippingChange function', () => {
         changeShippingLineMock.mockReturnValue(Promise.resolve(successfulReturnObject));
         setTaxesMock.mockReturnValue(Promise.resolve(successfulReturnObject));
         callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successfulReturnObject));
+        getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
+        estimateShippingLinesMock.mockReturnValue(Promise.resolve(successfulReturnObject));
+        estimateTaxesMock.mockReturnValue(Promise.resolve(successfulReturnObject));
     });
 
     test('new addr, old addr empty, all data in and success API calls', async () => {
@@ -123,6 +136,34 @@ describe('testing  paypalOnShippingChange function', () => {
         expect(getShippingMock).toHaveBeenCalledTimes(1);
         expect(changeShippingLineMock).toHaveBeenCalledTimes(0);
         expect(setTaxesMock).toHaveBeenCalledTimes(1);
+        expect(getPaypalPatchOperationsMock).toHaveBeenCalledTimes(1);
+        expect(getPaypalPatchOperationsMock).toHaveBeenCalledWith(true);
+        expect(onShippingChangeActionsMock.reject).toHaveBeenCalledTimes(0);
+        expect(onShippingChangeActionsMock.order.patch).toHaveBeenCalledTimes(1);
+    });
+
+    test('new addr, old addr empty, all data in and success API calls with rsa', async () => {
+        const {general_settings: generalSettings} = orderInitialDataMock;
+        const {checkout_process: checkoutProcess} = generalSettings;
+        const newGeneralSettings = {...generalSettings, checkout_process: {...checkoutProcess, rsa_enabled: true}};
+        const initialData: IOrderInitialData = {...orderInitialDataMock, general_settings: newGeneralSettings};
+        getOrderInitialDataMock.mockReturnValue(initialData);
+
+        const result = await paypalOnShippingChange(dataMock, onShippingChangeActionsMock);
+
+        expect(result).toStrictEqual({id: '123'});
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
+        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(dataMock.shipping_address, undefined, undefined , '');
+        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(0);
+        expect(estimateShippingLinesMock).toHaveBeenCalledTimes(1);
+        expect(estimateShippingLinesMock).toHaveBeenCalledWith(formattedAddress, API_RETRY);
+        expect(getShippingLinesMock).toHaveBeenCalledTimes(1);
+        expect(getShippingLinesMock).toHaveBeenCalledWith(API_RETRY);
+        expect(getShippingMock).toHaveBeenCalledTimes(1);
+        expect(changeShippingLineMock).toHaveBeenCalledTimes(0);
+        expect(setTaxesMock).toHaveBeenCalledTimes(0);
+        expect(estimateTaxesMock).toHaveBeenCalledTimes(1);
+        expect(estimateTaxesMock).toHaveBeenCalledWith(formattedAddress, API_RETRY);
         expect(getPaypalPatchOperationsMock).toHaveBeenCalledTimes(1);
         expect(getPaypalPatchOperationsMock).toHaveBeenCalledWith(true);
         expect(onShippingChangeActionsMock.reject).toHaveBeenCalledTimes(0);
