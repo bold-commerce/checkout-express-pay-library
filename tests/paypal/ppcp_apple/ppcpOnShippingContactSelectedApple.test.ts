@@ -16,7 +16,7 @@ import {
     setTaxes,
     estimateTaxes,
     estimateShippingLines,
-    getOrderInitialData
+    getOrderInitialData, IShipping
 } from '@boldcommerce/checkout-frontend-library';
 import {
     addressesMock,
@@ -127,6 +127,14 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
             newShippingMethods: shippingMethodsMock,
             newTotal: {amount: '100.00', label: 'Total'}
         };
+
+        getShippingMock.mockReturnValueOnce(
+            {...shippingMock,
+                selected_shipping: null,
+                available_shipping_lines: [
+                    {id: '1', description: 'option'}
+                ]} as unknown as IShipping
+        );
         orderInitialDataMock.general_settings.checkout_process.rsa_enabled = true;
         getOrderInitialDataMock.mockReturnValue(orderInitialDataMock);
 
@@ -142,7 +150,7 @@ describe('testing ppcpOnShippingContactSelectedApple function',() => {
             expect(estimateTaxesMock).toBeCalledWith(addressesMock.shipping, API_RETRY);
             expect(getApplicationStateMock).toBeCalledTimes(1);
             expect(getPaymentRequestDisplayItemsMock).toBeCalledTimes(1);
-            expect(getShippingMock).toBeCalledTimes(1);
+            expect(getShippingMock).toBeCalledTimes(2);
             expect(applePaySessionCompleteShippingContactSelection).toBeCalledTimes(1);
             expect(applePaySessionCompleteShippingContactSelection).toBeCalledWith(expectedCompleteParam);
         });

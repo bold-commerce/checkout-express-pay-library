@@ -15,7 +15,8 @@ import {
     setTaxes,
     estimateShippingLines,
     estimateTaxes,
-    getOrderInitialData
+    getOrderInitialData,
+    changeShippingLine
 } from '@boldcommerce/checkout-frontend-library';
 
 export async function ppcpOnShippingContactSelectedApple(event: ApplePayShippingContactSelectedEvent): Promise<void> {
@@ -50,6 +51,11 @@ export async function ppcpOnShippingContactSelectedApple(event: ApplePayShipping
         let shippingResponseSuccess = true;
 
         if (rsaEnabled) {
+            const {selected_shipping: selectedShipping, available_shipping_lines: shippingLines} = getShipping();
+            if (!selectedShipping && shippingLines.length > 0) {
+                await changeShippingLine(shippingLines[0].id, API_RETRY);
+            }
+            await getShippingLines(API_RETRY);
             taxResponse = await estimateTaxes(address, API_RETRY);
         } else {
             const shippingLinesResponse = await getShippingLines(API_RETRY);
