@@ -1,6 +1,3 @@
-import {CreateOrderActions, CreateOrderData} from '@paypal/paypal-js/types/components/buttons';
-import {CreateOrderRequestBody} from '@paypal/paypal-js/types/apis/orders';
-import {getPaypalOrder} from 'src/paypal';
 import {
     IApiSuccessResponse,
     IWalletPayCreateOrderRequest, IWalletPayCreateOrderResponse,
