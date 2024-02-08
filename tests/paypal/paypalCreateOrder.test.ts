@@ -1,62 +1,49 @@
-import {getPaypalOrder, paypalCreateOrder} from 'src';
-import {CreateOrderActions} from '@paypal/paypal-js/types/components/buttons';
-import {AmountWithBreakdown, AmountWithCurrencyCode} from '@paypal/paypal-js';
-import {CreateOrderRequestBody, PurchaseItem} from '@paypal/paypal-js/types/apis/orders';
+import {displayError, paypalCreateOrder} from 'src';
 import {mocked} from 'jest-mock';
+import {
+    baseReturnObject,
+    IWalletPayCreateOrderResponse,
+    walletPayCreateOrder
+} from '@boldcommerce/checkout-frontend-library';
+import {applicationStateMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 
-jest.mock('src/paypal/getPaypalOrder');
-const getPaypalOrderMock = mocked(getPaypalOrder, true);
-const createOrderActionMock: CreateOrderActions = {order: {create: jest.fn()}};
+jest.mock('@boldcommerce/checkout-frontend-library/lib/walletPay/walletPayCreateOrder');
+jest.mock('src/actions/displayError');
+const walletPayCreateOrderMock = mocked(walletPayCreateOrder, true);
+const displayErrorMock = mocked(displayError, true);
 
 describe('testing  paypalCreateOrder function', () => {
-    const publicOrderId = 'abc123';
-    const breakdownItemMock: AmountWithCurrencyCode = {
-        currency_code: 'USD',
-        value: '0.00',
-    };
-    const breakdownItem100Mock: AmountWithCurrencyCode = {
-        currency_code: 'USD',
-        value: '100.00',
-    };
-
-    const amountWithBreakdownMock: AmountWithBreakdown = {
-        currency_code: 'USD',
-        value: '100.00',
-        breakdown: {
-            item_total: breakdownItem100Mock,
-            shipping: breakdownItemMock,
-            tax_total: breakdownItemMock,
-            discount: breakdownItemMock,
-            shipping_discount: breakdownItemMock,
-        }
-    };
-    const itemsMock: Array<PurchaseItem> = [
-        {
-            name: 'Some Name',
-            quantity: '1',
-            unit_amount: breakdownItem100Mock
-        }
-    ];
-    const paypalOrderMock: CreateOrderRequestBody = {
-        purchase_units: [{
-            custom_id: publicOrderId,
-            amount: amountWithBreakdownMock,
-            items: itemsMock
-        }]
-    };
-
     beforeEach(() => {
         jest.clearAllMocks();
-        getPaypalOrderMock.mockReturnValue(paypalOrderMock);
     });
 
-    test('testing call paypalCreateOrder success', async () => {
-        await paypalCreateOrder({paymentSource: 'paypal'}, createOrderActionMock);
+    test('testing with successful call', async () => {
+        const response: IWalletPayCreateOrderResponse = {
+            payment_data: {
+                id: 'test-order'
+            },
+            application_state: applicationStateMock
+        };
 
-        expect(getPaypalOrderMock).toHaveBeenCalledTimes(1);
-        expect(createOrderActionMock.order.create).toHaveBeenCalledTimes(1);
-        expect(createOrderActionMock.order.create).toHaveBeenCalledWith(paypalOrderMock);
+        const paymentReturn = {...baseReturnObject};
+        paymentReturn.success = true;
+        paymentReturn.response = {data: response};
+        walletPayCreateOrderMock.mockReturnValue(Promise.resolve(paymentReturn));
 
+        const result = await paypalCreateOrder();
+        expect(result).toBe('test-order');
+    });
+
+
+    test('testing with unsuccessful call', async () => {
+        const paymentReturn = {...baseReturnObject};
+        paymentReturn.success = false;
+        walletPayCreateOrderMock.mockReturnValue(Promise.resolve(paymentReturn));
+
+        const result = await paypalCreateOrder();
+        expect(displayErrorMock).toHaveBeenCalledTimes(1);
+        expect(displayErrorMock).toHaveBeenCalledWith('There was an unknown error while loading the payment.', 'payment_gateway', 'unknown_error');
+        expect(result).toBe('');
     });
 
 });
