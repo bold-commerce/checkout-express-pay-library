@@ -1,14 +1,8 @@
-import {OnApproveActions, OnApproveData} from '@paypal/paypal-js/types/components/buttons';
+import {OnApproveData} from '@paypal/paypal-js/types/components/buttons';
 import {
-    API_RETRY,
-    callBillingAddressEndpoint,
-    callGuestCustomerEndpoint,
-    callShippingAddressEndpoint, displayError,
-    formatPaypalToApiAddress,
-    getFirstAndLastName,
-    getPaypalGatewayPublicId,
+    displayError,
     orderProcessing,
-    paypalOnApprove
+    paypalOnApprove,
 } from 'src';
 import {mocked} from 'jest-mock';
 import {
@@ -16,36 +10,25 @@ import {
     baseReturnObject,
     getApplicationState,
     getCurrency,
-    IAddress,
-    setTaxes
+    walletPayOnApprove
 } from '@boldcommerce/checkout-frontend-library';
 import {applicationStateMock, currencyMock} from '@boldcommerce/checkout-frontend-library/lib/variables/mocks';
 import {OrderResponseBody} from '@paypal/paypal-js/types/apis/orders';
 
+
+jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
+jest.mock('@boldcommerce/checkout-frontend-library/lib/walletPay/walletPayOnApprove');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/payment/addPayment');
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getApplicationState');
-jest.mock('@boldcommerce/checkout-frontend-library/lib/state/getCurrency');
-jest.mock('@boldcommerce/checkout-frontend-library/lib/taxes/setTaxes');
 jest.mock('src/actions/orderProcessing');
 jest.mock('src/actions/displayError');
-jest.mock('src/paypal/formatPaypalToApiAddress');
-jest.mock('src/paypal/managePaypalState');
-jest.mock('src/utils/getFirstAndLastName');
-jest.mock('src/utils/callBillingAddressEndpoint');
-jest.mock('src/utils/callGuestCustomerEndpoint');
-jest.mock('src/utils/callShippingAddressEndpoint');
+
 const addPaymentMock = mocked(addPayment, true);
 const getApplicationStateMock = mocked(getApplicationState, true);
 const getCurrencyMock = mocked(getCurrency, true);
-const setTaxesMock = mocked(setTaxes, true);
 const orderProcessingMock = mocked(orderProcessing, true);
 const displayErrorMock = mocked(displayError, true);
-const getFirstAndLastNameMock = mocked(getFirstAndLastName, true);
-const getPaypalGatewayPublicIdMock = mocked(getPaypalGatewayPublicId, true);
-const formatPaypalToApiAddressMock = mocked(formatPaypalToApiAddress, true);
-const callBillingAddressEndpointMock = mocked(callBillingAddressEndpoint, true);
-const callGuestCustomerEndpointMock = mocked(callGuestCustomerEndpoint, true);
-const callShippingAddressEndpointMock = mocked(callShippingAddressEndpoint, true);
+const walletPayOnApproveMock = mocked(walletPayOnApprove, true);
 
 const onApproveActionsMock = {
     redirect: jest.fn(),
@@ -57,38 +40,9 @@ const onApproveActionsMock = {
         patch: jest.fn(),
     }
 };
-const onApproveDataMock: OnApproveData = {orderID: '123', facilitatorAccessToken: ''};
+const onApproveDataMock: OnApproveData = {orderID: '123', facilitatorAccessToken: '', payerID: 'payerId'};
 const successReturn = {...baseReturnObject, success: true};
 const failureReturn = {...baseReturnObject, success: false};
-const filled1Address: IAddress = {
-    address_line_1: 'Test line 1',
-    address_line_2: 'Test line 2',
-    business_name: '',
-    city: 'Test city',
-    country: 'Test Country',
-    country_code: 'test_country_code',
-    first_name: 'John',
-    last_name: 'Doe',
-    phone_number: '0000000000',
-    postal_code: 'M1M1M1',
-    province: 'Test Province',
-    province_code: 'test_province_code'
-};
-const filled2Address: IAddress = {
-    address_line_1: 'Another Test line 1',
-    address_line_2: 'Another Test line 2',
-    business_name: '',
-    city: 'Another Test city',
-    country: 'Another Test Country',
-    country_code: 'another_test_country_code',
-    first_name: 'Jane',
-    last_name: 'Doe',
-    phone_number: '0000000000',
-    postal_code: 'M2M2M2',
-    province: 'Another Test Province',
-    province_code: 'another_test_province_code'
-};
-const johnNames = {firstName: 'John', lastName: 'Doe'};
 const janeNames = {firstName: 'Jane', lastName: 'Doe'};
 const paypalEmptyAddress = {
     address_line_1: '',
@@ -106,14 +60,7 @@ const paypalFilled1Address = {
     admin_area_1: 'test_province_code',
     admin_area_2: 'test_city'
 };
-const paypalFilled2Address = {
-    address_line_1: 'Another Test Line 1',
-    address_line_2: 'Another Test Line 2',
-    postal_code: 'M2M2M2',
-    country_code: 'another_test_country_code',
-    admin_area_1: 'another_test_province_code',
-    admin_area_2: 'another_test_city'
-};
+
 const payer = {
     payer_id: 'test_payer_id',
     name: {given_name: janeNames.firstName, surname: janeNames.lastName},
@@ -135,207 +82,33 @@ const paypalOrderResponseMock: OrderResponseBody = {
     update_time: '',
     id: 'test_id',
     payer,
-    purchase_units: purchaseUnits
+    purchase_units: purchaseUnits,
+    payment_source: ''
 } as unknown as OrderResponseBody;
-const paymentRequest = {
-    token: 'test_id:test_payer_id',
-    nonce: 'test_id:test_payer_id',
-    wallet_pay_type: 'paypal',
-    gateway_public_id: 'abc123',
-    currency: 'USD',
-    amount: 10000,
-};
 
 describe('testing  paypalOnApprove function', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
         getCurrencyMock.mockReturnValue(currencyMock);
-        addPaymentMock.mockReturnValue(Promise.resolve(successReturn));
+
         getApplicationStateMock.mockReturnValue(applicationStateMock);
-        setTaxesMock.mockReturnValue(Promise.resolve(successReturn));
-        getFirstAndLastNameMock.mockReturnValue(johnNames);
-        getPaypalGatewayPublicIdMock.mockReturnValue('abc123');
-        formatPaypalToApiAddressMock
-            .mockReturnValueOnce(filled1Address)
-            .mockReturnValueOnce(filled2Address);
-        callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        onApproveActionsMock.order.get.mockReturnValue(Promise.resolve(paypalOrderResponseMock));
-    });
-
-    test('billing empty and success', async () => {
-        await paypalOnApprove(onApproveDataMock, onApproveActionsMock);
-
-        expect(getCurrencyMock).toHaveBeenCalledTimes(1);
-        expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(1);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(1);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledWith(purchaseUnits[0].shipping?.name?.full_name);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledWith(payer.name.given_name, payer.name.surname, payer.email_address);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, janeNames.firstName, janeNames.lastName, payer.phone.phone_number.national_number);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, true);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, false);
-        expect(setTaxesMock).toHaveBeenCalledTimes(1);
-        expect(setTaxesMock).toHaveBeenCalledWith(API_RETRY);
-        expect(getApplicationStateMock).toHaveBeenCalledTimes(1);
-        expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
-        expect(addPaymentMock).toHaveBeenCalledTimes(1);
-        expect(addPaymentMock).toHaveBeenCalledWith(paymentRequest, API_RETRY);
-        expect(orderProcessingMock).toHaveBeenCalledTimes(1);
-    });
-
-    test('billing filled equal shipping, equal names and success', async () => {
-        const newName = {given_name: johnNames.firstName, surname: johnNames.lastName};
-        const newPayer = {...payer, name: newName, address: paypalFilled1Address};
-        const paypalOrder = {...paypalOrderResponseMock, payer: newPayer};
-        onApproveActionsMock.order.get.mockReturnValueOnce(Promise.resolve(paypalOrder));
-
-        await paypalOnApprove(onApproveDataMock, onApproveActionsMock);
-
-        expect(getCurrencyMock).toHaveBeenCalledTimes(1);
-        expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(1);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(1);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledWith(purchaseUnits[0].shipping?.name?.full_name);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledWith(johnNames.firstName, johnNames.lastName, payer.email_address);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, true);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, false);
-        expect(setTaxesMock).toHaveBeenCalledTimes(1);
-        expect(setTaxesMock).toHaveBeenCalledWith(API_RETRY);
-        expect(getApplicationStateMock).toHaveBeenCalledTimes(1);
-        expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
-        expect(addPaymentMock).toHaveBeenCalledTimes(1);
-        expect(addPaymentMock).toHaveBeenCalledWith(paymentRequest, API_RETRY);
-        expect(orderProcessingMock).toHaveBeenCalledTimes(1);
-    });
-
-    test('billing filled diff then shipping and success', async () => {
-        const newPayer = {...payer, address: paypalFilled2Address};
-        const paypalOrder = {...paypalOrderResponseMock, payer: newPayer};
-        onApproveActionsMock.order.get.mockReturnValueOnce(Promise.resolve(paypalOrder));
-
-        await paypalOnApprove(onApproveDataMock, onApproveActionsMock);
-
-        expect(getCurrencyMock).toHaveBeenCalledTimes(1);
-        expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(1);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(1);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledWith(purchaseUnits[0].shipping?.name?.full_name);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledWith(payer.name.given_name, payer.name.surname, payer.email_address);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, johnNames.firstName, johnNames.lastName, payer.phone.phone_number.national_number);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled2Address, janeNames.firstName, janeNames.lastName, payer.phone.phone_number.national_number);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, true);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, true);
-        expect(setTaxesMock).toHaveBeenCalledTimes(1);
-        expect(setTaxesMock).toHaveBeenCalledWith(API_RETRY);
-        expect(getApplicationStateMock).toHaveBeenCalledTimes(1);
-        expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
-        expect(addPaymentMock).toHaveBeenCalledTimes(1);
-        expect(addPaymentMock).toHaveBeenCalledWith(paymentRequest, API_RETRY);
-        expect(orderProcessingMock).toHaveBeenCalledTimes(1);
-    });
-
-    test('null keys in order', async () => {
-        const newPayer = {...payer, address: null, email_address: null, phone: null, name: null};
-        const newShipping = {...purchaseUnits[0].shipping, name: null};
-        const newPurchaseUnits = [{shipping: newShipping}];
-        const paypalOrder = {...paypalOrderResponseMock, payer: newPayer, purchase_units: newPurchaseUnits};
-        onApproveActionsMock.order.get.mockReturnValueOnce(Promise.resolve(paypalOrder));
-
-        await paypalOnApprove(onApproveDataMock, onApproveActionsMock);
-
-        expect(getCurrencyMock).toHaveBeenCalledTimes(1);
-        expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(1);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(1);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledWith(undefined);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledWith('', '', '');
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(2);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, '', '', '');
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledWith(paypalFilled1Address, '', '', '');
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledWith(filled1Address, true);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledWith(filled2Address, false);
-        expect(setTaxesMock).toHaveBeenCalledTimes(1);
-        expect(setTaxesMock).toHaveBeenCalledWith(API_RETRY);
-        expect(getApplicationStateMock).toHaveBeenCalledTimes(1);
-        expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(1);
-        expect(addPaymentMock).toHaveBeenCalledTimes(1);
-        expect(addPaymentMock).toHaveBeenCalledWith(paymentRequest, API_RETRY);
-        expect(orderProcessingMock).toHaveBeenCalledTimes(1);
-    });
-
-    test('action missing order in order', async () => {
-        const actions = {...onApproveActionsMock, order: null};
-
-        await paypalOnApprove(onApproveDataMock, actions as unknown as OnApproveActions);
-
-        expect(getCurrencyMock).toHaveBeenCalledTimes(1);
-        expect(onApproveActionsMock.order.get).toHaveBeenCalledTimes(0);
-        expect(getFirstAndLastNameMock).toHaveBeenCalledTimes(0);
-        expect(callGuestCustomerEndpointMock).toHaveBeenCalledTimes(0);
-        expect(formatPaypalToApiAddressMock).toHaveBeenCalledTimes(0);
-        expect(callShippingAddressEndpointMock).toHaveBeenCalledTimes(0);
-        expect(callBillingAddressEndpointMock).toHaveBeenCalledTimes(0);
-        expect(setTaxesMock).toHaveBeenCalledTimes(0);
-        expect(getApplicationStateMock).toHaveBeenCalledTimes(0);
-        expect(getPaypalGatewayPublicIdMock).toHaveBeenCalledTimes(0);
-        expect(addPaymentMock).toHaveBeenCalledTimes(0);
-        expect(orderProcessingMock).toHaveBeenCalledTimes(0);
-    });
-
-});
-
-describe('testing  paypalOnApprove error cases', () => {
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-        getCurrencyMock.mockReturnValue(currencyMock);
-        getApplicationStateMock.mockReturnValue(applicationStateMock);
-        getFirstAndLastNameMock.mockReturnValue(johnNames);
-        getPaypalGatewayPublicIdMock.mockReturnValue('abc123');
-        formatPaypalToApiAddressMock
-            .mockReturnValueOnce(filled1Address)
-            .mockReturnValueOnce(filled2Address);
-        callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(successReturn));
-        callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(successReturn));
         onApproveActionsMock.order.get.mockReturnValue(Promise.resolve(paypalOrderResponseMock));
     });
 
     const data = [
-        {name: 'error in customer endpoint', customer: failureReturn, shipping: failureReturn, billing: failureReturn, taxes: failureReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'error in shipping endpoint', customer: successReturn, shipping: failureReturn, billing: failureReturn, taxes: failureReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'error in billing endpoint', customer: successReturn, shipping: successReturn, billing: failureReturn, taxes: failureReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'error in taxes endpoint', customer: successReturn, shipping: successReturn, billing: successReturn, taxes: failureReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'error in payment endpoint', customer: successReturn, shipping: successReturn, billing: successReturn, taxes: successReturn, payment: failureReturn, displayErrorCount: 1 },
-        {name: 'success in all endpoint', customer: successReturn, shipping: successReturn, billing: successReturn, taxes: successReturn, payment: successReturn, displayErrorCount: 0 },
+        {name: 'error in wallet pay endpoint endpoint', onApprove: failureReturn, payment: successReturn, displayErrorCount: 1, orderProcessing: 0 },
+        {name: 'error in add payment', onApprove: successReturn, payment: failureReturn, displayErrorCount: 1, orderProcessing: 0 },
+        {name: 'success in all endpoint', onApprove: successReturn, payment: successReturn, displayErrorCount: 0, orderProcessing: 1 },
     ];
 
-    test.each(data)('$name', async ({customer, shipping, billing, taxes, payment, displayErrorCount}) => {
-        callGuestCustomerEndpointMock.mockReturnValue(Promise.resolve(customer));
-        callShippingAddressEndpointMock.mockReturnValue(Promise.resolve(shipping));
-        callBillingAddressEndpointMock.mockReturnValue(Promise.resolve(billing));
-        setTaxesMock.mockReturnValue(Promise.resolve(taxes));
+    test.each(data)('$name', async ({onApprove, payment, displayErrorCount, orderProcessing}) => {
+        walletPayOnApproveMock.mockReturnValue(Promise.resolve(onApprove));
         addPaymentMock.mockReturnValue(Promise.resolve(payment));
 
-        await paypalOnApprove(onApproveDataMock, onApproveActionsMock);
+        await paypalOnApprove(onApproveDataMock);
         expect(displayErrorMock).toHaveBeenCalledTimes(displayErrorCount);
+        expect(orderProcessingMock).toHaveBeenCalledTimes(orderProcessing);
 
     });
 
