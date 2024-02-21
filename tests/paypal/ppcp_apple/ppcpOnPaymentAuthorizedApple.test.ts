@@ -135,7 +135,6 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
             givenName: addressContact.givenName,
             familyName: addressContact.familyName,
             emailAddress: addressContact.emailAddress,
-            notSame: true,
             eventParam: event
         },
         {
@@ -145,7 +144,6 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
             givenName: addressContact.givenName,
             familyName: addressContact.familyName,
             emailAddress: addressContact.emailAddress,
-            notSame: false,
             eventParam: {...event, payment: {...event.payment, billingContact: addressContact}}
         },
         {
@@ -155,7 +153,6 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
             givenName: '',
             familyName: '',
             emailAddress: '',
-            notSame: true,
             eventParam: {...event, payment: {...event.payment, shippingContact: undefined}}
         },
     ];
@@ -167,7 +164,6 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
             givenName,
             familyName,
             emailAddress,
-            notSame,
             eventParam }
     ) => {
         formatApplePayContactToCheckoutAddressMock
@@ -199,7 +195,7 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
         expect(callShippingAddressEndpointMock).toBeCalledTimes(1);
         expect(callShippingAddressEndpointMock).toBeCalledWith(shipping, true);
         expect(callBillingAddressEndpointMock).toBeCalledTimes(1);
-        expect(callBillingAddressEndpointMock).toBeCalledWith(billing, notSame);
+        expect(callBillingAddressEndpointMock).toBeCalledWith(billing, false);
         expect(setTaxesMock).toBeCalledTimes(1);
         expect(setTaxesMock).toBeCalledWith(API_RETRY);
         expect(getPPCPAppleCredentialsCheckedMock).toBeCalledTimes(1);

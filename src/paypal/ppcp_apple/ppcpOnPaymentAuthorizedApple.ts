@@ -3,7 +3,6 @@ import {
     callBillingAddressEndpoint,
     callGuestCustomerEndpoint,
     callShippingAddressEndpoint,
-    isObjectEquals,
     orderProcessing,
     applePayConstants,
     getTotals,
@@ -36,7 +35,6 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
 
     const shippingAddress = formatApplePayContactToCheckoutAddress(shippingContact as ApplePayPaymentContact);
     const billingAddress = formatApplePayContactToCheckoutAddress(billingContact as ApplePayPaymentContact);
-    const isSameAddress = isObjectEquals(shippingAddress, billingAddress);
 
     const fail = (error: ApplePayError) => {
         applePaySession.completePayment({
@@ -89,6 +87,7 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
             gateway_public_id: gatewayPublicId,
             currency: currencyCode,
             amount: totalAmountDue,
+            wallet_pay_type: 'applepay',
             extra_payment_data: {
                 brand: token.paymentMethod.network,
                 last_digits: displayNameLast,
