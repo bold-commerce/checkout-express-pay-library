@@ -61,7 +61,7 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
         });
     }
 
-    const billingAddressResponse = await callBillingAddressEndpoint(billingAddress, !isSameAddress);
+    const billingAddressResponse = await callBillingAddressEndpoint(billingAddress, false);
     if (!billingAddressResponse.success) {
         return fail({
             code: applePayConstants.APPLEPAY_ERROR_CODE_BILLING_CONTACT,
@@ -89,7 +89,6 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
             gateway_public_id: gatewayPublicId,
             currency: currencyCode,
             amount: totalAmountDue,
-            wallet_pay_type: 'applepay',
             extra_payment_data: {
                 brand: token.paymentMethod.network,
                 last_digits: displayNameLast,
@@ -109,6 +108,13 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
         const successResponse = paymentResult.response as IApiSuccessResponse;
         const {payment: addedPayment} = successResponse.data as IAddPaymentResponse;
         const orderId = addedPayment.token;
+
+        if (billingContact?.phoneNumber?.includes('+')) {
+            billingContact?.phoneNumber?.replace('+','');
+        }
+        if (shippingContact?.phoneNumber?.includes('+')) {
+            shippingContact?.phoneNumber?.replace('+','');
+        }
 
         await appleInstance.confirmOrder({orderId, token, billingContact, shippingContact});
         applePaySession.completePayment(ApplePaySession.STATUS_SUCCESS);
