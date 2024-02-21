@@ -109,10 +109,10 @@ export async function ppcpOnPaymentAuthorizedApple(event: ApplePayPaymentAuthori
         const orderId = addedPayment.token;
 
         if (billingContact?.phoneNumber?.includes('+')) {
-            billingContact?.phoneNumber?.replace('+','');
+            billingContact.phoneNumber.replace('+','');
         }
         if (shippingContact?.phoneNumber?.includes('+')) {
-            shippingContact?.phoneNumber?.replace('+','');
+            shippingContact.phoneNumber.replace('+','');
         }
 
         await appleInstance.confirmOrder({orderId, token, billingContact, shippingContact});

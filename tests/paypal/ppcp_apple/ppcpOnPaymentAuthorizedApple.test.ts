@@ -61,7 +61,7 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
     const addressContact: ApplePayPaymentContact = {
         givenName: 'John',
         familyName: 'Doe',
-        phoneNumber: '1231231234',
+        phoneNumber: '+1231231234',
         postalCode: 'R3Y0L6',
         locality: 'Winnipeg',
         addressLines: ['123 Any St', 'Line 2'],
@@ -153,8 +153,27 @@ describe('testing ppcpOnPaymentAuthorizedApple function', () => {
             givenName: '',
             familyName: '',
             emailAddress: '',
-            eventParam: {...event, payment: {...event.payment, shippingContact: undefined}}
+            eventParam: {...event, payment: {...event.payment, shippingContact: undefined, billingContact: undefined}}
         },
+        {
+            n: 'called successfully with same addresses with + phone number',
+            shipping: addressesMock.shipping,
+            billing: addressesMock.shipping,
+            givenName: addressContact.givenName,
+            familyName: addressContact.familyName,
+            emailAddress: addressContact.emailAddress,
+            eventParam: {...event, payment: {...event.payment, billingContact: {...addressContact, phoneNumber: '+1231231234'}, shippingContact: {...addressContact, phoneNumber: '+1231231234'}}}
+        },
+        {
+            n: 'called successfully with same addresses with undefined phone number',
+            shipping: addressesMock.shipping,
+            billing: addressesMock.shipping,
+            givenName: addressContact.givenName,
+            familyName: addressContact.familyName,
+            emailAddress: addressContact.emailAddress,
+            eventParam: {...event, payment: {...event.payment, billingContact: {...addressContact, phoneNumber: undefined}, shippingContact: {...addressContact, phoneNumber: undefined}}}
+        },
+
     ];
 
     test.each(happyPathData)('$n', async (
