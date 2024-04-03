@@ -14,6 +14,12 @@ export class GooglePayLoadingError extends Error {
     }
 }
 
+export class FastlaneLoadingError extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
 export class ApplePayValidateMerchantError extends Error {
     constructor(message: string) {
         super(message);
