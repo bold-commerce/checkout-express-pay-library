@@ -21,8 +21,8 @@ export function initialize(props: IInitializeProps): void{
     const {alternative_payment_methods} = getOrderInitialData();
     setOnAction(props.onAction);
 
-    if(alternative_payment_methods){
-        alternative_payment_methods.forEach(paymentMethod => {
+    if (alternative_payment_methods){
+        for (const paymentMethod of alternative_payment_methods) {
             const type = paymentMethod.type;
             switch (type){
                 case alternatePaymentMethodType.STRIPE:
@@ -45,6 +45,6 @@ export function initialize(props: IInitializeProps): void{
                     console.log('do nothing'); // TODO Implement the default behaviour.
                     break;
             }
-        });
+        }
     }
 }

@@ -1,3 +1,4 @@
+import {IFastlaneInstance} from './fastlane';
 import ApplePayPaymentRequest = ApplePayJS.ApplePayPaymentRequest;
 import ApplePayPaymentToken = ApplePayJS.ApplePayPaymentToken;
 import GooglePaymentData = google.payments.api.PaymentData;
@@ -10,11 +11,34 @@ export interface IBraintreeClient {
     };
     applePay: {
         create: IBraintreeApplePayCreate
-    }
+    };
     googlePayment: {
         create: IBraintreeGooglePayCreate
-    }
+    };
+    dataCollector: {
+        create: (_: {
+            client: IBraintreeClientInstance;
+            riskCorrelationId?: string;
+        }) => Promise<IBraintreeDataCollectorInstance>;
+    };
+    fastlane: {
+        create: IBraintreeFastlaneCreate;
+    };
 }
+
+export interface IBraintreeFastlaneCreateRequest {
+    authorization: string;
+    client: IBraintreeClientInstance;
+    deviceData: unknown;
+    metadata?: {
+        geoLocOverride: string;
+    };
+} 
+
+export interface IBraintreeDataCollectorCreateRequest {
+    client: IBraintreeClientInstance;
+    riskCorrelationId?: string;
+} 
 
 export interface IBraintreeClientCreateRequest {
     authorization: string;
@@ -81,6 +105,10 @@ export interface IBraintreeApplePayPaymentAuthorizedResponse {
     }
 }
 
+export interface IBraintreeDataCollectorInstance {
+    deviceData: unknown;
+}
+
 export type IBraintreeRequiredContactField = Array<'postalAddress' | 'email' | 'phone'>;
 export type IBraintreeClientInstance = Record<string, unknown>;
 export type IBraintreeClientCreateCallback = (error: string | Error | undefined, instance: IBraintreeClientInstance) => void;
@@ -88,6 +116,8 @@ export type IBraintreeApplePayCreateCallback = (error: string | Error | undefine
 export type IBraintreeGooglePayCreateCallback = (error: string | Error | undefined, instance: IBraintreeGooglePayInstance) => void;
 export type IBraintreeApplePayPerformValidationCallback = (error: string | Error | undefined, merchantSession: unknown) => void;
 export type IBraintreeApplePayPaymentAuthorizedCallback = (error: string | Error | undefined, payload: IBraintreeApplePayPaymentAuthorizedResponse | undefined) => void;
-export type IBraintreeClientCreate = (request: IBraintreeClientCreateRequest, callback?: IBraintreeClientCreateCallback) => IBraintreeClientInstance;
+export type IBraintreeClientCreate = (request: IBraintreeClientCreateRequest, callback?: IBraintreeClientCreateCallback) => Promise<IBraintreeClientInstance>;
 export type IBraintreeApplePayCreate = (request: IBraintreeApplePayCreateRequest, callback?: IBraintreeApplePayCreateCallback) => IBraintreeApplePayInstance;
-export type IBraintreeGooglePayCreate = (request: IBraintreeGooglePayCreateRequest, callback?: IBraintreeGooglePayCreateCallback) => IBraintreeGooglePayInstance;
+export type IBraintreeGooglePayCreate = (request: IBraintreeGooglePayCreateRequest, callback?: IBraintreeGooglePayCreateCallback) => Promise<IBraintreeGooglePayInstance>;
+export type IBraintreeFastlaneCreate = (request: IBraintreeFastlaneCreateRequest) => Promise<IFastlaneInstance>;
+export type IBraintreeDataCollectorCreate = (request: IBraintreeDataCollectorCreateRequest) => Promise<IBraintreeDataCollectorInstance>;

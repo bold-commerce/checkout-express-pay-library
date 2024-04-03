@@ -46,7 +46,8 @@ const jsUrls: IBraintreeUrls = {
     googleJsUrl: 'https://test.com/googleJsUrl.js',
     dataCollectorJsURL: 'https://test.com/dataCollectorJsURL.js',
     appleJsURL: 'https://test.com/appleJsURL.js',
-    braintreeGoogleJsURL: 'https://test.com/braintreeGoogleJsURL.js'
+    braintreeGoogleJsURL: 'https://test.com/braintreeGoogleJsURL.js',
+    fastlaneJsURL: 'https://test.com/fastlaneURL.js'
 };
 
 describe('testing initBraintreeGoogle function', () => {

@@ -82,6 +82,7 @@ export interface IBraintreeConstants {
     BASE_JS_URL: string;
     GOOGLE_JS_URL: string;
     CLIENT_JS: string;
+    FASTLANE_JS: string;
     APPLE_JS: string;
     GOOGLE_JS: string;
     DATA_COLLECTOR_JS: string;
@@ -114,6 +115,7 @@ export interface IBraintreeUrls {
     dataCollectorJsURL: string;
     googleJsUrl: string;
     braintreeGoogleJsURL: string;
+    fastlaneJsURL: string;
 }
 
 export interface ITotals {

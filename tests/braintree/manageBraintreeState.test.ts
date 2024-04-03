@@ -62,7 +62,11 @@ const googlePayClient: PaymentsClient = {
     prefetchPaymentData: jest.fn(),
 };
 const braintree: IBraintreeClient = {
-    applePay: {create: jest.fn()}, client: {create: jest.fn()}, googlePayment: {create: jest.fn()}
+    applePay: {create: jest.fn()},
+    client: {create: jest.fn()},
+    googlePayment: {create: jest.fn()},
+    dataCollector: {create: jest.fn()},
+    fastlane: {create: jest.fn()},
 };
 
 describe('testing manageBraintreeState functions', () => {

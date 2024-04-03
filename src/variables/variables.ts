@@ -1,3 +1,4 @@
+import { IFastlaneInstance } from 'src/types';
 import {
     IActionTypes,
     IApplePayConstants,
@@ -63,12 +64,17 @@ export const braintreeState: IBraintreeState = {
     appleInstance: null,
     appleSession: null,
     googleCredentials: null,
-    appleCredentials: null
+    appleCredentials: null,
+};
+
+export const fastlaneState = {
+    instance: null as null | Promise<IFastlaneInstance>,
 };
 
 export const braintreeConstants: IBraintreeConstants = {
     BASE_JS_URL: 'https://js.braintreegateway.com/web',
     GOOGLE_JS_URL: 'https://pay.google.com/gp/p/js/pay.js',
+    FASTLANE_JS: 'js/fastlane.min.js',
     CLIENT_JS: 'js/client.min.js',
     APPLE_JS: 'js/apple-pay.min.js',
     GOOGLE_JS: 'js/google-payment.min.js',

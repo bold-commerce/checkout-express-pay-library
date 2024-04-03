@@ -8,7 +8,7 @@ declare global {
 }
 
 export interface IInitializeProps {
-    onAction: IOnAction
+    onAction: IOnAction;
 }
 
 export interface IGetFirstAndLastName {
