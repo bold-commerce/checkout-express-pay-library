@@ -64,12 +64,23 @@ describe('testing initFastlane function', () => {
                     client_id: null,
                     type: 'braintree',
                     is_test_mode: false,
+                    gateway_public_id: 'gatewayPublicId',
                 },
             }),
         });
         const client = {create: jest.fn()};
         const fastlane = {create: jest.fn()};
-        fastlane.create.mockReturnValue('testing');
+        fastlane.create.mockReturnValue({
+            setLocale: jest.fn(),
+            FastlaneCardComponent: jest.fn(),
+            FastlanePaymentComponent: jest.fn(),
+            identity: {
+                lookupCustomerByEmail: jest.fn(),
+            },
+            profile: {
+                showCardSelector: jest.fn(),
+            },
+        });
 
         const dataCollector = {create: jest.fn()};
         dataCollector.create.mockReturnValue({deviceData: null});
@@ -86,7 +97,8 @@ describe('testing initFastlane function', () => {
         const actualFastlane = await initFastlane();
 
         // Asserting
-        expect(actualFastlane).toBe('testing');
+        expect(actualFastlane.gatewayPublicId).toBe('gatewayPublicId');
+        expect(actualFastlane.type).toBe('braintree');
 
         expect(loadJSMock).toBeCalledTimes(3);
         expect(loadJSMock).toBeCalledWith('client');
@@ -121,18 +133,30 @@ describe('testing initFastlane function', () => {
                     client_id: 'client_id',
                     type: 'ppcp',
                     is_test_mode: false,
+                    gateway_public_id: 'gatewayPublicId',
                 },
             }),
         });
         loadScriptMock.mockResolvedValue({
-            Fastlane: () => Promise.resolve('testing'),
+            Fastlane: () => Promise.resolve({
+                setLocale: jest.fn(),
+                FastlaneCardComponent: jest.fn(),
+                FastlanePaymentComponent: jest.fn(),
+                identity: {
+                    lookupCustomerByEmail: jest.fn(),
+                },
+                profile: {
+                    showCardSelector: jest.fn(),
+                },
+            }),
         });        
 
         // Assigning
         const actualFastlane = await initFastlane();
 
         // Asserting
-        expect(actualFastlane).toBe('testing');
+        expect(actualFastlane.gatewayPublicId).toBe('gatewayPublicId');
+        expect(actualFastlane.type).toBe('ppcp');
     });
 
     test('init error', async () => {

@@ -72,27 +72,29 @@ export interface IFastlaneAuthenticatedCustomerResult {
 }
 
 export interface IFastlaneInstance {
-  profile: {
-      showShippingAddressSelector: () => Promise<{
-          selectionChanged: true;
-          selectedAddress: IFastlaneAddress;
-      } | {
-          selectionChanged: false;
-          selectedAddress: null;
-      }>;
-      showCardSelector: () => Promise<{
-        selectionChanged: true;
-        selectedCard: IFastlanePaymentToken;
-      } | {
-        selectionChanged: false;
-        selectedCard: null;
-      }>;
-  };
-  setLocale: (locale: string) => void;
-  identity: {
-      lookupCustomerByEmail: (email: string) => Promise<{customerContextId: string}>;
-      triggerAuthenticationFlow: (customerContextId: string) => Promise<IFastlaneAuthenticatedCustomerResult>
-  };
-  FastlanePaymentComponent: (options: IFastlaneComponentOptions) => Promise<IFastlanePaymentComponent>;
-  FastlaneCardComponent: (options: Omit<IFastlaneComponentOptions, 'shippingAddress'>) => IFastlaneCardComponent;
+    gatewayPublicId: string;
+    type: 'ppcp' | 'braintree';
+    profile: {
+        showShippingAddressSelector: () => Promise<{
+            selectionChanged: true;
+            selectedAddress: IFastlaneAddress;
+        } | {
+            selectionChanged: false;
+            selectedAddress: null;
+        }>;
+        showCardSelector: () => Promise<{
+            selectionChanged: true;
+            selectedCard: IFastlanePaymentToken;
+        } | {
+            selectionChanged: false;
+            selectedCard: null;
+        }>;
+    };
+    setLocale: (locale: string) => void;
+    identity: {
+        lookupCustomerByEmail: (email: string) => Promise<{customerContextId: string}>;
+        triggerAuthenticationFlow: (customerContextId: string) => Promise<IFastlaneAuthenticatedCustomerResult>
+    };
+    FastlanePaymentComponent: (options: IFastlaneComponentOptions) => Promise<IFastlanePaymentComponent>;
+    FastlaneCardComponent: (options: Omit<IFastlaneComponentOptions, 'shippingAddress'>) => IFastlaneCardComponent;
 }

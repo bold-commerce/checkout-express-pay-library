@@ -9,10 +9,13 @@ import {
     IBraintreeClient,
     FastlaneLoadingError,
 } from 'src';
+import Fastlane from './fastlane';
 
 interface TokenResponse {
     is_test_mode: boolean;
     client_token: string;
+    gateway_public_id: string;
+    type: IFastlaneInstance['type'];
 }
 
 interface BraintreeTokenResponse extends TokenResponse {
@@ -46,8 +49,10 @@ export async function initFastlane(): Promise<IFastlaneInstance>  {
             client_id: clientId,
             type,
             is_test_mode: isTest,
+            gateway_public_id: gatewayPublicId,
         } = await resp.json().then(r => r.data) as BraintreeTokenResponse | PPCPTokenResponse;
         
+        let fastlane: IFastlaneInstance;
         switch (type) {
             case 'braintree': {
                 await Promise.all([
@@ -62,13 +67,13 @@ export async function initFastlane(): Promise<IFastlaneInstance>  {
                     client: client,
                     riskCorrelationId: getPublicOrderId(),
                 });
-                const fastlane = await braintree.fastlane.create({
+                fastlane = await braintree.fastlane.create({
                     client,
                     authorization: clientToken,
                     deviceData: dataCollector.deviceData,
                 });
-                
-                return fastlane;
+
+                break;
             }
             case 'ppcp': {
                 const paypal = await loadScript({
@@ -77,13 +82,15 @@ export async function initFastlane(): Promise<IFastlaneInstance>  {
                     components: 'fastlane',
                     debug: isTest,
                 }) as unknown as {Fastlane: () => Promise<IFastlaneInstance>};
-                const fastlane = await paypal.Fastlane();
+                fastlane = await paypal.Fastlane();
 
-                return fastlane;
+                break;
             }
             default:
                 throw new Error(`unknown type: ${type}`);
         }
+
+        return new Fastlane(fastlane, type, gatewayPublicId);
     } catch (error) {
         if (error instanceof Error) {
             error.name = FastlaneLoadingError.name;
