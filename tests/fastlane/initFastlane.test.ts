@@ -1,7 +1,7 @@
 import {getEnvironment, getJwtToken, getPublicOrderId, getShopIdentifier} from '@boldcommerce/checkout-frontend-library';
 import {loadScript} from '@paypal/paypal-js';
 import {mocked} from 'jest-mock';
-import {IBraintreeUrls, braintreeOnLoadClient, getBraintreeClient, getBraintreeJsUrls, initFastlane, loadJS} from 'src';
+import {IBraintreeUrls, IFastlaneOptions, braintreeOnLoadClient, getBraintreeClient, getBraintreeJsUrls, initFastlane, loadJS} from 'src';
 
 jest.mock('src/braintree/getBraintreeJsUrls.ts');
 jest.mock('src/utils/loadJS.ts');
@@ -113,6 +113,79 @@ describe('testing initFastlane function', () => {
 
     });
 
+    test('init braintree correctly with options', async () => {
+        // Arranging
+        getBraintreeJsUrlsMock.mockReturnValue({
+            clientJsURL: 'client', dataCollectorJsURL: 'data', fastlaneJsURL: 'fastlane',
+        } as IBraintreeUrls);
+        getEnvironmentMock.mockReturnValue({
+            path: 'path',
+            type: 'testing',
+            url: 'https://staging.com',
+        });
+        getPublicOrderIdMock.mockReturnValue('testOrderId');
+        getShopIdentifierMock.mockReturnValue('testShopId');
+        getJwtTokenMock.mockReturnValue('jwt');
+        fetchMock.mockResolvedValue({
+            json: () => Promise.resolve({
+                data: {
+                    client_token: 'client_token',
+                    client_id: null,
+                    type: 'braintree',
+                    is_test_mode: false,
+                    gateway_public_id: 'gatewayPublicId',
+                },
+            }),
+        });
+        const client = {create: jest.fn()};
+        const fastlane = {create: jest.fn()};
+        fastlane.create.mockReturnValue({
+            setLocale: jest.fn(),
+            FastlaneCardComponent: jest.fn(),
+            FastlanePaymentComponent: jest.fn(),
+            identity: {
+                lookupCustomerByEmail: jest.fn(),
+            },
+            profile: {
+                showCardSelector: jest.fn(),
+            },
+        });
+
+        const dataCollector = {create: jest.fn()};
+        dataCollector.create.mockReturnValue({deviceData: null});
+
+        getBraintreeClientMock.mockReturnValue({
+            client,
+            fastlane,
+            dataCollector,
+            applePay: {create: jest.fn()},
+            googlePayment: {create: jest.fn()},
+        });
+
+        const options = {
+            styles: {}
+        } as IFastlaneOptions;
+
+        // Assigning
+        const actualFastlane = await initFastlane(options);
+
+        // Asserting
+        expect(actualFastlane.gatewayPublicId).toBe('gatewayPublicId');
+        expect(actualFastlane.type).toBe('braintree');
+
+        expect(loadJSMock).toBeCalledTimes(3);
+        expect(loadJSMock).toBeCalledWith('client');
+        expect(loadJSMock).toBeCalledWith('fastlane');
+        expect(loadJSMock).toBeCalledWith('data');
+
+        expect(braintreeOnLoadClientMock).toBeCalled();
+
+        expect(client.create).toBeCalled();
+        expect(dataCollector.create).toBeCalled();
+        expect(fastlane.create).toBeCalled();
+
+    });
+
     test('init ppcp correctly', async () => {
         // Arranging
         getBraintreeJsUrlsMock.mockReturnValue({
@@ -153,6 +226,56 @@ describe('testing initFastlane function', () => {
 
         // Assigning
         const actualFastlane = await initFastlane();
+
+        // Asserting
+        expect(actualFastlane.gatewayPublicId).toBe('gatewayPublicId');
+        expect(actualFastlane.type).toBe('ppcp');
+    });
+
+    test('init ppcp correctly with options', async () => {
+        // Arranging
+        getBraintreeJsUrlsMock.mockReturnValue({
+            clientJsURL: 'client', dataCollectorJsURL: 'data', fastlaneJsURL: 'fastlane',
+        } as IBraintreeUrls);
+        getEnvironmentMock.mockReturnValue({
+            path: 'path',
+            type: 'testing',
+            url: 'https://staging.com',
+        });
+        getPublicOrderIdMock.mockReturnValue('testOrderId');
+        getShopIdentifierMock.mockReturnValue('testShopId');
+        getJwtTokenMock.mockReturnValue('jwt');
+        fetchMock.mockResolvedValue({
+            json: () => Promise.resolve({
+                data: {
+                    client_token: 'client_token',
+                    client_id: 'client_id',
+                    type: 'ppcp',
+                    is_test_mode: false,
+                    gateway_public_id: 'gatewayPublicId',
+                },
+            }),
+        });
+        loadScriptMock.mockResolvedValue({
+            Fastlane: () => Promise.resolve({
+                setLocale: jest.fn(),
+                FastlaneCardComponent: jest.fn(),
+                FastlanePaymentComponent: jest.fn(),
+                identity: {
+                    lookupCustomerByEmail: jest.fn(),
+                },
+                profile: {
+                    showCardSelector: jest.fn(),
+                },
+            }),
+        });  
+
+        const options = {
+            styles: {}
+        } as IFastlaneOptions;
+
+        // Assigning
+        const actualFastlane = await initFastlane(options);
 
         // Asserting
         expect(actualFastlane.gatewayPublicId).toBe('gatewayPublicId');
