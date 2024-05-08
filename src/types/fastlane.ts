@@ -98,3 +98,54 @@ export interface IFastlaneInstance {
     FastlanePaymentComponent: (options: IFastlaneComponentOptions) => Promise<IFastlanePaymentComponent>;
     FastlaneCardComponent: (options: Omit<IFastlaneComponentOptions, 'shippingAddress'>) => IFastlaneCardComponent;
 }
+
+export interface IFastlaneOptions {
+    shippingAddressOptions: IFastlaneAddressOptions,
+    cardOptions: IFastlaneCardOptions,
+    styles: IFastlaneStyleOptions
+}
+
+export interface IFastlaneAddressOptions {
+    // default: empty array = all locations allowed
+    allowedLocations: string[];
+}
+
+export interface IFastlaneCardOptions {
+    // default: empty array = all brands allowed
+    allowedBrands: IFastlaneCardBrandTypes[];
+}
+  
+export type IFastlaneCardBrandTypes =
+    'VISA' |
+    'MASTERCARD' |
+    'AMERICAN-EXPRESS' |
+    'DINERS-CLUB' |
+    'DISCOVER' |
+    'JCB' |
+    'UNION-PAY' |
+    'MAESTRO' |
+    'ELO' |
+    'MIR' |
+    'HIPER' |
+    'HIPERCARD';
+
+
+export interface IFastlaneStyleOptions {
+    root: {
+        backgroundColor: string 
+        errorColor: string, 
+        fontFamily: string, 
+        textColorBase: string,
+        fontSizeBase: string, 
+        padding: string, 
+        primaryColor: string 
+    },
+    input: {
+        backgroundColor: string, 
+        borderRadius: string, 
+        borderColor: string, 
+        borderWidth: string, 
+        textColorBase: string, 
+        focusBorderColor: string, 
+    }
+}

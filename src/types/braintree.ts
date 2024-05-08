@@ -1,4 +1,4 @@
-import {IFastlaneInstance} from './fastlane';
+import {IFastlaneInstance, IFastlaneStyleOptions} from './fastlane';
 import ApplePayPaymentRequest = ApplePayJS.ApplePayPaymentRequest;
 import ApplePayPaymentToken = ApplePayJS.ApplePayPaymentToken;
 import GooglePaymentData = google.payments.api.PaymentData;
@@ -33,6 +33,7 @@ export interface IBraintreeFastlaneCreateRequest {
     metadata?: {
         geoLocOverride: string;
     };
+    styles: IFastlaneStyleOptions|undefined
 } 
 
 export interface IBraintreeDataCollectorCreateRequest {

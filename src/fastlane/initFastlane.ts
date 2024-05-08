@@ -8,6 +8,7 @@ import {
     getBraintreeClient,
     IBraintreeClient,
     FastlaneLoadingError,
+    IFastlaneOptions,
 } from 'src';
 import Fastlane from './fastlane';
 
@@ -28,7 +29,7 @@ interface PPCPTokenResponse extends TokenResponse {
     client_id: string;
 }
 
-export async function initFastlane(): Promise<IFastlaneInstance>  {
+export async function initFastlane(options?: IFastlaneOptions): Promise<IFastlaneInstance>  {
     const {clientJsURL, dataCollectorJsURL, fastlaneJsURL} = getBraintreeJsUrls('3.101.0-fastlane-beta.7.2');
 
     try {
@@ -71,6 +72,7 @@ export async function initFastlane(): Promise<IFastlaneInstance>  {
                     client,
                     authorization: clientToken,
                     deviceData: dataCollector.deviceData,
+                    styles: options?.styles
                 });
 
                 break;
@@ -81,8 +83,8 @@ export async function initFastlane(): Promise<IFastlaneInstance>  {
                     clientId: clientId,
                     components: 'fastlane',
                     debug: isTest,
-                }) as unknown as {Fastlane: () => Promise<IFastlaneInstance>};
-                fastlane = await paypal.Fastlane();
+                }) as unknown as {Fastlane: (options?: IFastlaneOptions) => Promise<IFastlaneInstance>};
+                fastlane = await paypal.Fastlane(options);
 
                 break;
             }
