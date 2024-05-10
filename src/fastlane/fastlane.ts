@@ -32,6 +32,7 @@ export default class Fastlane {
     public identity: IFastlaneInstance['identity'];
     public FastlaneCardComponent: IFastlaneInstance['FastlaneCardComponent'];
     public FastlanePaymentComponent: IFastlaneInstance['FastlanePaymentComponent'];
+    public FastlaneWatermarkComponent: IFastlaneInstance['FastlaneWatermarkComponent'];
     setLocale: IFastlaneInstance['setLocale']; 
 
     constructor(
@@ -50,6 +51,7 @@ export default class Fastlane {
         };
         this.FastlaneCardComponent = instance.FastlaneCardComponent.bind(instance);
         this.FastlanePaymentComponent = instance.FastlanePaymentComponent.bind(instance);
+        this.FastlaneWatermarkComponent = instance.FastlaneWatermarkComponent.bind(instance);
     }
 
     private showShippingAddressSelector = async () => {

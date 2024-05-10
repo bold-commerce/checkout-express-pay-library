@@ -5,6 +5,7 @@ describe('testing Fastlane class', () => {
         setLocale: jest.fn(),
         FastlaneCardComponent: jest.fn(),
         FastlanePaymentComponent: jest.fn(),
+        FastlaneWatermarkComponent: jest.fn(),
         identity: {
             lookupCustomerByEmail: jest.fn(),
             triggerAuthenticationFlow: jest.fn(),

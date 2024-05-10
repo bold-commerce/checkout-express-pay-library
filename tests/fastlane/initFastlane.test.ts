@@ -74,6 +74,7 @@ describe('testing initFastlane function', () => {
             setLocale: jest.fn(),
             FastlaneCardComponent: jest.fn(),
             FastlanePaymentComponent: jest.fn(),
+            FastlaneWatermarkComponent: jest.fn(),
             identity: {
                 lookupCustomerByEmail: jest.fn(),
             },
@@ -143,6 +144,7 @@ describe('testing initFastlane function', () => {
             setLocale: jest.fn(),
             FastlaneCardComponent: jest.fn(),
             FastlanePaymentComponent: jest.fn(),
+            FastlaneWatermarkComponent: jest.fn(),
             identity: {
                 lookupCustomerByEmail: jest.fn(),
             },
@@ -215,6 +217,7 @@ describe('testing initFastlane function', () => {
                 setLocale: jest.fn(),
                 FastlaneCardComponent: jest.fn(),
                 FastlanePaymentComponent: jest.fn(),
+                FastlaneWatermarkComponent: jest.fn(),
                 identity: {
                     lookupCustomerByEmail: jest.fn(),
                 },
@@ -261,6 +264,7 @@ describe('testing initFastlane function', () => {
                 setLocale: jest.fn(),
                 FastlaneCardComponent: jest.fn(),
                 FastlanePaymentComponent: jest.fn(),
+                FastlaneWatermarkComponent: jest.fn(),
                 identity: {
                     lookupCustomerByEmail: jest.fn(),
                 },
