@@ -39,6 +39,10 @@ export interface IFastlaneCardComponent {
     }) => Promise<IFastlanePaymentToken>;
 }
 
+export interface IFastlaneWatermarkComponent {
+    render: (container: string) => null;
+}
+
 interface Field {
     placeholder?: string;
     prefill?: string;
@@ -57,6 +61,10 @@ export interface IFastlaneComponentOptions {
         phoneNumber?: Field;
     };
     shippingAddress?: IFastlaneAddress;
+}
+
+export interface IFastlaneWatermarkOptions {
+    includeAdditionalInfo: boolean;
 }
 
 export interface IFastlaneAuthenticatedCustomerResult {
@@ -97,6 +105,7 @@ export interface IFastlaneInstance {
     };
     FastlanePaymentComponent: (options: IFastlaneComponentOptions) => Promise<IFastlanePaymentComponent>;
     FastlaneCardComponent: (options: Omit<IFastlaneComponentOptions, 'shippingAddress'>) => IFastlaneCardComponent;
+    FastlaneWatermarkComponent: (options: IFastlaneWatermarkOptions) => IFastlaneWatermarkComponent;
 }
 
 export interface IFastlaneOptions {
