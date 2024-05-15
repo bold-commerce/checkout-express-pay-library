@@ -74,7 +74,7 @@ export interface IFastlaneAuthenticatedCustomerResult {
             firstName: string;
             lastName: string;
         };
-        shippingAddress: IFastlaneAddress;
+        shippingAddress: IFastlaneAddress | undefined;
         card: IFastlanePaymentToken;
       }
 }

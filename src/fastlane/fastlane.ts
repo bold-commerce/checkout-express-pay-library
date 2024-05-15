@@ -82,7 +82,7 @@ export default class Fastlane {
             profileData: {
                 card: resp.profileData.card,
                 name: resp.profileData.name,
-                shippingAddress: this.transformPaypalAddress(paypalAddress),
+                shippingAddress: paypalAddress === undefined ? undefined : this.transformPaypalAddress(paypalAddress),
             },
         };
     }

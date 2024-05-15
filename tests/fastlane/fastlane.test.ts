@@ -1,4 +1,5 @@
 import Fastlane from 'src/fastlane/fastlane';
+import { IFastlaneAuthenticatedCustomerResult } from 'src';
 
 describe('testing Fastlane class', () => {
     const fastlaneInstanceMock = {
@@ -91,6 +92,7 @@ describe('testing Fastlane class', () => {
 
     test.each([
         {
+            name: 'ppcp',
             type: 'ppcp',
             respProfileData: {
                 card: {},
@@ -133,6 +135,20 @@ describe('testing Fastlane class', () => {
             }),
         } as const,
         {
+            name: 'ppcp - no shipping address',
+            type: 'ppcp',
+            respProfileData: {
+                card: {},
+                name: {
+                    firstName: 'firstName',
+                    lastName: 'firstName',
+                },
+                shippingAddress: undefined,
+            },
+            expected: (): IFastlaneAuthenticatedCustomerResult['profileData']['shippingAddress'] => undefined,
+        } as const,
+        {
+            name: 'braintree',
             type: 'braintree',
             respProfileData: {
                 card: {},
@@ -157,7 +173,7 @@ describe('testing Fastlane class', () => {
                 return this.respProfileData.shippingAddress;
             },
         } as const,
-    ])('$type triggerAuthenticationFlow', async (input) => {
+    ])('$name triggerAuthenticationFlow', async (input) => {
         // Arranging
         fastlaneInstanceMock.identity.triggerAuthenticationFlow.mockResolvedValue({
             authenticationState: 'succeeded',
