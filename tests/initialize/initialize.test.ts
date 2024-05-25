@@ -6,6 +6,7 @@ import {
     IExpressPayBraintreeGoogle,
     IExpressPayPaypal,
     IExpressPayPaypalCommercePlatform,
+    IExpressPayPaypalCommercePlatformButton,
 } from '@boldcommerce/checkout-frontend-library';
 import {mocked} from 'jest-mock';
 import {
@@ -16,12 +17,14 @@ import {
     initPaypal,
     initPPCPApple,
     setOnAction,
+    initPpcp,
 } from 'src';
 
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
 jest.mock('src/initialize/manageExpressPayContext');
 jest.mock('src/stripe/initStripe');
 jest.mock('src/paypal/initPaypal');
+jest.mock('src/paypal/initPpcp');
 jest.mock('src/paypal/ppcp_apple/initPPCPApple');
 jest.mock('src/braintree/google/initBraintreeGoogle');
 jest.mock('src/braintree/apple/initBraintreeApple');
@@ -32,6 +35,7 @@ const initPaypalMock = mocked(initPaypal, true);
 const initPPCPAppleMock = mocked(initPPCPApple, true);
 const initBraintreeGoogleMock = mocked(initBraintreeGoogle, true);
 const initBraintreeAppleMock = mocked(initBraintreeApple, true);
+const initPpcpMock = mocked(initPpcp, true);
 
 describe('testing initialize function', () => {
     let consoleSpy: jest.SpyInstance;
@@ -129,6 +133,37 @@ describe('testing initialize function', () => {
         expect(consoleSpy).toHaveBeenCalledTimes(0);
         expect(initPPCPAppleMock).toHaveBeenCalledTimes(1);
         expect(initPPCPAppleMock).toHaveBeenCalledWith(ppcpPayment);
+        expect(setOnActionMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('testing with ppcp', () => {
+        const ppcpApplePayment: IExpressPayPaypalCommercePlatform = {
+            type: alternatePaymentMethodType.PPCP_APPLE,
+            is_test: true,
+            public_id: 'somePublicId',
+            apple_pay_enabled: true,
+            partner_id: 'somePartnerId',
+            merchant_id: 'someMerchantId',
+        };
+        const ppcpPayment: IExpressPayPaypalCommercePlatformButton = {
+            type: alternatePaymentMethodType.PPCP,
+            is_3ds_enabled: true,
+            is_dev: false,
+            merchant_country: 'US',
+            payment_types: {},
+            style: {},
+            public_id: 'somePublicId',
+            apple_pay_enabled: true,
+            partner_id: 'somePartnerId',
+            merchant_id: 'someMerchantId',
+        };
+
+        const orderInitData = {...initData, alternative_payment_methods: [ppcpPayment, ppcpApplePayment]};
+        getOrderInitialDataMock.mockReturnValueOnce(orderInitData);
+        initialize({onAction: onActionMock});
+        expect(consoleSpy).toHaveBeenCalledTimes(0);
+        expect(initPPCPAppleMock).not.toBeCalled();
+        expect(initPpcpMock).toBeCalledWith(onActionMock, false);
         expect(setOnActionMock).toHaveBeenCalledTimes(1);
     });
 

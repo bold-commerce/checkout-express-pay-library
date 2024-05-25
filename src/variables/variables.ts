@@ -43,6 +43,7 @@ export const actionTypes: IActionTypes = {
 
 export const paypalState: IPaypalState = {
     paypal: null,
+    paypalPromise: null,
     gatewayPublicId: '',
     ppcpAppleCredentials: null,
     ppcpApplePayInstance: null,

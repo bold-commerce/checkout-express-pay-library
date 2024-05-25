@@ -1,12 +1,15 @@
-import {getEnvironment, getJwtToken, getPublicOrderId, getShopIdentifier} from '@boldcommerce/checkout-frontend-library';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {alternatePaymentMethodType, getEnvironment, getJwtToken, getOrderInitialData, getPublicOrderId, getShopIdentifier, IOrderInitialData} from '@boldcommerce/checkout-frontend-library';
 import {loadScript} from '@paypal/paypal-js';
 import {mocked} from 'jest-mock';
-import {IBraintreeUrls, IFastlaneOptions, braintreeOnLoadClient, getBraintreeClient, getBraintreeJsUrls, initFastlane, loadJS} from 'src';
+import {IBraintreeUrls, IFastlaneOptions, braintreeOnLoadClient, getBraintreeClient, getBraintreeJsUrls, initFastlane, loadJS, getPaypalNameSpacePromise, getPaypalNameSpace, initPpcpSdk} from 'src';
 
 jest.mock('src/braintree/getBraintreeJsUrls.ts');
 jest.mock('src/utils/loadJS.ts');
 jest.mock('src/braintree/manageBraintreeState.ts');
+jest.mock('src/paypal/managePaypalState.ts');
 jest.mock('src/braintree/braintreeOnLoadClient.ts');
+jest.mock('src/paypal/ppcp_buttons/initPpcpButtons.ts');
 jest.mock('src/fastlane/manageFastlaneState.ts');
 jest.mock('@boldcommerce/checkout-frontend-library', () => ({
     ...jest.requireActual('@boldcommerce/checkout-frontend-library'),
@@ -14,6 +17,7 @@ jest.mock('@boldcommerce/checkout-frontend-library', () => ({
     getJwtToken: jest.fn(),
     getPublicOrderId: jest.fn(),
     getShopIdentifier: jest.fn(),
+    getOrderInitialData: jest.fn(),
 }));
 jest.mock('@paypal/paypal-js', () => ({
     ...jest.requireActual('@paypal/paypal-js'),
@@ -29,6 +33,10 @@ const loadJSMock = mocked(loadJS);
 const braintreeOnLoadClientMock = mocked(braintreeOnLoadClient);
 const getBraintreeClientMock = mocked(getBraintreeClient);
 const loadScriptMock = mocked(loadScript) as jest.Mock;
+const getOrderInitialDataMock = mocked(getOrderInitialData);
+const getPaypalNameSpaceMock = mocked(getPaypalNameSpace);
+const getPaypalNameSpacePromiseMock = mocked(getPaypalNameSpacePromise);
+const initPpcpSdkMock = mocked(initPpcpSdk);
 
 describe('testing initFastlane function', () => {
     let fetchMock: jest.Mock;
@@ -37,6 +45,9 @@ describe('testing initFastlane function', () => {
     beforeEach(() => {
         actualFetch = global.fetch;
         fetchMock = global.fetch = jest.fn();
+        getOrderInitialDataMock.mockReturnValue({
+            alternative_payment_methods: [],
+        } as any);
     });
 
     afterEach(() => {
@@ -188,31 +199,62 @@ describe('testing initFastlane function', () => {
 
     });
 
-    test('init ppcp correctly', async () => {
+    test('init ppcp correctly from nothing', async () => {
         // Arranging
+        const payment = {
+            alternative_payment_methods: [{
+                type: alternatePaymentMethodType.PPCP,
+                public_id: 'gatewayPublicId',
+            }]
+        } as IOrderInitialData;
         getBraintreeJsUrlsMock.mockReturnValue({
             clientJsURL: 'client', dataCollectorJsURL: 'data', fastlaneJsURL: 'fastlane',
         } as IBraintreeUrls);
-        getEnvironmentMock.mockReturnValue({
-            path: 'path',
-            type: 'testing',
-            url: 'https://staging.com',
+        getOrderInitialDataMock.mockReturnValue(payment);
+        getPaypalNameSpacePromiseMock.mockReturnValue(null);
+        getPaypalNameSpaceMock.mockReturnValue(null);
+        initPpcpSdkMock.mockImplementation(async () => {
+            getPaypalNameSpaceMock.mockReturnValue({
+                Fastlane: () => Promise.resolve({
+                    setLocale: jest.fn(),
+                    FastlaneCardComponent: jest.fn(),
+                    FastlanePaymentComponent: jest.fn(),
+                    FastlaneWatermarkComponent: jest.fn(),
+                    identity: {
+                        lookupCustomerByEmail: jest.fn(),
+                    },
+                    profile: {
+                        showCardSelector: jest.fn(),
+                    },
+                }),
+            } as any);
         });
-        getPublicOrderIdMock.mockReturnValue('testOrderId');
-        getShopIdentifierMock.mockReturnValue('testShopId');
-        getJwtTokenMock.mockReturnValue('jwt');
-        fetchMock.mockResolvedValue({
-            json: () => Promise.resolve({
-                data: {
-                    client_token: 'client_token',
-                    client_id: 'client_id',
-                    type: 'ppcp',
-                    is_test_mode: false,
-                    gateway_public_id: 'gatewayPublicId',
-                },
-            }),
-        });
-        loadScriptMock.mockResolvedValue({
+
+        // Assigning
+        const actualFastlane = await initFastlane();
+
+        // Asserting
+        expect(actualFastlane.gatewayPublicId).toBe('gatewayPublicId');
+        expect(actualFastlane.type).toBe('ppcp');
+    });
+
+    test('init ppcp correctly from in-flight', async () => {
+        // Arranging
+        let resolve: any;
+        const promise = new Promise(r => resolve = r);
+        const payment = {
+            alternative_payment_methods: [{
+                type: alternatePaymentMethodType.PPCP,
+                public_id: 'gatewayPublicId',
+            }]
+        } as IOrderInitialData;
+        getBraintreeJsUrlsMock.mockReturnValue({
+            clientJsURL: 'client', dataCollectorJsURL: 'data', fastlaneJsURL: 'fastlane',
+        } as IBraintreeUrls);
+        getOrderInitialDataMock.mockReturnValue(payment);
+        getPaypalNameSpacePromiseMock.mockReturnValue(Promise.resolve() as any);
+        getPaypalNameSpaceMock.mockReturnValueOnce(null);
+        getPaypalNameSpaceMock.mockReturnValueOnce({
             Fastlane: () => Promise.resolve({
                 setLocale: jest.fn(),
                 FastlaneCardComponent: jest.fn(),
@@ -225,10 +267,11 @@ describe('testing initFastlane function', () => {
                     showCardSelector: jest.fn(),
                 },
             }),
-        });        
+        } as any);
 
         // Assigning
         const actualFastlane = await initFastlane();
+        
 
         // Asserting
         expect(actualFastlane.gatewayPublicId).toBe('gatewayPublicId');
@@ -240,39 +283,30 @@ describe('testing initFastlane function', () => {
         getBraintreeJsUrlsMock.mockReturnValue({
             clientJsURL: 'client', dataCollectorJsURL: 'data', fastlaneJsURL: 'fastlane',
         } as IBraintreeUrls);
-        getEnvironmentMock.mockReturnValue({
-            path: 'path',
-            type: 'testing',
-            url: 'https://staging.com',
-        });
-        getPublicOrderIdMock.mockReturnValue('testOrderId');
-        getShopIdentifierMock.mockReturnValue('testShopId');
-        getJwtTokenMock.mockReturnValue('jwt');
-        fetchMock.mockResolvedValue({
-            json: () => Promise.resolve({
-                data: {
-                    client_token: 'client_token',
-                    client_id: 'client_id',
-                    type: 'ppcp',
-                    is_test_mode: false,
-                    gateway_public_id: 'gatewayPublicId',
-                },
-            }),
-        });
-        loadScriptMock.mockResolvedValue({
-            Fastlane: () => Promise.resolve({
-                setLocale: jest.fn(),
-                FastlaneCardComponent: jest.fn(),
-                FastlanePaymentComponent: jest.fn(),
-                FastlaneWatermarkComponent: jest.fn(),
-                identity: {
-                    lookupCustomerByEmail: jest.fn(),
-                },
-                profile: {
-                    showCardSelector: jest.fn(),
-                },
-            }),
-        });  
+        getOrderInitialDataMock.mockReturnValue({
+            alternative_payment_methods: [{
+                type: alternatePaymentMethodType.PPCP,
+                public_id: 'gatewayPublicId',
+            }]
+        } as IOrderInitialData);
+        getPaypalNameSpacePromiseMock.mockReturnValue(null);
+        getPaypalNameSpaceMock.mockReturnValue(null);
+        initPpcpSdkMock.mockImplementation(async () => {
+            getPaypalNameSpaceMock.mockReturnValue({
+                Fastlane: () => Promise.resolve({
+                    setLocale: jest.fn(),
+                    FastlaneCardComponent: jest.fn(),
+                    FastlanePaymentComponent: jest.fn(),
+                    FastlaneWatermarkComponent: jest.fn(),
+                    identity: {
+                        lookupCustomerByEmail: jest.fn(),
+                    },
+                    profile: {
+                        showCardSelector: jest.fn(),
+                    },
+                }),
+            } as any);
+        }); 
 
         const options = {
             styles: {}
@@ -291,25 +325,15 @@ describe('testing initFastlane function', () => {
         getBraintreeJsUrlsMock.mockReturnValue({
             clientJsURL: 'client', dataCollectorJsURL: 'data', fastlaneJsURL: 'fastlane',
         } as IBraintreeUrls);
-        getEnvironmentMock.mockReturnValue({
-            path: 'path',
-            type: 'testing',
-            url: 'https://staging.com',
-        });
-        getPublicOrderIdMock.mockReturnValue('testOrderId');
-        getShopIdentifierMock.mockReturnValue('testShopId');
-        getJwtTokenMock.mockReturnValue('jwt');
-        fetchMock.mockResolvedValue({
-            json: () => Promise.resolve({
-                data: {
-                    client_token: 'client_token',
-                    client_id: 'client_id',
-                    type: 'ppcp',
-                    is_test_mode: false,
-                },
-            }),
-        });
-        loadScriptMock.mockRejectedValue(new Error('Oh no!'));
+        getOrderInitialDataMock.mockReturnValue({
+            alternative_payment_methods: [{
+                type: alternatePaymentMethodType.PPCP,
+                public_id: 'gatewayPublicId',
+            }]
+        } as IOrderInitialData);
+        getPaypalNameSpacePromiseMock.mockReturnValue(null);
+        getPaypalNameSpaceMock.mockReturnValue(null);
+        initPpcpSdkMock.mockRejectedValue(new Error('Oh no!'));
 
         // Assigning
         try {
@@ -320,66 +344,21 @@ describe('testing initFastlane function', () => {
         }
     });
 
-    test('init unknown type', async () => {
-        // Arranging
-        getBraintreeJsUrlsMock.mockReturnValue({
-            clientJsURL: 'client', dataCollectorJsURL: 'data', fastlaneJsURL: 'fastlane',
-        } as IBraintreeUrls);
-        getEnvironmentMock.mockReturnValue({
-            path: 'path',
-            type: 'testing',
-            url: 'https://staging.com',
-        });
-        getPublicOrderIdMock.mockReturnValue('testOrderId');
-        getShopIdentifierMock.mockReturnValue('testShopId');
-        getJwtTokenMock.mockReturnValue('jwt');
-        fetchMock.mockResolvedValue({
-            json: () => Promise.resolve({
-                data: {
-                    client_token: 'client_token',
-                    client_id: 'client_id',
-                    type: 'unknown',
-                    is_test_mode: false,
-                },
-            }),
-        });
-
-        // Assigning
-        try {
-            await initFastlane();
-        } catch (e: unknown) {
-            // Asserting
-            expect((e as Error).message).toContain('unknown type');
-        }
-    });
-
     test.each([
         [new Error('test'), 'test'],
         ['test', 'Error loading Fastlane: test'],
     ])('init exception', async (error, expectedMsg) => {
         // Arranging
+        getOrderInitialDataMock.mockReturnValue({
+            alternative_payment_methods: [{
+                type: alternatePaymentMethodType.PPCP,
+                public_id: 'gatewayPublicId',
+            }]
+        } as IOrderInitialData);
         getBraintreeJsUrlsMock.mockReturnValue({
             clientJsURL: 'client', dataCollectorJsURL: 'data', fastlaneJsURL: 'fastlane',
         } as IBraintreeUrls);
-        getEnvironmentMock.mockReturnValue({
-            path: 'path',
-            type: 'testing',
-            url: 'https://staging.com',
-        });
-        getPublicOrderIdMock.mockReturnValue('testOrderId');
-        getShopIdentifierMock.mockReturnValue('testShopId');
-        getJwtTokenMock.mockReturnValue('jwt');
-        fetchMock.mockResolvedValue({
-            json: () => Promise.resolve({
-                data: {
-                    client_token: 'client_token',
-                    client_id: 'client_id',
-                    type: 'ppcp',
-                    is_test_mode: false,
-                },
-            }),
-        });
-        loadScriptMock.mockRejectedValue(error);
+        initPpcpSdkMock.mockRejectedValue(error);
 
         // Assigning
         try {

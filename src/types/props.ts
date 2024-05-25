@@ -9,6 +9,7 @@ declare global {
 
 export interface IInitializeProps {
     onAction: IOnAction;
+    fastlane?: boolean;
 }
 
 export interface IGetFirstAndLastName {

@@ -10,7 +10,6 @@ import {ppcpOrderCreate} from 'src/paypal/ppcp_buttons/ppcpOrderCreate';
 import {ppcpOnShippingChange} from 'src/paypal/ppcp_buttons/ppcpOnShippingChange';
 
 export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButton): Promise<void> {
-
     const paypal = getPaypalNameSpace();
 
     let enableSection = false;
