@@ -48,6 +48,7 @@ export interface IActionTypes {
 
 export interface IPaypalState {
     paypal: PayPalNamespace | IPaypalNamespaceApple | null;
+    paypalPromise: Promise<PayPalNamespace | null> | null;
     gatewayPublicId: string;
     ppcpAppleCredentials: IExpressPayPaypalCommercePlatform | null;
     ppcpApplePayInstance: IPPCPApplePayInstance | null;

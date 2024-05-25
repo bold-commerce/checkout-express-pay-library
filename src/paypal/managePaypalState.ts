@@ -12,6 +12,14 @@ export function setPaypalNameSpace(paypal: PayPalNamespace | IPaypalNamespaceApp
     paypalState.paypal = paypal;
 }
 
+export function setPaypalNameSpacePromise(paypal: Promise<PayPalNamespace | null> | null): void {
+    paypalState.paypalPromise = paypal;
+}
+
+export function getPaypalNameSpacePromise(): Promise<PayPalNamespace | null> | null {
+    return paypalState.paypalPromise;
+}
+
 export function getPaypalNameSpace(): PayPalNamespace | IPaypalNamespaceApple | null {
     return paypalState.paypal;
 }

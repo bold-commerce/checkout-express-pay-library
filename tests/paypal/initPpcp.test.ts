@@ -37,7 +37,6 @@ describe('testing initPpcp function', () => {
     });
 
     test('initPpcp successfully without actions', async () => {
-
         const payments = {...orderInitialDataMock};
         payments.alternative_payment_methods = [];
 
@@ -53,7 +52,6 @@ describe('testing initPpcp function', () => {
     });
 
     test('initPpcp successfully with actions', async () => {
-
         const paypalPayment: IExpressPayPaypalCommercePlatformButton = {
             type: alternatePaymentMethodType.PPCP,
             is_dev: true,
@@ -92,7 +90,7 @@ describe('testing initPpcp function', () => {
         expect(displayErrorMock).toHaveBeenCalledTimes(0);
         expect(enableDisableSectionMock).toHaveBeenCalledTimes(0);
         expect(initPpcpButtonsMock).toHaveBeenCalledTimes(1);
-        expect(initPpcpButtonsMock).toHaveBeenCalledWith(paypalPayment);
+        expect(initPpcpButtonsMock).toHaveBeenCalledWith(paypalPayment, false);
         expect(initPPCPAppleMock).toHaveBeenCalledTimes(1);
         expect(initPPCPAppleMock).toHaveBeenCalledWith(applePay);
 

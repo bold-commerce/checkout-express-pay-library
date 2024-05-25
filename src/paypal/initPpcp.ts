@@ -14,7 +14,7 @@ import {
     showPaymentMethodTypes
 } from 'src';
 
-export async function initPpcp(callback?: IOnAction): Promise<void> {
+export async function initPpcp(callback?: IOnAction, fastlane = false): Promise<void> {
 
     if (callback) {
         setOnAction(callback);
@@ -23,7 +23,7 @@ export async function initPpcp(callback?: IOnAction): Promise<void> {
     const payment = alternative_payment_methods.find(payment => payment.type === alternatePaymentMethodType.PPCP);
 
     if(payment) {
-        await initPpcpButtons(payment as IExpressPayPaypalCommercePlatformButton);
+        await initPpcpButtons(payment as IExpressPayPaypalCommercePlatformButton, fastlane);
         const applePayment = alternative_payment_methods.find(payment => payment.type === alternatePaymentMethodType.PPCP_APPLE);
         if(applePayment){
             await initPPCPApple(applePayment as IExpressPayPaypalCommercePlatform);
