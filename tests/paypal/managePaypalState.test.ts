@@ -116,6 +116,7 @@ describe('testing  managePaypalState functions', () => {
             apple_pay_enabled: true,
             partner_id: 'somePartnerId',
             merchant_id: 'someMerchantId',
+            fastlane_styles: {}
         };
 
         test('testing call setPPCPAppleCredentials with mock', async () => {

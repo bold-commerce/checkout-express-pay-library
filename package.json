@@ -54,7 +54,7 @@
     "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0"
   },
   "dependencies": {
-    "@boldcommerce/checkout-frontend-library": "0.57.1",
+    "@boldcommerce/checkout-frontend-library": "0.58.0",
     "@paypal/paypal-js": "^7.0.1",
     "@types/applepayjs": "^3.0.4",
     "@types/googlepay": "^0.6.4"

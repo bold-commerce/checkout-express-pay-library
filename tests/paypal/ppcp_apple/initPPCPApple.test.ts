@@ -38,6 +38,7 @@ describe('testing initPPCPApple function', () => {
         apple_pay_enabled: true,
         partner_id: 'somePartnerId',
         merchant_id: 'someMerchantId',
+        fastlane_styles: {}
     };
     const paypalNameSpaceMock: PayPalNamespace = {version: 'test_mock_version'};
     const paypalScriptOptions: PayPalScriptOptions = {
@@ -124,6 +125,7 @@ describe('testing initPPCPApple function', () => {
             apple_pay_enabled: false,
             partner_id: 'somePartnerId',
             merchant_id: 'someMerchantId',
+            fastlane_styles: {}
         };
 
         await initPPCPApple(ppcpPaymentAppleDisabled);

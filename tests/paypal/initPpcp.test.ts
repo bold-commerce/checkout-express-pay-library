@@ -79,6 +79,7 @@ describe('testing initPpcp function', () => {
             apple_pay_enabled: true,
             merchant_id: 'someClientId',
             partner_id: 'somePartnerId',
+            fastlane_styles: {}
         };
 
         const payments = {...orderInitialDataMock};
