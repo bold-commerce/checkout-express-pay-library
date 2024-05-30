@@ -145,6 +145,7 @@ describe('testing initialize function', () => {
             apple_pay_enabled: true,
             partner_id: 'somePartnerId',
             merchant_id: 'someMerchantId',
+            fastlane_styles: {},
         };
         const ppcpPayment: IExpressPayPaypalCommercePlatformButton = {
             type: alternatePaymentMethodType.PPCP,
