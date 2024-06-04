@@ -8,7 +8,7 @@ export function createPPCPApple(): void {
         // creating a paypal-apple payment div inside express payment container
         const ppcpAppleDiv = document.createElement('div');
         ppcpAppleDiv.id = 'ppcp-apple-express-payment';
-        ppcpAppleDiv.className = 'ppcp-apple-express-payment';
+        ppcpAppleDiv.className = 'ppcp-apple-express-payment express-payment';
         ppcpAppleDiv.dataset.testid = 'ppcp-apple-express-payment';
 
         const button = document.createElement('button');

@@ -5,6 +5,7 @@
 
 .ppcp-express-payment{
     width: auto;
+    display: contents;
 }
 
 .ppcp-apple-pay-button{

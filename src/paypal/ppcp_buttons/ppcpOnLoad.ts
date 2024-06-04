@@ -18,11 +18,13 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
     const paypalButtonDivId = 'ppcp-paypal-express-payment-button';
     paypalButtonDiv.id = paypalButtonDivId;
     paypalButtonDiv.dataset.testid = paypalButtonDivId;
+    paypalButtonDiv.className = 'express-payment';
 
     const payLaterButtonDiv = document.createElement('div');
     const payLaterButtonDivId = 'ppcp-paylater-express-payment-button';
     payLaterButtonDiv.id = payLaterButtonDivId;
     payLaterButtonDiv.dataset.testid = payLaterButtonDivId;
+    payLaterButtonDiv.className = 'express-payment';
 
     // creating a paypal payment div inside express payment container
     const paypalDiv = document.createElement('div');
