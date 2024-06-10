@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     alternatePaymentMethodType,
     getOrderInitialData,
@@ -18,6 +19,7 @@ import {
     initPPCPApple,
     setOnAction,
     initPpcp,
+    initBraintreePayPalButtons,
 } from 'src';
 
 jest.mock('@boldcommerce/checkout-frontend-library/lib/state');
@@ -27,6 +29,7 @@ jest.mock('src/paypal/initPaypal');
 jest.mock('src/paypal/initPpcp');
 jest.mock('src/paypal/ppcp_apple/initPPCPApple');
 jest.mock('src/braintree/google/initBraintreeGoogle');
+jest.mock('src/braintree/initBraintreePayPalButtons');
 jest.mock('src/braintree/apple/initBraintreeApple');
 const getOrderInitialDataMock = mocked(getOrderInitialData, true);
 const setOnActionMock = mocked(setOnAction, true);
@@ -34,6 +37,7 @@ const initStripeMock = mocked(initStripe, true);
 const initPaypalMock = mocked(initPaypal, true);
 const initPPCPAppleMock = mocked(initPPCPApple, true);
 const initBraintreeGoogleMock = mocked(initBraintreeGoogle, true);
+const initBraintreePayPalButtonsMock = mocked(initBraintreePayPalButtons, true);
 const initBraintreeAppleMock = mocked(initBraintreeApple, true);
 const initPpcpMock = mocked(initPpcp, true);
 
@@ -166,6 +170,32 @@ describe('testing initialize function', () => {
         expect(consoleSpy).toHaveBeenCalledTimes(0);
         expect(initPPCPAppleMock).not.toBeCalled();
         expect(initPpcpMock).toBeCalledWith(onActionMock, false);
+        expect(setOnActionMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('testing with braintree-paypal', () => {
+        const payment = {
+            'properties': {
+                'public_id': 'public_id',
+                'commit': false
+            },
+            'validation_schema': [],
+            'is_test': 1,
+            'tokenization_key': 'key',
+            'fastlane_styles': {
+                'root': [],
+                'input': [],
+                'privacy': 'yes'
+            },
+            'is_paylater_enabled': false,
+            'type': 'braintree-paypal'
+        };
+
+        const orderInitData = {...initData, alternative_payment_methods: [payment]};
+        getOrderInitialDataMock.mockReturnValueOnce(orderInitData as any);
+        initialize({onAction: onActionMock});
+        expect(consoleSpy).toHaveBeenCalledTimes(0);
+        expect(initBraintreePayPalButtonsMock).toBeCalledWith(payment);
         expect(setOnActionMock).toHaveBeenCalledTimes(1);
     });
 

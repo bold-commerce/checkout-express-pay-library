@@ -27,14 +27,15 @@ interface BraintreeTokenResponse extends TokenResponse {
 }
 
 export async function initFastlane(options?: IFastlaneOptions): Promise<IFastlaneInstance>  {
-    const {clientJsURL, dataCollectorJsURL, fastlaneJsURL} = getBraintreeJsUrls('3.101.0-fastlane-beta.7.2');
+    const {clientJsURL, dataCollectorJsURL, fastlaneJsURL, paypalCheckoutURL} = getBraintreeJsUrls('3.101.0-fastlane-beta.7.2');
     const {alternative_payment_methods} = getOrderInitialData();
-    const payment = alternative_payment_methods
+    const ppcpPayment = alternative_payment_methods
         .find(payment => payment.type === alternatePaymentMethodType.PPCP) as IExpressPayPaypalCommercePlatformButton | undefined;
 
     try {
-        const type = payment ? 'ppcp' : 'braintree';
+        const type = ppcpPayment ? 'ppcp' : 'braintree';
 
+        /* istanbul ignore else */
         if (type === 'braintree') {
             // TODO move this request to the checkout frontend library
             const env = getEnvironment();
@@ -73,32 +74,35 @@ export async function initFastlane(options?: IFastlaneOptions): Promise<IFastlan
             });
 
             return new Fastlane(fastlane, 'braintree', gatewayPublicId);
-        }
+        } else if (ppcpPayment) {
 
-        // It should be impossible for PPCP to be the type and no PPCP gateway entry to be in 
-        // in initialData.alternative_payment_gateway
-        /* istanbul ignore next */
-        if (!payment) { 
-            throw new Error('Unreachable: PPCP type but no PPCP gateway found');
-        }
+            // It should be impossible for PPCP to be the type and no PPCP gateway entry to be in 
+            // in initialData.alternative_payment_gateway
+            /* istanbul ignore next */
+            if (!ppcpPayment) { 
+                throw new Error('Unreachable: PPCP type but no PPCP gateway found');
+            }
 
-        type FastlaneType = {Fastlane: (options?: IFastlaneOptions) => Promise<IFastlaneInstance>}
-        let paypal = getPaypalNameSpace() as unknown as FastlaneType;
-        const paypalPromise = getPaypalNameSpacePromise();
-        if (!paypal && !paypalPromise) {
-            await initPpcpSdk(payment, true);
-        } else if (!paypal) {
-            await paypalPromise;
+            type FastlaneType = {Fastlane: (options?: IFastlaneOptions) => Promise<IFastlaneInstance>}
+            let paypal = getPaypalNameSpace() as unknown as FastlaneType;
+            const paypalPromise = getPaypalNameSpacePromise();
+            if (!paypal && !paypalPromise) {
+                await initPpcpSdk(ppcpPayment, true);
+            } else if (!paypal) {
+                await paypalPromise;
+            }
+            
+            paypal = getPaypalNameSpace() as unknown as FastlaneType;
+            /* istanbul ignore next */
+            if (!paypal?.Fastlane) {
+                throw new Error('Unreconcilable: Paypal SDK instance does not have Fastlane method');
+            }
+            
+            const fastlane = await paypal.Fastlane(options);
+            return new Fastlane(fastlane, type, ppcpPayment.public_id);
+        } else {
+            throw new Error('Unreconcilable: Neither PPCP or Braintree found in alternative payment gateways');
         }
-        
-        paypal = getPaypalNameSpace() as unknown as FastlaneType;
-        /* istanbul ignore next */
-        if (!paypal?.Fastlane) {
-            throw new Error('Unreconcilable: Paypal SDK instance does not have Fastlane method');
-        }
-        
-        const fastlane = await paypal.Fastlane(options);
-        return new Fastlane(fastlane, type, payment.public_id);
     } catch (error) {
         if (error instanceof Error) {
             error.name = FastlaneLoadingError.name;

@@ -67,6 +67,7 @@ const braintree: IBraintreeClient = {
     googlePayment: {create: jest.fn()},
     dataCollector: {create: jest.fn()},
     fastlane: {create: jest.fn()},
+    paypalCheckout: {create: jest.fn()},
 };
 
 describe('testing manageBraintreeState functions', () => {

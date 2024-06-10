@@ -103,6 +103,7 @@ describe('testing initFastlane function', () => {
             dataCollector,
             applePay: {create: jest.fn()},
             googlePayment: {create: jest.fn()},
+            paypalCheckout: {create: jest.fn()},
         });
 
         // Assigning
@@ -173,6 +174,7 @@ describe('testing initFastlane function', () => {
             dataCollector,
             applePay: {create: jest.fn()},
             googlePayment: {create: jest.fn()},
+            paypalCheckout: {create: jest.fn()},
         });
 
         const options = {
@@ -240,8 +242,6 @@ describe('testing initFastlane function', () => {
 
     test('init ppcp correctly from in-flight', async () => {
         // Arranging
-        let resolve: any;
-        const promise = new Promise(r => resolve = r);
         const payment = {
             alternative_payment_methods: [{
                 type: alternatePaymentMethodType.PPCP,

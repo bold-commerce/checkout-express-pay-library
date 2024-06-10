@@ -16,6 +16,8 @@ import {
     setOnAction,
     initPPCPApple,
     initPpcp,
+    initBraintreePayPalButtons,
+    IExpressPayBraintreePaypal,
 } from 'src';
 
 export function initialize(props: IInitializeProps): void{
@@ -50,6 +52,10 @@ export function initialize(props: IInitializeProps): void{
                     break;
                 case alternatePaymentMethodType.PPCP:
                     initPpcp(props.onAction, !!props.fastlane);
+                    break;
+                // TODO move method type of frontend library
+                case 'braintree-paypal':
+                    initBraintreePayPalButtons(paymentMethod as unknown as IExpressPayBraintreePaypal);
                     break;
                 default:
                     // eslint-disable-next-line no-console

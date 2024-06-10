@@ -1,4 +1,4 @@
-import {IFastlaneInstance, IFastlaneStyleOptions} from './fastlane';
+import { IFastlaneInstance, IFastlaneStyleOptions } from './fastlane';
 import ApplePayPaymentRequest = ApplePayJS.ApplePayPaymentRequest;
 import ApplePayPaymentToken = ApplePayJS.ApplePayPaymentToken;
 import GooglePaymentData = google.payments.api.PaymentData;
@@ -10,10 +10,13 @@ export interface IBraintreeClient {
         create: IBraintreeClientCreate;
     };
     applePay: {
-        create: IBraintreeApplePayCreate
+        create: IBraintreeApplePayCreate;
     };
     googlePayment: {
-        create: IBraintreeGooglePayCreate
+        create: IBraintreeGooglePayCreate;
+    };
+    paypalCheckout: {
+        create: IBraintreePaypalCheckoutCreate;
     };
     dataCollector: {
         create: (_: {
@@ -23,6 +26,140 @@ export interface IBraintreeClient {
     };
     fastlane: {
         create: IBraintreeFastlaneCreate;
+    };
+}
+
+export interface IBraintreePaypalCheckoutCreate {
+    (config: {
+        client: IBraintreeClientInstance,
+        authorization?: string;
+        merchantAccountId?: string;
+        autoSetDataUserIdToken?: boolean;
+    }): Promise<IBraintreePaypalCheckoutInstance>;
+}
+
+export interface IBraintreePaypalCheckoutInstance {
+    createPayment: (config: {
+        flow: string;
+        intent?: string;
+        offerCredit?: boolean;
+        amount?: string | number;
+        currency?: string;
+        displayName?: string;
+        requestBillingAgreement?: boolean;
+        billingAgreementDetails?: { description?: string };
+        vaultInitiatedCheckoutPaymentMethodToken?: string;
+        shippingOptions?: Array<unknown>;
+        enableShippingAddress?: boolean;
+        shippingAddressOverride?: {
+            line1: string;
+            line2?: string;
+            city: string;
+            state: string;
+            postalCode: string;
+            countryCode: string;
+            phone?: string;
+            recipientName?: string;
+        };
+        shippingAddressEditable?: boolean;
+        billingAgreementDescription?: string;
+        landingPageType?: string;
+        lineItems?: {
+            quantity: string,
+            unitAmount: string,
+            name: string,
+            kind: string,
+            unitTaxAmount?: string,
+            description?: string,
+            productCode?: string,
+            url?: string,
+        }[];
+    }) => Promise<string>;
+    updatePayment: (config: {
+        paymentId: string;
+        amount: string | number;
+        currency?: string;
+        shippingOptions?: {
+            id: string;
+            label: string;
+            selected: boolean;
+            type: 'SHIPPING' | 'PICKUP';
+            amount: {
+                currency: string;
+                value: string;
+            };
+        }[];
+        lineItems?: {
+            quantity: string,
+            unitAmount: string,
+            name: string,
+            kind: string,
+            unitTaxAmount?: string,
+            description?: string,
+            productCode?: string,
+            url?: string,
+        }[];
+        amountBreakdown?: {
+            itemTotal?: string;
+            shipping?: string;
+            handling?: string;
+            taxTotal?: string;
+            insurance?: string;
+            shippingDiscount?: string;
+            discount?: string;
+        };
+    }) => Promise<string>;
+    tokenizePayment: (config: {
+        payerId: string;
+        paymentId?: string;
+        billingToken?: string;
+        vault?: boolean;
+    }) => Promise<TokenizePaymentResult>;
+    getClientId: () => Promise<string>;
+    loadPayPalSDK: (options?: {
+        'client-id'?: string;
+        intent?: string;
+        locale?: string;
+        currency?: string;
+        vault?: boolean;
+        components?: string;
+        dataAttributes?: {
+            'client-token'?: string;
+            'csp-nonce'?: string;
+        }
+    }) => Promise<IBraintreePaypalCheckoutInstance>
+}
+
+export interface TokenizePaymentResult {
+    nonce: string;
+    type: string;
+    details: {
+        shippingAddress?: {
+            recipientName: string;
+            line1: string;
+            line2?: string;
+            city: string;
+            state: string;
+            countryCode: string;
+            postalCode: string;
+
+        };
+        email: string;
+        firstName: string;
+        lastName: string;
+        countryCode: string;
+        payerId: string;
+        phone: string;
+        billingAddress: {
+            line1: string;
+            line2?: string;
+            city: string;
+            state: string;
+            countryCode: string;
+            postalCode: string;
+
+        };
+        tenant: string;
     };
 }
 

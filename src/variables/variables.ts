@@ -25,6 +25,7 @@ export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
     PAYPAL: 'paypal',
     BRAINTREE_GOOGLE: 'braintreeGoogle',
     BRAINTREE_APPLE: 'braintreeApple',
+    BRAINTREE_PAYPAL: 'braintree-paypal',
     PPCP_APPLE: 'ppcpApple',
     PPCP: 'paypalCommercePlatform',
 };
@@ -80,7 +81,8 @@ export const braintreeConstants: IBraintreeConstants = {
     APPLE_JS: 'js/apple-pay.min.js',
     GOOGLE_JS: 'js/google-payment.min.js',
     DATA_COLLECTOR_JS: 'js/data-collector.min.js',
-    JS_VERSION: '3.88.2',
+    PAYPAL_CHECKOUT_JS: 'js/paypal-checkout.min.js',
+    JS_VERSION: '3.101.0-fastlane-beta.7.2',
     APPLEPAY_VERSION_NUMBER: 3,
     APPLEPAY_ERROR_CODE_SHIPPING_CONTACT: 'shippingContactInvalid',
     APPLEPAY_ERROR_CODE_BILLING_CONTACT: 'billingContactInvalid',

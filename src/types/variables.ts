@@ -28,6 +28,7 @@ export interface IShowPaymentMethodTypes {
     PAYPAL: string;
     BRAINTREE_GOOGLE: string;
     BRAINTREE_APPLE: string;
+    BRAINTREE_PAYPAL: string;
     PPCP_APPLE: string;
     PPCP: string
 }
@@ -88,6 +89,7 @@ export interface IBraintreeConstants {
     GOOGLE_JS: string;
     DATA_COLLECTOR_JS: string;
     JS_VERSION: string;
+    PAYPAL_CHECKOUT_JS: string;
     APPLEPAY_VERSION_NUMBER: number;
     APPLEPAY_ERROR_CODE_SHIPPING_CONTACT: ApplePayErrorCode;
     APPLEPAY_ERROR_CODE_BILLING_CONTACT: ApplePayErrorCode;
@@ -111,6 +113,7 @@ export interface IApplePayConstants {
 }
 
 export interface IBraintreeUrls {
+    paypalCheckoutURL: string;
     appleJsURL: string;
     clientJsURL: string;
     dataCollectorJsURL: string;

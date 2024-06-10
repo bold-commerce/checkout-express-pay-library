@@ -32,6 +32,7 @@ describe('testing braintreeOnLoadGoogle function',() => {
         applePay: {create: applePayCreate},
         dataCollector: {create: jest.fn()},
         fastlane: {create: jest.fn()},
+        paypalCheckout: {create: jest.fn()},
     } as IBraintreeClient;
     const createdClient = {} as IBraintreeClientInstance;
     const createdAppleInstance = {} as IBraintreeApplePayInstance;
