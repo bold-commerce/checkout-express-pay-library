@@ -12,7 +12,8 @@ export function getBraintreeJsUrls(version?: string): IBraintreeUrls {
         FASTLANE_JS: fastlaneJs,
         DATA_COLLECTOR_JS: dataCollectorJs,
         GOOGLE_JS_URL: googleJsUrl,
-        JS_VERSION: jsVersion
+        JS_VERSION: jsVersion,
+        PAYPAL_CHECKOUT_JS: paypalCheckoutJs,
     } = braintreeConstants;
     version ??= jsVersion;
     const clientJsURL = `${base}/${version}/${clientJs}`;
@@ -20,6 +21,7 @@ export function getBraintreeJsUrls(version?: string): IBraintreeUrls {
     const braintreeGoogleJsURL = `${base}/${version}/${googleJs}`;
     const dataCollectorJsURL = `${base}/${version}/${dataCollectorJs}`;
     const fastlaneJsURL = `${base}/${version}/${fastlaneJs}`;
+    const paypalCheckoutURL = `${base}/${version}/${paypalCheckoutJs}`;
 
-    return {appleJsURL, clientJsURL, dataCollectorJsURL, googleJsUrl, braintreeGoogleJsURL, fastlaneJsURL};
+    return {appleJsURL, clientJsURL, dataCollectorJsURL, googleJsUrl, braintreeGoogleJsURL, fastlaneJsURL, paypalCheckoutURL};
 }

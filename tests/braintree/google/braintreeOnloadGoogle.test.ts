@@ -51,6 +51,7 @@ describe('testing braintreeOnLoadGoogle function',() => {
             applePay: {create: jest.fn()},
             fastlane: {create: jest.fn()},
             dataCollector: {create: jest.fn()},
+            paypalCheckout: {create: jest.fn()},
         } as IBraintreeClient);
         hasBraintreeMock.mockReturnValueOnce(true);
         await braintreeOnLoadGoogle().then(() => {

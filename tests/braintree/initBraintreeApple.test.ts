@@ -42,7 +42,8 @@ const jsUrls: IBraintreeUrls = {
     dataCollectorJsURL: 'https://test.com/dataCollectorJsURL.js',
     appleJsURL: 'https://test.com/appleJsURL.js',
     braintreeGoogleJsURL: 'https://test.com/braintreeGoogleJsURL.js',
-    fastlaneJsURL: 'https://test.com/fastlaneURL.js'
+    fastlaneJsURL: 'https://test.com/fastlaneURL.js',
+    paypalCheckoutURL: 'https://test.com/paypalCheckoutURL.js',
 };
 const supportsVersionMock = jest.fn();
 const canMakePaymentsMock = jest.fn();
