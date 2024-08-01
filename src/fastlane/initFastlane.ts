@@ -27,7 +27,7 @@ interface BraintreeTokenResponse extends TokenResponse {
 }
 
 export async function initFastlane(options?: IFastlaneOptions): Promise<IFastlaneInstance>  {
-    const {clientJsURL, dataCollectorJsURL, fastlaneJsURL} = getBraintreeJsUrls('3.101.0-fastlane-beta.7.2');
+    const {clientJsURL, dataCollectorJsURL, fastlaneJsURL} = getBraintreeJsUrls('3.104.0');
     const {alternative_payment_methods} = getOrderInitialData();
     const payment = alternative_payment_methods
         .find(payment => payment.type === alternatePaymentMethodType.PPCP) as IExpressPayPaypalCommercePlatformButton | undefined;
