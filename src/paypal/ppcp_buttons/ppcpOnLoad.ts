@@ -31,8 +31,6 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
     const paypalDivId = 'ppcp-express-payment';
     paypalDiv.id = paypalDivId;
     paypalDiv.className = `${paypalDivId}`;
-    paypalDiv.appendChild(paypalButtonDiv);
-    paypalDiv.appendChild(payLaterButtonDiv);
     const container = document.getElementById('express-payment-container');
     container?.appendChild(paypalDiv);
 
@@ -61,15 +59,16 @@ export async function ppcpOnLoad(payment: IExpressPayPaypalCommercePlatformButto
 
         if(container) {
             if (paypalButton.isEligible()) {
+                paypalDiv.appendChild(paypalButtonDiv);
                 await paypalButton.render(`#${paypalButtonDivId}`);
                 enableSection = true;
             }
 
             if (payLaterButton.isEligible()) {
+                paypalDiv.appendChild(payLaterButtonDiv);
                 await payLaterButton.render(`#${payLaterButtonDivId}`);
                 enableSection = true;
             }
-
         }
 
         if(enableSection) {
