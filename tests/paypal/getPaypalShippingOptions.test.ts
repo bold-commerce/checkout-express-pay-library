@@ -17,7 +17,8 @@ describe('testing  getPaypalShippingOptions function', () => {
     const extraAvailableShipping = {
         id: `test_select_shipping_line_id_2_${'-'.repeat(130)}`,
         description: `Test Description 2 ${'-'.repeat(130)}`,
-        amount: 100
+        amount: 100,
+        code: '',
     };
     const shippingReturnMock = {
         ...shippingMock,
