@@ -60,6 +60,7 @@ describe('testing initialize function', () => {
         life_elements: [],
         flow_settings: {},
         requires_shipping: true,
+        eps_gateways: {},
     };
     const braintreePayment: IExpressPayBraintree = {
         type: alternatePaymentMethodType.BRAINTREE_GOOGLE,
