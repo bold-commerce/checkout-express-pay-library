@@ -13,6 +13,8 @@ import {
     setOnAction,
     showPaymentMethodTypes
 } from 'src';
+import {initPPCPGoogle} from 'src/paypal/ppcp_google';
+import {IExpressPayBraintreeGoogle} from '@boldcommerce/checkout-frontend-library/lib/types/apiInterfaces';
 
 export async function initPpcp(callback?: IOnAction, fastlane = false): Promise<void> {
 
@@ -27,6 +29,10 @@ export async function initPpcp(callback?: IOnAction, fastlane = false): Promise<
         const applePayment = alternative_payment_methods.find(payment => payment.type === alternatePaymentMethodType.PPCP_APPLE);
         if(applePayment){
             await initPPCPApple(applePayment as IExpressPayPaypalCommercePlatform);
+        }
+        const ppcpPayment = payment as IExpressPayBraintreeGoogle;
+        if(ppcpPayment.google_pay_enabled) {
+            await initPPCPGoogle(payment as IExpressPayPaypalCommercePlatform);
         }
     } else {
         displayError('There was an unknown error while loading the paypal buttons. Please try again.', 'generic', 'unknown_error');

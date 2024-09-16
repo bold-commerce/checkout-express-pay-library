@@ -19,4 +19,5 @@ export * from './paypalOnClick';
 export * from './paypalOnload';
 export * from './paypalOnShippingChange';
 export * from './ppcp_apple';
+export * from './ppcp_google';
 export * from './ppcp_buttons';

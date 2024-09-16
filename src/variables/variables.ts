@@ -1,4 +1,4 @@
-import { IFastlaneInstance } from 'src/types';
+import {IFastlaneInstance, IGooglePayConstants} from 'src/types';
 import {
     IActionTypes,
     IApplePayConstants,
@@ -26,6 +26,7 @@ export const showPaymentMethodTypes: IShowPaymentMethodTypes = {
     BRAINTREE_GOOGLE: 'braintreeGoogle',
     BRAINTREE_APPLE: 'braintreeApple',
     PPCP_APPLE: 'ppcpApple',
+    PPCP_GOOGLE: 'ppcpGoogle',
     PPCP: 'paypalCommercePlatform',
 };
 
@@ -49,6 +50,10 @@ export const paypalState: IPaypalState = {
     ppcpApplePayInstance: null,
     ppcpApplePayConfig: null,
     ppcpApplePaySession: null,
+    ppcpGoogleCredentials: null,
+    ppcpGooglePayInstance: null,
+    ppcpGooglePayConfig: null,
+    ppcpGooglePaySession: null,
 };
 
 export const paypalConstants: IPaypalConstants = {
@@ -56,6 +61,7 @@ export const paypalConstants: IPaypalConstants = {
     MAX_STRING_LENGTH: 127,
     APPLEPAY_VERSION_NUMBER: 3,
     APPLEPAY_JS: 'https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js',
+    GOOGLEPAY_JS: 'https://pay.google.com/gp/p/js/pay.js',
 };
 
 export const braintreeState: IBraintreeState = {
@@ -101,6 +107,17 @@ export const applePayConstants: IApplePayConstants = {
     APPLEPAY_ERROR_CODE_SHIPPING_CONTACT: 'shippingContactInvalid',
     APPLEPAY_ERROR_CODE_BILLING_CONTACT: 'billingContactInvalid',
     APPLEPAY_ERROR_CODE_UNKNOWN: 'unknown',
+};
+
+export const googlePayConstants: IGooglePayConstants = {
+    GOOGLEPAY_ERROR_REASON_SHIPPING: 'SHIPPING_ADDRESS_INVALID',
+    GOOGLEPAY_TRANSACTION_STATE_ERROR: 'ERROR',
+    GOOGLEPAY_TRANSACTION_STATE_SUCCESS: 'SUCCESS',
+    GOOGLEPAY_ERROR_REASON_PAYMENT: 'PAYMENT_DATA_INVALID',
+    GOOGLEPAY_INTENT_SHIPPING_ADDRESS: 'SHIPPING_ADDRESS',
+    GOOGLEPAY_INTENT_SHIPPING_OPTION: 'SHIPPING_OPTION',
+    GOOGLEPAY_INTENT_PAYMENT_AUTHORIZATION: 'PAYMENT_AUTHORIZATION',
+    GOOGLEPAY_TRIGGER_INITIALIZE: 'INITIALIZE',
 };
 
 
