@@ -17,6 +17,7 @@ import {
     initPPCPApple,
     initPpcp,
 } from 'src';
+import {initPPCPGoogle} from 'src/paypal/ppcp_google';
 
 export function initialize(props: IInitializeProps): void{
     let {alternative_payment_methods} = getOrderInitialData();
@@ -27,7 +28,8 @@ export function initialize(props: IInitializeProps): void{
         const loadsPpcp = alternative_payment_methods.some(payment => payment.type === alternatePaymentMethodType.PPCP);
         if (loadsPpcp) {
             alternative_payment_methods = alternative_payment_methods
-                .filter(m => m.type !== alternatePaymentMethodType.PPCP_APPLE);
+                .filter(m => m.type !== alternatePaymentMethodType.PPCP_APPLE
+                || m.type !== alternatePaymentMethodType.PPCP_GOOGLE);
         }
 
         for (const paymentMethod of alternative_payment_methods) {
@@ -44,9 +46,6 @@ export function initialize(props: IInitializeProps): void{
                     break;
                 case alternatePaymentMethodType.BRAINTREE_APPLE:
                     initBraintreeApple(paymentMethod as IExpressPayBraintreeApple);
-                    break;
-                case alternatePaymentMethodType.PPCP_APPLE:
-                    initPPCPApple(paymentMethod as IExpressPayPaypalCommercePlatform);
                     break;
                 case alternatePaymentMethodType.PPCP:
                     initPpcp(props.onAction, !!props.fastlane);
