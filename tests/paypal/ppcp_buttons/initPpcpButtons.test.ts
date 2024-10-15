@@ -54,6 +54,7 @@ describe('testing initPpcpButtons function', () => {
         },
         is_3ds_enabled: false,
         apple_pay_enabled: false,
+        google_pay_enabled: false,
         public_id: 'somePublicId',
     };
     const paypalNameSpaceMock: PayPalNamespace = {version: 'test_mock_version'};

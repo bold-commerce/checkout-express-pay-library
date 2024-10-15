@@ -140,6 +140,7 @@ describe('testing  managePaypalState functions', () => {
             is_test: true,
             public_id: 'somePublicId',
             apple_pay_enabled: true,
+            google_pay_enabled: true,
             partner_id: 'somePartnerId',
             merchant_id: 'someMerchantId',
             fastlane_styles: {}

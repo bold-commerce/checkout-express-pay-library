@@ -67,6 +67,7 @@ describe('testing initPpcp function', () => {
             },
             is_3ds_enabled: false,
             apple_pay_enabled: false,
+            google_pay_enabled: false,
             public_id: 'somePublicId',
         };
 
@@ -75,6 +76,7 @@ describe('testing initPpcp function', () => {
             is_test: true,
             public_id: 'somePublicId',
             apple_pay_enabled: true,
+            google_pay_enabled: true,
             merchant_id: 'someClientId',
             partner_id: 'somePartnerId',
             fastlane_styles: {}

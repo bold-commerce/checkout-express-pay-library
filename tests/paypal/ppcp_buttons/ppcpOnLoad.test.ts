@@ -36,6 +36,7 @@ describe('testing ppcpOnload function', () => {
         },
         is_3ds_enabled: false,
         apple_pay_enabled: false,
+        google_pay_enabled: false,
         public_id: 'somePublicId',
     };
 
