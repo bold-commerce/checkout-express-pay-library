@@ -6,13 +6,20 @@ import {
 import {PayPalNamespace} from '@paypal/paypal-js';
 import {AmountWithBreakdown, ShippingInfoOption} from '@paypal/paypal-js/types/apis/orders';
 import {IBraintreeApplePayInstance, IBraintreeClient, IBraintreeGooglePayInstance} from 'src/types/braintree';
-import {IPaypalNamespaceApple, IPPCPAppleConfig, IPPCPApplePayInstance} from 'src/types/paypal';
+import {
+    IPaypalNamespaceApple, IPaypalNamespaceGoogle,
+    IPPCPAppleConfig,
+    IPPCPApplePayInstance,
+    IPPCPGoogleConfig,
+    IPPCPGooglePayInstance
+} from 'src/types/paypal';
 import GooglePaymentsClient = google.payments.api.PaymentsClient;
 import ApplePayErrorCode = ApplePayJS.ApplePayErrorCode;
 import ErrorReason = google.payments.api.ErrorReason;
 import TransactionState = google.payments.api.TransactionState;
 import CallbackIntent = google.payments.api.CallbackIntent;
 import CallbackTrigger = google.payments.api.CallbackTrigger;
+import PaymentsClient = google.payments.api.PaymentsClient;
 
 export interface IShowPaymentMethods {
     stripe: boolean;
@@ -29,6 +36,7 @@ export interface IShowPaymentMethodTypes {
     BRAINTREE_GOOGLE: string;
     BRAINTREE_APPLE: string;
     PPCP_APPLE: string;
+    PPCP_GOOGLE: string;
     PPCP: string
 }
 
@@ -47,13 +55,17 @@ export interface IActionTypes {
 }
 
 export interface IPaypalState {
-    paypal: PayPalNamespace | IPaypalNamespaceApple | null;
+    paypal: PayPalNamespace | IPaypalNamespaceApple | IPaypalNamespaceGoogle | null;
     paypalPromise: Promise<PayPalNamespace | null> | null;
     gatewayPublicId: string;
     ppcpAppleCredentials: IExpressPayPaypalCommercePlatform | null;
     ppcpApplePayInstance: IPPCPApplePayInstance | null;
     ppcpApplePayConfig: IPPCPAppleConfig | null;
     ppcpApplePaySession: ApplePaySession | null;
+    ppcpGoogleCredentials: IExpressPayPaypalCommercePlatform | null;
+    ppcpGooglePayInstance: IPPCPGooglePayInstance | null;
+    ppcpGooglePayConfig: IPPCPGoogleConfig | null;
+    ppcpGooglePaySession: PaymentsClient | null;
 }
 
 export interface IPaypalConstants {
@@ -61,6 +73,7 @@ export interface IPaypalConstants {
     MAX_STRING_LENGTH: number;
     APPLEPAY_VERSION_NUMBER: number;
     APPLEPAY_JS: string;
+    GOOGLEPAY_JS: string;
 }
 
 export interface IPaypalPatchOperation {
@@ -102,6 +115,17 @@ export interface IBraintreeConstants {
     GOOGLEPAY_TRIGGER_INITIALIZE: CallbackTrigger;
     GOOGLEPAY_VERSION_NUMBER: number;
     GOOGLEPAY_VERSION_NUMBER_MINOR: number;
+}
+
+export interface IGooglePayConstants {
+    GOOGLEPAY_ERROR_REASON_SHIPPING: ErrorReason;
+    GOOGLEPAY_ERROR_REASON_PAYMENT: ErrorReason;
+    GOOGLEPAY_TRANSACTION_STATE_ERROR: TransactionState;
+    GOOGLEPAY_TRANSACTION_STATE_SUCCESS: TransactionState;
+    GOOGLEPAY_INTENT_SHIPPING_ADDRESS: CallbackIntent;
+    GOOGLEPAY_INTENT_SHIPPING_OPTION: CallbackIntent;
+    GOOGLEPAY_INTENT_PAYMENT_AUTHORIZATION: CallbackIntent;
+    GOOGLEPAY_TRIGGER_INITIALIZE: CallbackTrigger;
 }
 
 export interface IApplePayConstants {

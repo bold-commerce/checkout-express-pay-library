@@ -13,7 +13,7 @@ import {loadScript, PayPalNamespace} from '@paypal/paypal-js';
 import {getCurrency,getEnvironment,getJwtToken,getPublicOrderId,getShopIdentifier,IExpressPayPaypalCommercePlatformButton} from '@boldcommerce/checkout-frontend-library';
 
 async function initPpcpSdkInternal(payment: IExpressPayPaypalCommercePlatformButton, /* istanbul ignore next */ fastlane = false): Promise<PayPalNamespace | null> {
-    let components = `buttons,applepay${fastlane ? ',fastlane' : ''}`;
+    let components = `buttons,applepay,googlepay${fastlane ? ',fastlane' : ''}`;
     const {iso_code: currency} = getCurrency();
     const merchantCountry = payment.merchant_country;
     let buyerCountry = '';
