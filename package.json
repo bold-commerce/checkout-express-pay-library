@@ -45,7 +45,7 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "peerDependencies": {
-    "@boldcommerce/checkout-frontend-library": "0.62.0"
+    "@boldcommerce/checkout-frontend-library": "0.62.1"
   },
   "files": [
     "lib/**/*"
@@ -54,7 +54,7 @@
     "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0"
   },
   "dependencies": {
-    "@boldcommerce/checkout-frontend-library": "0.62.0",
+    "@boldcommerce/checkout-frontend-library": "0.62.1",
     "@paypal/paypal-js": "^7.0.1",
     "@types/applepayjs": "^3.0.4",
     "@types/googlepay": "^0.6.4"
